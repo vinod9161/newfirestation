@@ -1,0 +1,1121 @@
+@extends('layouts.citizen.template')
+@section('content')
+
+<!-- Start::row-1 -->
+<div class="d-md-flex d-block align-items-center justify-content-between my-4">
+    <div>
+        <h5 class="main-content-title text-default  fs-24  mg-b-4 mb-0 mt-10">NOC For Temporary Permission of Public Functions</h5>
+    </div>
+</div>
+<!-- End Row -->
+
+
+<div class="card custom-card" id="hori">
+    <div class="card-body">
+        <div class="text-wrap">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+            @if (session('failed'))
+            <div class="alert alert-danger">
+                {{ session('failed') }}
+            </div>
+            @endif
+            <br>
+
+            <div class="tab-content col-md-10" id="v-pills-tabContent">
+                <div class="tab-pane fade shadow rounded bg-white show active p-5" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                    <form method="POST" enctype="multipart/form-data" action="{{route('noc.public.function.post')}}">
+                        @csrf
+                        <label class="mt-1" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Basic Details</label>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Applicant Type<span class="span_required">*</span></label>
+                                    <select class="form-control" name="applicant_type" id="applicant_type" required>
+                                        <option value="" disabled selected>Select Applicant Type</option>
+                                        <option value="Owner">Owner</option>
+                                        <option value="Organizer">Organizer</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    @if($errors->has('project_status'))
+                                    <div class="validation-error">{{ $errors->first('project_status') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Applicant Detail</label>
+                        <div class="row" style="margin-top: 0px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="salutation">Salutation<span class="span_required">*</span></label>
+                                    <select class="form-control" name="salutation" id="salutation" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                    </select>
+                                    @if($errors->has('salutation'))
+                                    <div class="validation-error">{{ $errors->first('salutation') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">First Name<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="">
+                                    @if($errors->has('first_name'))
+                                    <div class="validation-error">{{ $errors->first('first_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Middle Name" value="">
+                                    @if($errors->has('middle_name'))
+                                    <div class="validation-error">{{ $errors->first('middle_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" value="">
+                                    @if($errors->has('last_name'))
+                                    <div class="validation-error">{{ $errors->first('last_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span class="span_required">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ $application->email ?? ''}}" required>
+                                    @if($errors->has('email'))
+                                    <div class="validation-error">{{ $errors->first('email') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile No. <span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="mobile_no" name="mobile_no" placeholder="Mobile No." value="{{ $application->mobile_no ?? ''}}" required maxlength="10" minlength="10">
+                                    @if($errors->has('mobile_no'))
+                                    <div class="validation-error">{{ $errors->first('mobile_no') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <label class="mt-5">Address of Applicant</label>
+                        <div class="row" style="margin-top: 0px;width: 100%;">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">District<span class="span_required">*</span></label>
+                                    <select class="form-control" name="district_id" id="district_id" required>
+                                        <option value="" disabled selected>Select District</option>
+                                        @foreach ($districts as $dist)
+                                        <option value="{{ $dist->id }}">{{ ucfirst($dist->name) }} </option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('district_id'))
+                                    <div class="validation-error">{{ $errors->first('district_id') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Urban / Rural <span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="urban" name="rural_urban" value="urban" onclick="chooseRularUrban(this);" style="height: auto">
+                                        <label for="urban">Urban</label>
+
+                                        <input type="radio" id="rular" name="rural_urban" value="rural" onclick="chooseRularUrban(this);" style="height: auto">
+                                        <label for="rural">Rural</label>
+
+                                    </div>
+                                    @if($errors->has('rural_urban'))
+                                    <div class="validation-error">{{ $errors->first('rural_urban') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="urban_div" style="display:none;">
+                            <div class="row">
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Tehsil <span class="span_required">*</span></label>
+                                        <select class="form-control" name="tehsil_id" id="tehsil_id" required>
+                                            <option value="" disabled selected>Select Tehsil</option>
+
+                                        </select>
+                                        @if($errors->has('tehsil_id'))
+                                        <div class="validation-error">{{ $errors->first('tehsil_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Street <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="street" name="street" placeholder="Street" value="">
+                                        @if($errors->has('street'))
+                                        <div class="validation-error">{{ $errors->first('street') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Landmark <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Landmark" value="">
+                                        @if($errors->has('landmark'))
+                                        <div class="validation-error">{{ $errors->first('landmark') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">City <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="city" name="city" placeholder="City" value="">
+                                        @if($errors->has('city'))
+                                        <div class="validation-error">{{ $errors->first('city') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-10 col-xs-12" style="padding-right:0px;">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Choose Plot/ Khasra/ Khatoni <span class="span_required">*</span></label>
+                                        <div class="radio-toolbar" style="margin-left: 20px;">
+                                            <input type="radio" id="plot" name="plot_khasra_khatauni" value="plot" style="height: auto">
+                                            <label for="plot" style="margin-right: 10px;">Plot No.</label>
+                                            <input type="radio" id="khasra" name="plot_khasra_khatauni" value="khasra" style="height: auto">
+                                            <label for="khasra" style="margin-right: 10px;">Khasra No.</label>
+                                            <input type="radio" id="khatoni" name="plot_khasra_khatauni" value="khatoni" style="height: auto">
+                                            <label for="khatoni">Khatoni No.</label>
+                                        </div>
+                                        @if($errors->has('plot_khasra_khatauni'))
+                                        <div class="validation-error">{{ $errors->first('plot_khasra_khatauni') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Plot/Khasra/Khatoni No. <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="plot_khasra_khatauni_no" name="plot_khasra_khatauni_no" placeholder="Plot/Khasra/Khatoni No." value="" required>
+                                        @if($errors->has('plot_khasra_khatauni_no'))
+                                        <div class="validation-error">{{ $errors->first('plot_khasra_khatauni_no') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Pincode <span class="span_required">*</span></label>
+                                        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="" maxlength="6" minlength="6">
+                                        @if($errors->has('pincode'))
+                                        <div class="validation-error">{{ $errors->first('pincode') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="rular_div" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Block <span class="span_required">*</span></label>
+                                        <select class="form-control" name="block_id" id="block_id" required>
+                                            <option value="" disabled selected>Select Block</option>
+
+                                        </select>
+                                        @if($errors->has('block_id'))
+                                        <div class="validation-error">{{ $errors->first('block_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Panchayat<span class="span_required">*</span></label>
+                                        <select class="form-control" name="panchayat_id" id="panchayat_id" required>
+                                            <option value="" disabled selected>Select Panchayat</option>
+
+                                        </select>
+                                        @if($errors->has('panchayat_id'))
+                                        <div class="validation-error">{{ $errors->first('panchayat_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Village<span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="village" name="village" placeholder="Village" value="" required>
+                                        @if($errors->has('village'))
+                                        <div class="validation-error">{{ $errors->first('village') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Landmark <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Landmark" value="">
+                                        @if($errors->has('landmark'))
+                                        <div class="validation-error">{{ $errors->first('landmark') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+                                <div class="col-lg-6 col-sm-10 col-xs-12" style="padding-right:0px;">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Choose Plot/ Khasra/ Khatoni <span class="span_required">*</span></label>
+                                        <div class="radio-toolbar" style="margin-left: 20px;">
+                                            <input type="radio" id="plot1" name="plot_khasra_khatauni" value="plot" style="height: auto">
+                                            <label for="plot1" style="margin-right: 10px;">Plot No.</label>
+                                            <input type="radio" id="khasra1" name="plot_khasra_khatauni" value="khasra" style="height: auto">
+                                            <label for="khasra1" style="margin-right: 10px;">Khasra No.</label>
+                                            <input type="radio" id="khatoni1" name="plot_khasra_khatauni" value="khatoni" style="height: auto">
+                                            <label for="khatoni1">Khatoni No.</label>
+                                        </div>
+                                        @if($errors->has('plot_khasra_khatauni'))
+                                        <div class="validation-error">{{ $errors->first('plot_khasra_khatauni') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 col-xs-12" style="padding-left:0px">
+                                    <div class="form-group">
+                                        <label class="form-label">Plot/Khasra/Khatoni No. <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="plot_khasra_khatauni_no" name="plot_khasra_khatauni_no" placeholder="Plot/Khasra/Khatoni No." value="" required>
+                                        @if($errors->has('plot_khasra_khatauni_no'))
+                                        <div class="validation-error">{{ $errors->first('plot_khasra_khatauni_no') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Pincode <span class="span_required">*</span></label>
+                                        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="" maxlength="6" minlength="6">
+                                        @if($errors->has('pincode'))
+                                        <div class="validation-error">{{ $errors->first('pincode') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Organizing Place and Address</label>
+                        <div class="row" style="margin-top:0px">
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">District<span class="span_required">*</span></label>
+                                    <select class="form-control" name="org_district_id" id="org_district_id" required>
+                                        <option value="" disabled selected>Select District</option>
+                                        @foreach ($districts as $dist)
+                                        <option value="{{ $dist->id }}">{{ ucfirst($dist->name) }} </option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('org_district_id'))
+                                    <div class="validation-error">{{ $errors->first('org_district_id') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Urban / Rural <span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="org_urban" name="org_rural_urban" value="urban" onclick="chooseRularUrbanOrg(this);" style="height: auto">
+                                        <label for="org_urban">Urban</label>
+
+                                        <input type="radio" id="org_rular" name="org_rural_urban" value="rural" onclick="chooseRularUrbanOrg(this);" style="height: auto">
+                                        <label for="org_rular">Rural</label>
+
+                                    </div>
+                                    @if($errors->has('org_rural_urban'))
+                                    <div class="validation-error">{{ $errors->first('org_rural_urban') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="org_urban_div" style="display:none;">
+                            <div class="row">
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Tehsil <span class="span_required">*</span></label>
+                                        <select class="form-control" name="org_tehsil_id" id="org_tehsil_id" required>
+                                            <option value="" disabled selected>Select Tehsil</option>
+
+                                        </select>
+                                        @if($errors->has('org_tehsil_id'))
+                                        <div class="validation-error">{{ $errors->first('org_tehsil_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Street <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_street" name="org_street" placeholder="Street" value="">
+                                        @if($errors->has('org_street'))
+                                        <div class="validation-error">{{ $errors->first('org_street') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Landmark <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_landmark" name="org_landmark" placeholder="Landmark" value="">
+                                        @if($errors->has('org_landmark'))
+                                        <div class="validation-error">{{ $errors->first('org_landmark') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">City <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_city" name="org_city" placeholder="City" value="">
+                                        @if($errors->has('org_city'))
+                                        <div class="validation-error">{{ $errors->first('org_city') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-10 col-xs-12" style="padding-right:0px;">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Choose Plot/ Khasra/ Khatoni <span class="span_required">*</span></label>
+                                        <div class="radio-toolbar" style="margin-left: 20px;">
+                                            <input type="radio" id="org_plot" name="org_plot_khasra_khatauni" value="plot" style="height: auto">
+                                            <label for="org_plot" style="margin-right: 10px;">Plot No.</label>
+                                            <input type="radio" id="org_khasra" name="org_plot_khasra_khatauni" value="khasra" style="height: auto">
+                                            <label for="org_khasra" style="margin-right: 10px;">Khasra No.</label>
+                                            <input type="radio" id="org_khatoni" name="org_plot_khasra_khatauni" value="khatoni" style="height: auto">
+                                            <label for="org_khatoni">Khatoni No.</label>
+                                        </div>
+                                        @if($errors->has('org_plot_khasra_khatauni'))
+                                        <div class="validation-error">{{ $errors->first('org_plot_khasra_khatauni') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Plot/Khasra/Khatoni No. <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_plot_khasra_khatauni_no" name="org_plot_khasra_khatauni_no" placeholder="Plot/Khasra/Khatoni No." value="" required>
+                                        @if($errors->has('org_plot_khasra_khatauni_no'))
+                                        <div class="validation-error">{{ $errors->first('org_plot_khasra_khatauni_no') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Pincode <span class="span_required">*</span></label>
+                                        <input type="number" class="form-control" id="org_pincode" name="org_pincode" placeholder="Pincode" value="" maxlength="6" minlength="6">
+                                        @if($errors->has('org_pincode'))
+                                        <div class="validation-error">{{ $errors->first('org_pincode') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="org_rular_div" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Block <span class="span_required">*</span></label>
+                                        <select class="form-control" name="org_block_id" id="org_block_id" required>
+                                            <option value="" disabled selected>Select Block</option>
+
+                                        </select>
+                                        @if($errors->has('org_block_id'))
+                                        <div class="validation-error">{{ $errors->first('org_block_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Panchayat<span class="span_required">*</span></label>
+                                        <select class="form-control" name="org_panchayat_id" id="org_panchayat_id" required>
+                                            <option value="" disabled selected>Select Panchayat</option>
+
+                                        </select>
+                                        @if($errors->has('org_panchayat_id'))
+                                        <div class="validation-error">{{ $errors->first('org_panchayat_id') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Village<span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_village" name="org_village" placeholder="Village" value="" required>
+                                        @if($errors->has('org_village'))
+                                        <div class="validation-error">{{ $errors->first('org_village') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Landmark <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_landmark" name="org_landmark" placeholder="Landmark" value="">
+                                        @if($errors->has('org_landmark'))
+                                        <div class="validation-error">{{ $errors->first('org_landmark') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-10 col-xs-12" style="padding-right:0px;">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Choose Plot/ Khasra/ Khatoni <span class="span_required">*</span></label>
+                                        <div class="radio-toolbar" style="margin-left: 20px;">
+                                            <input type="radio" id="org_plot1" name="org_plot_khasra_khatauni" value="plot" style="height: auto">
+                                            <label for="org_plot1" style="margin-right: 10px;">Plot No.</label>
+                                            <input type="radio" id="org_khasra1" name="plot_khasra_khatauni" value="khasra" style="height: auto">
+                                            <label for="org_khasra1" style="margin-right: 10px;">Khasra No.</label>
+                                            <input type="radio" id="org_khatoni1" name="org_plot_khasra_khatauni" value="khatoni" style="height: auto">
+                                            <label for="org_khatoni1">Khatoni No.</label>
+                                        </div>
+                                        @if($errors->has('org_plot_khasra_khatauni'))
+                                        <div class="validation-error">{{ $errors->first('org_plot_khasra_khatauni') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 col-xs-12" style="padding-left:0px">
+                                    <div class="form-group">
+                                        <label class="form-label">Plot/Khasra/Khatoni No. <span class="span_required">*</span></label>
+                                        <input type="text" class="form-control" id="org_plot_khasra_khatauni_no" name="org_plot_khasra_khatauni_no" placeholder="Plot/Khasra/Khatoni No." value="" required>
+                                        @if($errors->has('org_plot_khasra_khatauni_no'))
+                                        <div class="validation-error">{{ $errors->first('org_plot_khasra_khatauni_no') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Pincode <span class="span_required">*</span></label>
+                                        <input type="number" class="form-control" id="org_pincode" name="org_pincode" placeholder="Pincode" value="" maxlength="6" minlength="6">
+                                        @if($errors->has('org_pincode'))
+                                        <div class="validation-error">{{ $errors->first('org_pincode') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Latitude</label>
+                                    <input type="number" class="form-control" id="latitude" name="latitude" placeholder="Latitude" value="{{ $application->latitude ?? ''}}">
+                                    @if($errors->has('latitude'))
+                                    <div class="validation-error">{{ $errors->first('latitude') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Longitude</label>
+                                    <input type="number" class="form-control" id="longitude" name="longitude" placeholder="Longitude" value="{{ $application->longitude ?? ''}}">
+                                    @if($errors->has('longitude'))
+                                    <div class="validation-error">{{ $errors->first('longitude') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Orgnizer Contact Detail</label>
+                        <div class="row" style="margin-top: 0px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="org_salutation">Salutation<span class="span_required">*</span></label>
+                                    <select class="form-control" name="org_salutation" id="org_salutation" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                    </select>
+                                    @if($errors->has('org_salutation'))
+                                    <div class="validation-error">{{ $errors->first('org_salutation') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">First Name<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="org_first_name" name="org_first_name" placeholder="First Name" value="">
+                                    @if($errors->has('org_first_name'))
+                                    <div class="validation-error">{{ $errors->first('org_first_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="org_middle_name" name="org_middle_name" placeholder="Middle Name" value="">
+                                    @if($errors->has('org_middle_name'))
+                                    <div class="validation-error">{{ $errors->first('org_middle_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="org_last_name" name="org_last_name" placeholder="Last Name" value="">
+                                    @if($errors->has('org_last_name'))
+                                    <div class="validation-error">{{ $errors->first('org_last_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Name of Organizing Firm <span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="org_name" name="org_name" placeholder="Name" value="{{ $application->org_name ?? ''}}" required>
+                                    @if($errors->has('org_name'))
+                                    <div class="validation-error">{{ $errors->first('org_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span class="span_required">*</span></label>
+                                    <input type="email" class="form-control" id="org_email" name="org_email" placeholder="Email" value="{{ $application->org_email ?? ''}}" required>
+                                    @if($errors->has('org_email'))
+                                    <div class="validation-error">{{ $errors->first('org_email') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile No. <span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="org_mobile_no" name="org_mobile_no" placeholder="Mobile No." value="{{ $application->org_mobile_no ?? ''}}" required maxlength="10" minlength="10">
+                                    @if($errors->has('org_mobile_no'))
+                                    <div class="validation-error">{{ $errors->first('org_mobile_no') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Erector Contact Detail</label>
+                        <div class="row" style="margin-top: 0px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="ere_salutation">Salutation<span class="span_required">*</span></label>
+                                    <select class="form-control" name="ere_salutation" id="ere_salutation" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                    </select>
+                                    @if($errors->has('ere_salutation'))
+                                    <div class="validation-error">{{ $errors->first('ere_salutation') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">First Name<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="ere_first_name" name="ere_first_name" placeholder="First Name" value="">
+                                    @if($errors->has('ere_first_name'))
+                                    <div class="validation-error">{{ $errors->first('ere_first_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="ere_middle_name" name="ere_middle_name" placeholder="Middle Name" value="">
+                                    @if($errors->has('ere_middle_name'))
+                                    <div class="validation-error">{{ $errors->first('ere_middle_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="ere_last_name" name="ere_last_name" placeholder="Last Name" value="">
+                                    @if($errors->has('ere_last_name'))
+                                    <div class="validation-error">{{ $errors->first('ere_last_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Name of Erector Firm <span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="ere_name" name="ere_name" placeholder="Name" value="{{ $application->ere_name ?? ''}}" required>
+                                    @if($errors->has('ere_name'))
+                                    <div class="validation-error">{{ $errors->first('ere_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span class="span_required">*</span></label>
+                                    <input type="email" class="form-control" id="ere_email" name="ere_email" placeholder="Email" value="{{ $application->ere_email ?? ''}}" required>
+                                    @if($errors->has('ere_email'))
+                                    <div class="validation-error">{{ $errors->first('ere_email') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile No. <span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="ere_mobile_no" name="ere_mobile_no" placeholder="Mobile No." value="{{ $application->ere_mobile_no ?? ''}}" required maxlength="10" minlength="10">
+                                    @if($errors->has('ere_mobile_no'))
+                                    <div class="validation-error">{{ $errors->first('ere_mobile_no') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Coordinator Contact Detail</label>
+                        <div class="row" style="margin-top: 0px;">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="coor_salutation">Salutation<span class="span_required">*</span></label>
+                                    <select class="form-control" name="coor_salutation" id="coor_salutation" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                    </select>
+                                    @if($errors->has('coor_salutation'))
+                                    <div class="validation-error">{{ $errors->first('coor_salutation') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">First Name<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="coor_first_name" name="coor_first_name" placeholder="First Name" value="">
+                                    @if($errors->has('coor_first_name'))
+                                    <div class="validation-error">{{ $errors->first('coor_first_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="coor_middle_name" name="coor_middle_name" placeholder="Middle Name" value="">
+                                    @if($errors->has('coor_middle_name'))
+                                    <div class="validation-error">{{ $errors->first('coor_middle_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="coor_last_name" name="coor_last_name" placeholder="Last Name" value="">
+                                    @if($errors->has('coor_last_name'))
+                                    <div class="validation-error">{{ $errors->first('coor_last_name') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Email <span class="span_required">*</span></label>
+                                    <input type="email" class="form-control" id="coor_email" name="coor_email" placeholder="Email" value="{{ $application->coor_email ?? ''}}" required>
+                                    @if($errors->has('coor_email'))
+                                    <div class="validation-error">{{ $errors->first('coor_email') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Mobile No. <span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="coor_mobile_no" name="coor_mobile_no" placeholder="Mobile No." value="{{ $application->coor_mobile_no ?? ''}}" required maxlength="10" minlength="10">
+                                    @if($errors->has('coor_mobile_no'))
+                                    <div class="validation-error">{{ $errors->first('coor_mobile_no') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Project / Area Detail</label>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Total Plot Area<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="total_plot_area" name="total_plot_area" placeholder="Total Area" value="">
+                                    @if($errors->has('total_plot_area'))
+                                    <div class="validation-error">{{ $errors->first('total_plot_area') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Unit<span class="span_required">*</span></label>
+                                    <select class="form-control" name="plot_area_unit" id="plot_area_unit" required>
+                                        <!-- <option value="" disabled selected>Select Unit</option> -->
+                                        <option value="Sqmt" selected>Sqmt</option>
+                                        <!-- <option value="Sqyard">Sqyard</option>
+                     <option value="Sqft">Sqft</option> -->
+                                    </select>
+
+                                    @if($errors->has('area_unit'))
+                                    <div class="validation-error">{{ $errors->first('area_unit') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Total Covered Area<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="total_covered_area" name="total_covered_area" placeholder="Covered Area" value="">
+                                    @if($errors->has('total_covered_area'))
+                                    <div class="validation-error">{{ $errors->first('total_covered_area') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Unit<span class="span_required">*</span></label>
+                                    <select class="form-control" name="covered_area_unit" id="covered_area_unit" required>
+                                        <!-- <option value="" disabled selected>Select Unit</option> -->
+                                        <option value="Sqmt" selected>Sqmt</option>
+                                        <!-- <option value="Sqyard">Sqyard</option>
+                     <option value="Sqft">Sqft</option> -->
+                                    </select>
+
+                                    @if($errors->has('covered_area_unit'))
+                                    <div class="validation-error">{{ $errors->first('covered_area_unit') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Type of Activity<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="function_type" name="function_type" placeholder="Type  of Entertainment/Function Activity" value="">
+                                    @if($errors->has('function_type'))
+                                    <div class="validation-error">{{ $errors->first('function_type') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Event Start Date<span class="span_required">*</span></label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Date" value="">
+                                    @if($errors->has('start_date'))
+                                    <div class="validation-error">{{ $errors->first('start_date') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Event End Date <span class="span_required">*</span></label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Date" value="">
+                                    @if($errors->has('end_date'))
+                                    <div class="validation-error">{{ $errors->first('end_date') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Number of Camps<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="no_camps" name="no_camps" placeholder="Number of Camps" value="">
+                                    @if($errors->has('no_camps'))
+                                    <div class="validation-error">{{ $errors->first('no_camps') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Number of Stalls<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="no_stalls" name="no_stalls" placeholder="Number of Stalls" value="">
+                                    @if($errors->has('no_stalls'))
+                                    <div class="validation-error">{{ $errors->first('no_stalls') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Provision of Kitchen/Food stall <span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="pro_kitchen_yes" name="pro_kitchen" value="yes" style="height: auto">
+                                        <label for="pro_kitchen_yes">Yes</label>
+
+                                        <input type="radio" id="pro_kitchen_no" name="pro_kitchen" value="no" style="height: auto">
+                                        <label for="pro_kitchen_no">No</label>
+
+                                    </div>
+                                    @if($errors->has('pro_kitchen'))
+                                    <div class="validation-error">{{ $errors->first('pro_kitchen') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Boundary<span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="temporary" name="boundary" value="temporary" style="height: auto">
+                                        <label for="pro_kitchen_yes">Temporary</label>
+
+                                        <input type="radio" id="permanent" name="boundary" value="permanent" style="height: auto">
+                                        <label for="permanent">Permanent</label>
+
+                                    </div>
+                                    @if($errors->has('boundary'))
+                                    <div class="validation-error">{{ $errors->first('boundary') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Use of Inflammable item<span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="inflammable_yes" name="inflammable" value="yes" style="height: auto">
+                                        <label for="inflammable_yes">Yes</label>
+
+                                        <input type="radio" id="inflammable_no" name="inflammable" value="no" style="height: auto">
+                                        <label for="inflammable_no">No</label>
+
+                                    </div>
+                                    @if($errors->has('inflammable'))
+                                    <div class="validation-error">{{ $errors->first('inflammable') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Type of Inflammable item<span class="span_required">*</span></label>
+                                    <input type="text" class="form-control" id="inflamable_type" name="inflamable_type" placeholder="Type of Inflammable" value="">
+                                    @if($errors->has('inflamable_type'))
+                                    <div class="validation-error">{{ $errors->first('inflamable_type') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Whether the activity is Open or indoor<span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="open" name="open_indoor" value="open" style="height: auto">
+                                        <label for="open">Open</label>
+
+                                        <input type="radio" id="indoor" name="open_indoor" value="indoor" style="height: auto">
+                                        <label for="indoor">Indoor</label>
+
+                                    </div>
+                                    @if($errors->has('open_indoor'))
+                                    <div class="validation-error">{{ $errors->first('open_indoor') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Seating Capacity of Stage<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="seating_capacity" name="seating_capacity" placeholder="Seating Capacity" value="">
+                                    @if($errors->has('seating_capacity'))
+                                    <div class="validation-error">{{ $errors->first('seating_capacity') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Number of fire/Security Person<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="security_person" name="security_person" placeholder="fire/Security Person" value="">
+                                    @if($errors->has('security_person'))
+                                    <div class="validation-error">{{ $errors->first('security_person') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Width of Approach Road (in Meter)<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="road_width" name="road_width" placeholder="Approach Road" value="">
+                                    @if($errors->has('road_width'))
+                                    <div class="validation-error">{{ $errors->first('road_width') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-username">Separate Parking Area<span class="span_required">*</span></label>
+                                    <div class="radio-toolbar">
+
+                                        <input type="radio" id="parking_yes" name="parking" value="yes" style="height: auto">
+                                        <label for="parking_yes">Yes</label>
+
+                                        <input type="radio" id="parking_no" name="parking" value="no" style="height: auto">
+                                        <label for="parking_no">No</label>
+
+                                    </div>
+                                    @if($errors->has('parking'))
+                                    <div class="validation-error">{{ $errors->first('parking') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">No. of Entrance<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="no_entrance" name="no_entrance" placeholder="No. of Entrance" value="">
+                                    @if($errors->has('no_entrance'))
+                                    <div class="validation-error">{{ $errors->first('no_entrance') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Height of Entrance(in Meter)<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="entrance_height" name="entrance_height" placeholder="Entrance Height" value="">
+                                    @if($errors->has('entrance_height'))
+                                    <div class="validation-error">{{ $errors->first('entrance_height') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Width of Entrance(in Meter)<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="entrance_width" name="entrance_width" placeholder="Entrance Width" value="">
+                                    @if($errors->has('entrance_width'))
+                                    <div class="validation-error">{{ $errors->first('entrance_width') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">No. of Exit<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="no_exit" name="no_exit" placeholder="No. of exit" value="">
+                                    @if($errors->has('no_exit'))
+                                    <div class="validation-error">{{ $errors->first('no_exit') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Height of Exit(in Meter)<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="exit_height" name="exit_height" placeholder="Exit Height" value="">
+                                    @if($errors->has('exit_height'))
+                                    <div class="validation-error">{{ $errors->first('exit_height') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Width of Exit(in Meter)<span class="span_required">*</span></label>
+                                    <input type="number" class="form-control" id="exit_width" name="exit_width" placeholder="Exit Width" value="">
+                                    @if($errors->has('exit_width'))
+                                    <div class="validation-error">{{ $errors->first('exit_width') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <label class="mt-5" style="background: #5678f4;padding: 6px;width: 100%; color: white;">Attachment</label>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Reference Letter or Reference Number from Magistrate<span class="span_required">*</span></label>
+                                    <input type="file" class="form-control" id="reference_letter" name="reference_letter" style="height: 36px;" required>
+                                    @if($errors->has('reference_letter'))
+                                    <div class="validation-error">{{ $errors->first('reference_letter') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                <div class="form-group">
+                                    <label class="form-label">If Yatra is organizing attached the route plan and No. of Person Participate in Yatra<span class="span_required">*</span></label>
+                                    <input type="file" class="form-control" id="route_plan" name="route_plan" style="height: 36px;">
+                                    @if($errors->has('route_plan'))
+                                    <div class="validation-error">{{ $errors->first('route_plan') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Attach Fire escape plan.<span class="span_required">*</span></label>
+                                    <input type="file" class="form-control" id="fire_plan" name="fire_plan" style="height: 36px;">
+                                    @if($errors->has('fire_plan'))
+                                    <div class="validation-error">{{ $errors->first('fire_plan') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center mt-3">
+                                <a href="" style="margin-right:10px" class="btn btn-info">Cancel</a>
+                                <button class="save-btn hover-btn btn btn-primary" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('/public/admin/js/select2.js') }}"></script>
+<script>
+</script>
+@stop

@@ -1,0 +1,14 @@
+/vendor/
+/node_modules/
+/.env
+/storage/*
+!/storage/app/public
+/storage/logs/
+/storage/framework/
+/uploads/
+/public/uploads/
+/database/*.sqlite
+*.zip
+*.mp4
+*.log
+.vscode/

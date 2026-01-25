@@ -1,0 +1,141 @@
+/******************** CSS Vertical Tabs *******************/
+
+* {margin: 0; padding: 0; }
+
+body{
+  font-family: 'Montserrat', sans-serif;
+}
+p{
+    line-height: 1.5;
+    padding: 10px;
+    text-indent: 20px;
+}
+img{
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 620px;
+    margin: 5px auto;
+
+}
+
+.tabs-container{
+   position: relative;
+   background: #fe7e31;
+   width: 120px;
+   height: 100vh;
+   float: left;
+   z-index: 20;
+
+}
+/* tabs names */
+.tabs-container label{
+   position: relative;
+   padding: 10px;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+   display: block;
+   font-size: 13px;
+   color: #fff;
+   cursor: pointer;
+   user-select: none;
+}
+
+/* Hover effect on tabs names */
+.tabs-container label:hover{
+  background: rgba(0, 0, 0, 0.2);
+
+}
+/* Content area for tabs */
+.tab-content{
+   position: relative;
+   background: #eee;
+   width: calc(100% - 120px);
+   min-height: 100vh;
+   padding: 15px;
+   float: left;
+   box-sizing: border-box;
+   z-index: 19;
+   display: none;
+}
+
+.tab-content:after{
+   content: "";
+   clear: both;
+
+}
+ /* Hide input radio from users */
+input[name="tab"]{
+  display: none;
+}
+ /* Show tab when input checked */
+input[name="tab"]:checked + .tab-content{
+    display: block;
+  animation: slide 0.5s forwards;
+
+}
+
+/* Slide animation for tab contents */
+@keyframes slide{
+    from{
+        left: -100%;
+        opacity: 0;
+    }
+    to{
+        left: 0;
+        opacity: 1;
+    }
+
+}
+
+* {box-sizing: border-box}
+
+/* Style the tab */
+.tab {
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 100%;
+  border-left: none;
+  height: 100%;
+}
+
+.side-menu {
+  border: 1px solid #fff;
+    margin: 5px;
+    background-color: #df4333e6;
+    color: white;
+    font-size: medium;
+}
+

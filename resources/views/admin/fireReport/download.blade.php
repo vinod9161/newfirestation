@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Report Document</title>
+    <style>
+        @page {
+            margin: 0;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+        }
+
+        #content {
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+    </style>
+</head>
+
+<body style="margin:0; padding:0; background:#fff;">
+
+    <div id="content" style="width: 90%;max-width: 800px;background-color: #ffffff;margin: 0px auto;padding: 5px 10px;box-shadow: none;border-bottom:1px solid #000;height:auto;margin-bottom:100px; margin-top:25px !important">
+    
+        <!-- Header Section -->
+        <div style="text-align: center;margin-bottom: 10px;display: flex;">
+            <div style="width:20%">
+                <img src="{{ asset('/public/admin/images/fire-logo.png') }}" style="width: 110px; height: auto; display: block; margin: 0 auto;">
+            </div>
+            <div style="width:60%">
+                <p style="text-align:center; color:#000; margin:0; padding:0; font-family: 'DejaVu Sans', sans-serif; line-height:1.45;">
+
+                    <span style="display:block; font-size:18px; font-weight:700;">
+                        उत्तराखण्ड अग्निशमन एवं आपात सेवा
+                    </span>
+
+                    <span style="display:block; font-size:15px; font-weight:700; margin-bottom:10px;">
+                        Uttarakhand Fire & Emergency Service
+                    </span>
+
+                    <span style="display:block; font-size:13px; font-weight:600;">
+                        मुख्यालय - चतुर्थ तल, सरदार पटेल भवन
+                    </span>
+                    <span style="display:block; font-size:13px; font-weight:600; margin-bottom:6px;">
+                        कोर्ट रोड, देहरादून, उत्तराखंड – 248001
+                    </span>
+
+                    <span style="display:block; font-size:13px; font-weight:600;">
+                        Headquarter - IV Floor, Sardar Patel Bhavan
+                    </span>
+                    <span style="display:block; font-size:13px; font-weight:600;">
+                        Court Road, Dehradun, Uttarakhand - 248001
+                    </span>
+                </p>
+            </div>
+            <div style="width:20%"></div>
+        </div>
+        <hr>
+
+        <!-- Fire Report Header -->
+        <div style="display: flex; justify-content: space-between; padding: 5px 10px; font-weight: bold;">
+            <span>फायर रिपोर्ट (Fire Report)</span>
+            <span>Fire Report No. {{ $fireReport[0]->application_no }}</span>
+        </div>
+        <!-- General Detaisl Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Fire Report - General Details (फायर रिपोर्ट सामान्य विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">District <br> (जनपद)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ ucfirst($district[0]->name) ?? 'NA' }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Fire Station <br> (फायर स्टेशन)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ ucfirst($station[0]->name)}} ({{ empty($station[0]->firestation_code) ? 'N/A' : ucfirst($station[0]->firestation_code) }})</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Annual Number <br> (वार्षिक संख्या)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fireReport[0]->fire_report_no }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Monthly Number <br> (मासिक संख्या)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fireReport[0]->monthly_no }}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Date and Time of Fire Incident <br> (अग्निकाण्ड की तिथि एवं समय)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ \Carbon\Carbon::parse($fireReport[0]->fire_incident_datetime)->format('d-m-Y H:i:s') }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Type of Fire <br> (आग का प्रकार)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">
+                        @if($fireReport[0]->category ==1)
+                            @php echo "Small Fire लघु अग्निकाण्ड" @endphp
+                        @elseif($fireReport[0]->category ==2)
+                            @php echo "Medium Fire मध्यम अग्निकाण्ड" @endphp
+                        @elseif($fireReport[0]->category ==3)
+                            @php echo "Major/special Fire भीषण अग्निकाण्ड" @endphp
+                        @else
+                            @php echo "Serious Fire गम्भीर अग्निकाण्ड" @endphp
+                        @endif
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Information Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Information Details (सूचना का विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Name of Informer <br> (सूचना देने वाले का नाम)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->informer_name}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Medium of Information <br> (सूचना का माध्यम)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->info_medium}}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Contact Number of Informer <br> (संपर्क नंबर)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->informer_contact_no}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Address of Incident Place <br> (घटनास्थल का पता)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->incident_address}}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Date and Time of Information <br> (सूचना की तिथि एवं समय)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ \Carbon\Carbon::parse($fireReport[0]->info_datetime)->format('d-m-Y H:i:s')}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Additional Comments <br> (अतिरिक्त टिप्पणियाँ)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">-</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Action Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Action Details (कार्यवाही का विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Departure Time from Fire Station <br> (फायर स्टेशन से प्रस्थान का समय)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ \Carbon\Carbon::parse($fireReport[0]->station_depart_datetime)->format('d-m-Y H:i:s') }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Arrival Time on Incident Place <br> (घटनास्थल पर पहुँचने का समय)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ \Carbon\Carbon::parse($fireReport[0]->fire_site_arrive_datetime)->format('d-m-Y H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Return Time to Fire Station <br> (फायर स्टेशन पर वापसी का समय)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ \Carbon\Carbon::parse($fireReport[0]->station_return_datetime)->format('d-m-Y H:i:s') }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Distance of Incident Place from Fire Station <br> (फायर स्टेशन से घटनास्थल की दूरी) (in KM)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->distance}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Details of Fire Fighting/Fire Machine used Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Details of Fire Fighting Machine used <br> (प्रयुक्त अग्निशमन मशीन का विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:50%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Fire Fighting Machine used <br> (प्रयुक्त अग्निशमन मशीन)</th>
+                    <th style="color:#000;width:50%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Pumping <br> (पंपिंग विवरण)</th>
+                </tr>
+                @php $i=0; @endphp
+                @foreach($vehicle as $veh)
+                <tr>
+                    <td style="color:#000;width:50%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $veh['vehicle'] }} {{ $veh['vehicle_type'] }}</td>
+                    <td style="color:#000;width:50%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $veh['pumping_km'] }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        
+        <!-- Details of Fire & Emergency Service Personnel on Incident Place Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;page-break-after: always;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Details of Fire & Emergency Service Personnel on Incident Place <br> (घटनास्थल पर अग्निशमन एवं आपात सेवा कर्मियों का विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">CFO</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $cfo }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">FSO</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fso }}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">FSSO</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fsso }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">LFM</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $lfm }}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">DVR</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $dvr }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">FM</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fm }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Fire Incident Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Fire Incident Details (अग्निकाण्ड का विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Class of Fire <br> (अग्निकाण्ड का वर्ग)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->fire_class}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Area of Fire <br> (अग्निकाण्ड का क्षेत्र)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">
+                        @if($fireReport[0]->fire_area ==1)
+                            @php echo "Rural" @endphp
+                        @else
+                            @php echo "City" @endphp
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Type of Fire Area <br> (अग्निकाण्ड क्षेत्र का प्रकार)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">
+                        @if($fireReport[0]->fire_area_type ==1)
+                        @php echo "Commercial" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==2)
+                        @php echo "Residential" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==3)
+                        @php echo "High Rise" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==4)
+                        @php echo "Forest" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==5)
+                        @php echo "Farm" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==6)
+                        @php echo "Industry" @endphp
+                        @elseif($fireReport[0]->fire_area_type ==7)
+                        @php echo "Vehicle" @endphp
+                        @else
+                        @php echo "Other" @endphp
+                        @endif
+                    </td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Insured <br> (बीमित: Yes या No)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">
+                        @if($fireReport[0]->insured ==0)
+                            @php echo "Not known" @endphp
+                        @elseif($fireReport[0]->insured ==1)
+                            @php echo "No" @endphp
+                        @else
+                            @php echo "Yes" @endphp
+                        @endif 
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Was it Arson Based? <br> (क्या आग जान-बूझकर लगाई गई?)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">   
+                        @if($fireReport[0]->arson_based ==0)
+                            @php echo "Not known" @endphp
+                        @elseif($fireReport[0]->arson_based ==1)
+                            @php echo "No" @endphp
+                        @else
+                            @php echo "Yes" @endphp
+                        @endif
+                    </td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Fire Category <br> मुख्य श्रेणी</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">   
+                        {{ $category[0]->name ?? 'NA' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Fire Subcategory <br> उप-श्रेणी</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $subcategory[0]->name ?? 'NA' }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Details <br> विवरण</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->fire_reason}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+        <!-- Loss Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Loss Details (क्षति विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Property Lost <br> (क्षति संपत्ति) (in INR)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{ $fireReport[0]->property_lost }}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">	Property Saved <br> (बचाई गई संपत्ति) (in INR)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->property_saved}}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Life Lost Human <br> (मनुष्य मरे)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->life_lost_human}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Life Saved Human <br> (मनुष्य बचाए)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->life_saved_human}}</td>
+                </tr>
+                <tr>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Life Lost Animal <br> (पशु मरे)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->life_lost_animal}}</td>
+                    <th style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">Life Saved Animal <br> (पशु बचाए)</th>
+                    <td style="color:#000;width:25%;font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->life_saved_animal}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Loss Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+            <thead>
+                <tr>
+                    <th style="color:#000;background-color: #cccccc; color: black; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="4">Description (विवरण)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" style="font-size: 10px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;">{{$fireReport[0]->short_description}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 30px; padding: 5px 10px; border: 1px solid #000; text-align: center; font-size: 10px; display: flex; justify-content: space-between; text-align: left;">
+            <div style="width: 45%; margin-left:8%;color:#000;">
+                <strong>सत्यापनकर्ता अधिकारी (Verification Officer)</strong>
+                <p style="color:#000;">
+                    अग्निशमन अधिकारी<br>
+                    {{ ucfirst($station[0]->name)}}<br>
+                    {{ ucfirst($district[0]->name)}}<br>
+                    Date and Time of Information (सूचना की तिथि एवं समय) <br> 
+                    {{ $fireReport[0]->info_datetime }}
+                </p>
+                
+            </div>
+            <div style="width: 45%; margin-left:22%;color:#000;">
+                <strong>अनुमोदनकर्ता अधिकारी (Approval Officer)</strong><br>
+                <p style="color:#000;">
+                    मुख्य अग्निशमन अधिकारी<br>
+                    {{ ucfirst($district[0]->name)}}<br>
+                    Approved Date / स्वीकृति दिनांक <br>
+                    {{ $fireReport[0]->approved_date }}
+                </p>
+            </div>
+        </div>
+        <div style="margin-top:20px; font-size: 10px; text-align: center; font-style: italic;color:#000;">
+            Issue Reference Number जारी पत्रांक : {{ $fireReport[0]->application_no ?? 'NA' }} <br> Printed Date Time: {{date('Y-m-d H:i:s')}} <br>
+            * This report is created and verified by Fire Station Officer {{ ucfirst($station[0]->name)}} {{ ucfirst($district[0]->name)}} and approved by Chief Fire Officer {{ ucfirst($district[0]->name)}}.
+        </div>
+    </div>
+</body>
+</html>
