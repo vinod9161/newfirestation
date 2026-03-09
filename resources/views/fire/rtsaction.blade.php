@@ -17,49 +17,45 @@
 </section>
 <!-- End About Us Section -->
 <!-- ======= About Section ======= -->
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
-      <div class="col-md-12">
-         <h3 style="margin-top: 40px;">Right To Service</h3>
-         <!-- <p>List of Public Information Officers / Appellate Officers in Uttarakhand Fire Service under RTI Act 2005</p> -->
+<section class="flagday-section py-5">
+   <div class="container" style="margin-bottom: 40px;">
+      <div class="row content-card content-text">
+         <div class="col-md-12 pb-3">
+            <h3 >Right To Service</h3>
+         </div>
+
+         <?php if(!empty($getData)):?>
+
+               <table class="table table-bordered table-responsive-sm">
+                  <thead>
+                     <tr>
+                        <th scope="col">S.No.</th>
+                        <th scope="col">Service Name</th>
+                        <th scope="col">Service File </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+               <?php foreach($getData as $key => $value):?>
+                  <tr>
+                     <th>{{ $key+1 }}</th>
+                     <th>{{ $value->hadding ?? 'NA' }}</th>
+                     <th>
+                           <a href="{{ asset('public/admin/services/rti_service/'. $value->image) }}" class="btn btn-danger"><i class="fa fa-file"></i> Download File</a>
+                     </th>
+                  </tr>
+               <?php endforeach;?>        
+               <?php else:?>
+                  <tr>
+                     <th colspan="3">No Data Found</th>
+                  </tr>
+               <?php endif;?>         
+                     
+                  </tbody>
+               </table>
+               
       </div>
    </div>
-</div>
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
-
-        <?php if(!empty($getData)):?>
-
-            <table class="table table-bordered table-responsive-sm">
-               <thead>
-                  <tr>
-                     <th scope="col">S.No.</th>
-                     <th scope="col">Service Name</th>
-                     <th scope="col">Service File </th>
-                  </tr>
-               </thead>
-               <tbody>
-            <?php foreach($getData as $key => $value):?>
-                <tr>
-                    <th>{{ $key+1 }}</th>
-                    <th>{{ $value->hadding ?? 'NA' }}</th>
-                    <th>
-                        <a href="{{ asset('public/admin/services/rti_service/'. $value->image) }}" class="btn btn-danger"><i class="fa fa-file"></i> Download File</a>
-                    </th>
-                </tr>
-            <?php endforeach;?>        
-            <?php else:?>
-                <tr>
-                    <th colspan="3">No Data Found</th>
-                </tr>
-            <?php endif;?>         
-                  
-               </tbody>
-            </table>
-            
-   </div>
-</div>
-</div>
+</section>
 @endsection
 @section('scripts')
 @stop

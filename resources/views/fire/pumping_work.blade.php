@@ -18,23 +18,21 @@
 <!--Sub Header End-->
 
     <!-- ======= About Section ======= -->
-    <section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
+    <section class="why-us section-bg flagday-section py-5" data-aos="fade-up" date-aos-delay="200">
         <div class="container">
   
-          <div class="row">
+          <div class="row content-card content-text">
         
             <div class="col-lg-6 video-box">
-              <img src="{{asset('/public/fire/gallery/standby.jpg')}}" class="img-fluid img-reponsive" alt="">
+              <img src="{{asset('/public/fire/gallery/standby.jpg')}}" class="img-fluid img-reponsive rounded" alt="">
             </div>
   
-            <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
+            <div class="col-lg-6 d-flex flex-column justify-content-center">
               <h4 class="title">Pumping Work</a></h4>
   
-                <p class="description">Pumping work shall be done by Uttarakhand Fire and
-                    Emergency department in case of disaster/emergency/order of
-                    govt. Director, District Collector, SSP. It can be done for
-                    cinematography and other purpose. Nominal charges shall be
-                    applied for certain cases.
+                <p class="description">
+                  The Uttarakhand Fire and Emergency Service Department undertakes pumping operations during disasters, emergencies, or on the orders of competent government authorities, such as for dewatering flooded areas to prevent loss of life and property.
+                  Pumping services may also be provided for cinematography and other approved purposes, subject to availability of equipment and manpower. In such non-emergency cases, nominal charges are applicable as per departmental norms. The service is aimed at ensuring safety, damage control, and effective water management.
                 </p>              
               </div>
   

@@ -1,5 +1,88 @@
 @extends('layouts.fire_new')
 @section('content')
+<style>
+    .flagday-section {
+      background: #f5f7fb;
+    }
+    
+    .content-card {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .page-title {
+      color: #0b2a6f;
+      font-weight: 600;
+    }
+
+
+    .page-title {
+    color: #0b2a6f;
+    font-weight: 600;
+    }
+
+    .objective-card {
+    border: 1px solid #dee2e6;
+    border-top: 4px solid #0b2a6f;
+    transition: 0.3s;
+    height: 100%;
+    }
+
+    .objective-card:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .objective-card:hover .objective-title,
+    .objective-card:hover .text-muted,
+    .objective-card:hover .read-more,
+    .objective-card:hover .objective-icon {
+        color: #ffffff !important;
+    }
+    .card:hover p {
+        color: #fff !important;
+    }
+
+    .objective-icon {
+    font-size: 40px;
+    color: #0b2a6f;
+    margin-bottom: 10px;
+    }
+
+    .objective-title {
+    /* color: #0b2a6f; */
+    font-weight: 600;
+    }
+
+    .read-more {
+    /* color: #0b2a6f; */
+    font-weight: 500;
+    }
+
+    .read-more:hover {
+    text-decoration: underline;
+    }
+
+    .detail-card {
+    background: #f8f9fa;
+    border-left: 5px solid #0b2a6f;
+    border-color: #0b2a6f;
+    }
+
+    .task-list {
+    padding-left: 18px;
+    }
+
+    .task-list li {
+    margin-bottom: 8px;
+    }
+    .card-body{
+      color: #fff;
+    }
+
+    
+
+
+</style>
 
 <!--Sub Header Start-->
 <section class="breadcrumb-section">
@@ -17,131 +100,165 @@
 </section>
 <!--Sub Header End-->
 
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!-- ======= About Section ======= -->
-<section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
+<section class="flagday-section py-5">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/event/3a.jpg')}}" class="img-fluid img-reponsive" alt="">
+
+        <div class="row align-items-stretch content-text">
+            <div class="col-lg-6 mb-4">
+                <div class="content-card h-100">
+                    <img src="{{ asset('/public/fire/gallery/f1-new.jpg') }}" class="img-fluid rounded" alt="Fire Safety">
+                </div>
             </div>
 
-            <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
-                <h4 class="title">Objectives of the Uttrakhand Fire and Emergency service Department</a></h4>
+            <div class="col-lg-6 mb-4">
+                <div class="content-card content-text">
+                  <!-- <h4 class="title">Objectives of the Uttrakhand Fire and Emergency service Department</a></h4> -->
 
-                <p class="description"> The motto of Uttarakhand Fire and Emergency service Fire Services asserts “ WE
-                    SERVE TO SAVE.” A translated idea of original motto in Sanskrit that is “ TRANAY SEVA MAHE.” Based
-                    on this motto there are three priority wise objective concepts.<br>
-
-                    (A) Primary Objective: SAVING LIFE.<br>
-                    (B) Secondary Objective: SAVE National and Public PROPERTY.<br>
-                    (C) Tertiary Objective: Salvage and Preservation.
-                </p>
+                  <p class="description">The motto of the Uttarakhand Fire and Emergency Service is “We Serve to Save.”
+                    It is derived from the original Sanskrit motto “Tranay Seva Mahe,” which conveys the same spirit of service and protection.
+                    Based on this motto, the objectives of the Fire Service are defined in order of priority:</p>
+                    
+                    <p class="description"> (A) Primary Objective: Saving Life</p>
+                    <p class="description"> (B) Secondary Objective: Protection of National and Public Property</p>
+                    <p class="description" style="padding-bottom: 18px;"> (C) Tertiary Objective: Salvage and Preservation</p>
+                  </p>
+                </div>
             </div>
 
         </div>
+
     </div>
 </section>
 
-<section class="features">
+<section class="flagday-section">
+  <div class="container pb-5">
+
+    <!-- OBJECTIVE CARDS -->
+    <div class="row">
+
+      <!-- Primary -->
+      <div class="col-md-4 mb-4">
+        <div class="card objective-card text-center">
+          <div class="card-body">
+            <div class="objective-icon">🛡️</div>
+            <h5 class="objective-title">Primary Objective</h5>
+            <p class="text-muted">Saving Life</p>
+            <a class="read-more"
+              data-toggle="collapse"
+              href="#primaryObj">
+              Read More →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary -->
+      <div class="col-md-4 mb-4">
+        <div class="card objective-card text-center">
+          <div class="card-body">
+            <div class="objective-icon">🏛️</div>
+            <h5 class="objective-title">Secondary Objective</h5>
+            <p class="text-muted">Protection of Property</p>
+            <a class="read-more"
+              data-toggle="collapse"
+              href="#secondaryObj">
+              Read More →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tertiary -->
+      <div class="col-md-4 mb-4">
+        <div class="card objective-card text-center">
+          <div class="card-body">
+            <div class="objective-icon">🚑</div>
+            <h5 class="objective-title">Tertiary Objective</h5>
+            <p class="text-muted">Salvage & Preservation</p>
+            <a class="read-more"
+              data-toggle="collapse"
+              href="#tertiaryObj">
+              Read More →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DETAILS SECTION -->
+
+    <div id="primaryObj" class="collapse objective-detail mt-4">
+      <div class="card detail-card">
+        <div class="card-body">
+          <!-- <h5 class="objective-title">Primary Objective – Saving Life</h5> -->
+          <p>
+            Smoke is the leading cause of death in fire incidents due to rapid asphyxiation. Fire Service personnel are specially trained to operate in hot, smoke-filled conditions using breathing apparatus and systematic search procedures. Modern materials release highly toxic smoke when burning, making rapid rescue critical. The Fire Service also provides immediate life-saving response during disasters such as building collapses, earthquakes, cloudbursts, and drowning incidents.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="secondaryObj" class="collapse objective-detail mt-4">
+      <div class="card detail-card">
+        <div class="card-body">
+          <!-- <h5 class="objective-title">
+            Secondary Objective – Protection of National & Public Property
+          </h5> -->
+          <p>
+            The Fire Service adopts modern firefighting technologies and specialized training to minimize fire damage. Through skilled firemanship, fires are controlled at their source, ensuring effective extinguishment while preventing unnecessary property loss, including damage caused by excessive use of water.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="tertiaryObj" class="collapse objective-detail mt-4">
+      <div class="card detail-card">
+        <div class="card-body">
+          <!-- <h5 class="objective-title">Tertiary Objective – Salvage & Preservation</h5> -->
+          <p>
+            Uttarakhand Fire and Emergency Service provides ambulance support, first aid, and assistance to people in distress. During fire incidents, a dedicated salvage team works to protect property from damage caused by fire, smoke, and firefighting water.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<section class="flagday-section pb-5">
     <div class="container">
-        @if(!empty($objective))
-            @foreach($objective as $objective)
-            <div class="row" data-aos="fade-up">
-            <div class="col-md-5 <?php echo ($objective->image_position == 'left') ? '' : 'order-1 order-md-2';?>">
 
-                <img src="{{asset('/public/admin/about/our_objective/'.$objective->image)}}" class="img-fluid" alt="">
-            </div>
-            <div class="col-md-7 pt-4" style="padding-bottom:10px">
-                <h3>{{ $objective->hadding }}</h3>
-                <p>{!! $objective->content !!}
-                </p>
+        <div class="row align-items-stretch">
 
-            </div>
-        </div>
-
-            @endforeach
-        @else
-        <div class="row" data-aos="fade-up">
-            <div class="col-md-5">
-                <img src="{{asset('/public/fire/gallery/event/p1.png')}}" class="img-fluid" alt="">
-            </div>
-            <div class="col-md-7 pt-4" style="padding-bottom:10px">
-                <h3>SAVING LIFE. </h3>
-                <p>
-                    This is the most essential part of Fire Service, which requires personnel to be well trained. In
-                    case of fire the SMOKE evolving from fire that is the main culprit for taking toll of life contrary
-                    to the fire itself. It is the SMOKE that kills first by asphyxiating.
-                    Fire Service personnel are rigorously trained to withstand HOT and HUMID conditions filled with
-                    SMOKE with the help of breathing equipments and to search for casualties by following proper SEARCH
-                    PROCEDURES. Modern technology has given products like PVC, FOAM textiles and furnishings that evolve
-                    noxious smoke, which have toxic effect. They are a boon for human comforts but if catch fire they
-                    prove as instant killers. Apart from Fire Service there are disasters, cloud brust,
-                    earthquackbuilding collapse, drowning rescues etc that require immediate life saving.
-                </p>
-
-            </div>
-        </div>
-
-        <div class="row" data-aos="fade-up">
-            <div class="col-md-5 order-1 order-md-2">
-                <img src="{{asset('/public/fire/gallery/event/p2.png')}}" class="img-fluid" alt="">
-            </div>
-            <div class="col-md-7 pt-5 order-2 order-md-1" style="padding-bottom:10px">
-                <h3>SAVE National and Public PROPERTY.</h3>
-                <p>
-                    Fire Service has to keep abreast of latest technological developments in fire-fighting so as to curb
-                    and check this damage. There are different wings and training programs teaching practical
-                    fireman-ship for mitigating fire loss.
-                    Uttarakhand Fire and Emergency service takes care to extinguish fire at its seat such that property
-                    does not get spoiled or damaged because of water used by the Fire Service for fire fighting.
-                </p>
-
-            </div>
-        </div>
-
-        <div class="row" data-aos="fade-up">
-            <div class="col-md-5">
-                <img src="{{asset('/public/fire/gallery/event/p3.png')}}" class="img-fluid" alt="">
-            </div>
-            <div class="col-md-7 pt-5" style="padding-bottom:10px">
-                <h3> Salvage or preservation</h3>
-                <p>Humanitarian services and salvage services. Services like Ambulance service; offering First Aid
-                    helping humans in distress to safety are provided by Uttarakhand Fire and Emergency service. At the
-                    fire scene a wing is busy in preserving property from fire, smoke and water due to firefighting.</p>
-
-            </div>
-        </div>
-        @endif
-        <div class="row" data-aos="fade-up">
-            <div class="col-md-12" style="margin-top: 40px;">
-                <h3>Apart from above tasks, Uttarakhand fire and emergency service also performs following tasks : </h3>
-                <ul>
-                    <li><i class="icofont-fire-burn"></i> Render Advise in general on Fire Protection and Fire
-                        Prevention.</li>
-                    <li><i class="icofont-fire-burn"></i> It also provides fire protection to the public during the
-                        exigencies, like communal riots, strikes, Festival, public gatherings, Large Processions etc..
-                    </li>
-                    <li><i class="icofont-fire-burn"></i> Uttarakhand Fire and Emergency service organises public
-                        education, fire prevention campaign through lecture and demonstration at different places.</li>
-                    <li><i class="icofont-fire-burn"></i> Fire and emergency Service observes Fire Service Day on 14th
-                        April every year to commemorate the Fire Service Personnel who laid down their lives during
-                        public service. The message of fire prevention is carried to the public by means of
-                        demonstrations, film shows, Cultural Programs, distribution of pamphlets, Seminar and lectures.
-                        The help of mass media like films, television, Radio and newspapers plays an important role in
-                        the successful execution of FIRE PREVENTION MESSAGE. Fire Service Department also organizes
-                        lectures/ demonstrations in schools and colleges and in Places where the management requests on
-                        fire prevention. Fire prevention education plays a VITAL role in saving the lives and property
-                        of people.</li>
-                    <li><i class="icofont-fire-burn"></i> Uttarakhand Fire and Emergency service is playing a vital role
-                        in saving the lives and property of people from fire apart from discharging preliminary role. It
-                        is an exceedingly important agency, and deserves strong support from Government and Society at
-                        large.</li>
-
-                </ul>
+            <div class="col-12">
+                <div class="content-card content-text">
+                  <h4 class="title">Additional Functions of Uttarakhand Fire & Emergency Service:</a></h4>
+                  <style>
+                      ul {
+                          margin: revert;
+                          padding: revert;
+                          list-style: revert;
+                      }
+                  </style>
+                  <ul>
+                    <li>Provides free fire safety advisory to public and institutions.</li>
+                    <li>Deploys fire protection during festivals, processions, strikes, and public events.</li>
+                    <li>Conducts fire prevention awareness programmes and live demonstrations.</li>
+                    <li>Observes Fire Service Day (14 April) to honor martyrs and promote fire safety awareness.</li>
+                    <li>Delivers fire safety education in schools, colleges, and institutions on request.</li>
+                    <li>Provide fire safety certificate/NOC as per Govt Noms.</li>
+                    <li>Safeguards life and property as a core public safety agency.</li>                    
+                  </ul>
+                </div>
             </div>
 
         </div>
-
 
     </div>
 </section>

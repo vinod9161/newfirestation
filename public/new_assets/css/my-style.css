@@ -146,10 +146,10 @@
 
 .body1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'), #29485d;
+    background: url('https://newfirestation.test-demo.in/public/new_assets/img/service-bg.jpeg'), #29485d;
     background-size: cover;
     margin: 0;
-    padding: 30px 50px;
+    padding: 10px 50px;
     color: #fff;
   }
 
@@ -162,21 +162,25 @@
   }
 
   .card {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #f7f9ff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     text-align: center;
     padding: 30px 20px;
     transition: all 0.3s ease;
     backdrop-filter: blur(5px);
+    box-shadow: 0px 4px 10px 4px #81b4e7;
   }
 
   .card:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(90deg, rgb(17, 94, 89) 0%, rgb(17, 94, 89, 1) 30%, rgb(0, 37, 142, .3) 100%);
     transform: translateY(-5px);
     border-color: #3ec0ff;
+    h3{
+        color:#fff;
+    }
   }
-
+  
   .card i {
     font-size: 30px;
     margin-bottom: 15px;
@@ -185,7 +189,7 @@
 
   .card h3 {
     font-size: 16px;
-    color: #fff;
+    color: #00258e;
     font-weight: 500;
   }
   
@@ -223,7 +227,7 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 20px;
       max-width: 100%;
-      margin: 40px auto;
+      margin: 10px auto;
     }
 
     .service-card {
@@ -238,6 +242,10 @@
     .service-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      background: linear-gradient(90deg, rgb(17, 94, 89) 0%, rgb(17, 94, 89, 1) 30%, rgb(0, 37, 142, .3) 100%);
+      h3, p{
+          color: #fff;
+      }
     }
 
     .service-card svg {

@@ -1,5 +1,37 @@
 @extends('layouts.fire_new')
 @section('content')
+<style>
+    /* Flag Day Content Styling */
+    .flagday-section {
+        background: #f5f7fb;
+    }
+
+    .section-title {
+        font-size: 32px;
+        font-weight: 600;
+        color: #0b2c6d;
+    }
+
+    .section-subtitle {
+        font-size: 16px;
+        color: #555;
+        margin-top: 8px;
+    }
+
+    .content-card {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .content-text {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #333;
+    }
+
+</style>
 
 <!--Sub Header Start-->
 <section class="breadcrumb-section">
@@ -17,66 +49,129 @@
 </section>
 <!--Sub Header End-->
 
-
-
-<!-- ======= Why Us Section ======= -->
-@if(!empty($flag_day))
-@foreach($flag_day as $flag)
-<section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
-
+<!-- ===== Content Section ===== -->
+<section class="flagday-section py-5">
     <div class="container">
+        @if(!empty($flag_day))
+            @foreach($flag_day as $flag)
 
-        <div class="row">
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/admin/about/flag_day/'.$flag->image)}}" class="img-fluid" alt="">
+            <div class="row align-items-stretch mb-4">
+
+                <!-- Image 1 -->
+                <div class="col-lg-6 mb-4">
+                    <div class="content-card h-100">
+                        <img src="{{ asset('/public/admin/about/flag_day/'.$flag->image) }}"
+                             class="img-fluid rounded"
+                             alt="Flag Day Image">
+                    </div>
+                </div>
+
+                <!-- Image 2 -->
+                <div class="col-lg-6 mb-4">
+                    <div class="content-card h-100">
+                        <img src="{{ asset('/public/admin/about/flag_day/'.$flag->image1) }}"
+                             class="img-fluid rounded"
+                             alt="Flag Day Activity">
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="col-12">
+                    <div class="content-card content-text">
+                        <!-- {!! $flag->content !!} -->
+                        <p>
+                            <strong> Flag Day of the Fire Service in India</strong> is observed every year during <strong> Fire Service Week in April</strong>. It is a significant occasion dedicated to the fire services, aimed at <strong>raising funds</strong> and <strong>promoting awareness about fire safety</strong>. The day honors the invaluable contributions and sacrifices of firefighters and supports the welfare of fire service personnel.
+                        </p>
+                        <style>
+                            ul {
+                                margin: revert;
+                                padding: revert;
+                                list-style: revert;
+                            }
+                        </style>
+                        <ul>
+                            <li>
+                                A primary objective of Flag Day is to <strong>raise funds for firefighter's</strong> welfare. These funds are utilized for improved equipment, advanced training, welfare measures, upgradation of fire stations, and support to the families of firefighters who have sacrificed their lives in the line of duty.
+                            </li>
+                            <li>
+                                The day <strong>recognizes the vital role of firefighters</strong> in protecting lives and property during emergencies, acknowledging their courage, dedication, and selfless service.
+
+                            </li>
+                            <li>
+                                Flag Day also <strong>strengthens community engagement</strong>. Through flag collection drives and participation in fire safety programs, citizens actively contribute to creating a safer environment.
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
             </div>
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/admin/about/flag_day/'.$flag->image1)}}" class="img-fluid" alt="">
+
+            @endforeach
+        @else
+
+        <div class="row align-items-stretch">
+
+            <div class="col-lg-6 mb-4">
+                <div class="content-card h-100">
+                    <img src="{{ asset('/public/fire/gallery/fsd.jpg') }}"
+                         class="img-fluid rounded"
+                         alt="Fire Service Day">
+                </div>
             </div>
 
-            <div class="col-lg-12 d-flex flex-column justify-content-center p-5">
-
-                <p>{!! $flag->content !!}</p>
-
+            <div class="col-lg-6 mb-4">
+                <div class="content-card h-100">
+                    <img src="{{ asset('/public/fire/gallery/f1.jpg') }}"
+                         class="img-fluid rounded"
+                         alt="Fire Safety">
+                </div>
             </div>
+
+            <div class="col-12">
+                <div class="content-card content-text">
+                    <!--<p>-->
+                    <!--    <strong>14th April</strong> each year is observed as National Fire Service Commemoration Day.-->
+                    <!--    This day marks the tragic explosion at the Bombay Docks and honours the brave firefighters-->
+                    <!--    who sacrificed their lives in the line of duty.-->
+                    <!--</p>-->
+                    <!--<p>-->
+                    <!--    The Fire Service Flag Day aims to raise awareness about fire safety and collect funds for-->
+                    <!--    the welfare of firefighters and their families. Contributions help improve equipment,-->
+                    <!--    training and emergency preparedness.-->
+                    <!--</p>-->
+                    
+                    <p>
+                        <strong> Flag Day of the Fire Service in India</strong> is observed every year during <strong> Fire Service Week in April</strong>. It is a significant occasion dedicated to the fire services, aimed at <strong>raising funds</strong> and <strong>promoting awareness about fire safety</strong>. The day honors the invaluable contributions and sacrifices of firefighters and supports the welfare of fire service personnel.
+                    </p>
+                    <style>
+                        ul {
+                            margin: revert;
+                            padding: revert;
+                            list-style: revert;
+                        }
+                    </style>
+                    <ul>
+                        <li>
+                            A primary objective of Flag Day is to <strong>raise funds for firefighter's</strong> welfare. These funds are utilized for improved equipment, advanced training, welfare measures, upgradation of fire stations, and support to the families of firefighters who have sacrificed their lives in the line of duty.
+                        </li>
+                        <li>
+                            The day <strong>recognizes the vital role of firefighters</strong> in protecting lives and property during emergencies, acknowledging their courage, dedication, and selfless service.
+
+                        </li>
+                        <li>
+                            Flag Day also <strong>strengthens community engagement</strong>. Through flag collection drives and participation in fire safety programs, citizens actively contribute to creating a safer environment.
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+
         </div>
+        @endif
+
     </div>
 </section>
-
-@endforeach
-@else
-<section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
-
-    <div class="container">
-
-        <div class="row">
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/fsd.jpg')}}" class="img-fluid" alt="">
-            </div>
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/f1.jpg')}}" class="img-fluid" alt="">
-            </div>
-
-            <div class="col-lg-12 d-flex flex-column justify-content-center p-5">
-
-                <p>The <strong>14th Apri</strong>l each year was nominated as the National Fire Services Commemorations
-                    Day. On this day the great explosion on the Bombay Docks occurred and claimed many lives including
-                    the lives of firemen of Bombay. This commemoration day is also observed on a full scale to make the
-                    public conscious of the fire hazards and the necessity of fire prevention. On this day, it is also
-                    necessary to pay tribute to the gallant firemen who work selflessly and in many cases laid down
-                    their lives so that others might live.
-                    On this day the Fire department sells Fire Day Flags and the amount collected to be used for the
-                    benefit of the fireman.later on it was directed that the same procedure may continue. However,
-                    instead of collecting the money in sealed containers (hundis), it is suggested that such donations
-                    may be obtained under proper receipts. </p>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-
-@endif
 
 @endsection
 @section('scripts')

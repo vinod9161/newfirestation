@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\CMS\About\{AboutController,HistoryController,Fire
 use App\Http\Controllers\Admin\CMS\Services\{RenderedPaidController,RenderedUnpaidController,AwarnessMockDrillController,PumpingWorkDrillController,RTIController,RTIServicesController};
 use App\Http\Controllers\Admin\CMS\Activities\{GalaryController,FireServiceWeekController};
 use App\Http\Controllers\Admin\CMS\Achivements\{MedalWinnersController};
+use App\Http\Controllers\Admin\CMS\Achivements\{AchievementController};
 use App\Http\Controllers\Admin\Activities\{InspectionController};
 use App\Http\Controllers\Admin\Master\{RemarkController};
 use App\Http\Controllers\Admin\Leaves\LeaveController;
@@ -70,7 +71,7 @@ Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
 Route::post('/resend-otp', [LoginController::class, 'resendOtp'])->name('resend.otp');
 
 
-Route::get('/account', [App\Http\Controllers\Admin\AdminController::class,'index'])->name('admin.home');
+Route::get('/account', [App\Http\Controllers\Admin\AdminController::class,'admin_profile'])->name('admin.home');
 // Route::post('logout', [App\Http\Controllers\Auth\LoginController::class,'logout'])->name('logout');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('auth.login');
@@ -282,7 +283,7 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('admin/stations/add', [StationsController::class, 'add'])->name('admin.addstations');
     Route::post('admin/stations/store', [StationsController::class, 'store'])->name('admin.storestations');
     Route::get('admin/station/edit/{id}', [StationsController::class, 'editStation'])->name('admin.editStation');
-    Route::put('admin/updateStationPost//{id}', [StationsController::class, 'updateStation'])->name('admin.updateStation');
+    Route::put('admin/updateStationPost/{id}', [StationsController::class, 'updateStation'])->name('admin.updateStation');
     Route::get('admin/stations/view', [StationsController::class, 'view'])->name('admin.view');
     Route::delete('admin/stations/delete/{id}',[StationsController::class, 'destroy'])->name('admin.deletestations');
     Route::get('admin/stations/filter', [StationsController::class, 'filter'])->name('admin.stationsfilter');
@@ -401,6 +402,7 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('admin/temporary-noc/view/{type}/{id}',[TemporaryNocController::class,'viewTemporaryNocDetail'])->name('admin.viewTemporaryNocDetail');
     Route::get('admin/noc/list',[NocController::class,'indexAdminNoc'])->name('admin.Noc.list');
     Route::get('admin/noc',[NocController::class,'indexNoc'])->name('admin.Noc');
+    Route::get('/apply-temporary-noc/{type}',[NocController::class,'applyTempNOC'])->name('apply.temp.noc');
 
     Route::post('/filter_noc_data',[NocController::class,'filter_noc_data'])->name('admin.filter_noc_data');
 
@@ -715,12 +717,29 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('/admin/fire_service_week_category/delete/{id}', [FireServiceWeekController::class, 'destroyCategory'])->name('admin.Activities.fire_service_week_category.destroy');
 
     //Admin cms Activities     admin.achivements.medal_winners
+    Route::get('admin/achivements/medal_category', [MedalWinnersController::class, 'medalCategory'])->name('admin.achivements.medal_category');
+    Route::get('admin/achivements/medal_category/add', [MedalWinnersController::class, 'addMedalCategory'])->name('admin.achivements.medal_category.add');
+    Route::post('admin/achivements/medal_category/save', [MedalWinnersController::class, 'saveMedalCategory'])->name('admin.achivements.medal_category.save');
+    Route::get('admin/achivements/medal_category/edit/{id}', [MedalWinnersController::class, 'editMedalCategory'])->name('admin.achivements.medal_category.edit');
+    Route::post('admin/achivements/medal_category/update/{id}', [MedalWinnersController::class, 'updateMedalCategory'])->name('admin.achivements.medal_category.update');
+    Route::get('/admin/medal_category/delete/{id}', [MedalWinnersController::class, 'destroyMedalCategory'])->name('admin.achivements.medal_category.destroy');
     Route::get('admin/achivements/medal_winners', [MedalWinnersController::class, 'index'])->name('admin.achivements.medal_winners');
     Route::get('admin/achivements/medal_winners/add', [MedalWinnersController::class, 'add'])->name('admin.achivements.medal_winners.add');
     Route::post('admin/achivements/medal_winners/save', [MedalWinnersController::class, 'Save'])->name('admin.achivements.medal_winners.save');
     Route::get('admin/achivements/medal_winners/edit/{id}', [MedalWinnersController::class, 'edit'])->name('admin.achivements.medal_winners.edit');
     Route::post('admin/achivements/medal_winners/update/{id}', [MedalWinnersController::class, 'update'])->name('admin.achivements.medal_winners.update');
     Route::get('/admin/medal_winners/delete/{id}', [MedalWinnersController::class, 'destroy'])->name('admin.achivements.medal_winners.destroy');
+    Route::get('/admin/achievement', [AchievementController::class,'index'])->name('admin.achievement');
+
+    Route::get('/admin/achievement/add', [AchievementController::class,'create'])->name('admin.achievement.add');
+
+    Route::post('/admin/achievement/store', [AchievementController::class,'store'])->name('admin.achievement.store');
+
+    Route::get('/admin/achievement/edit/{id}', [AchievementController::class,'edit'])->name('admin.achievement.edit');
+
+    Route::post('/admin/achievement/update', [AchievementController::class,'update'])->name('admin.achievement.update');
+
+    Route::get('/admin/achievement/delete/{id}', [AchievementController::class,'delete'])->name('admin.achievement.delete');
 
     Route::get('admin/vehicletypes', [VehicleTypesController::class, 'index'])->name('admin.vehicletypes');
     Route::get('admin/vehicletypes/addVehicleTypes', [VehicleTypesController::class, 'addVehicleTypesForm'])->name('admin.addVehicleTypesForm');
@@ -1006,6 +1025,7 @@ Route::get('/dg-message', [App\Http\Controllers\MainController::class, 'actionDg
 Route::get('/disaster-search',[App\Http\Controllers\MainController::class, 'actionDisasterSearch'])->name('actionDisasterSearch');
 Route::get('/faq', [App\Http\Controllers\MainController::class, 'actionFaq'])->name('actionFaq');
 Route::get('/faq2', [App\Http\Controllers\MainController::class, 'actionFaq2'])->name('actionFaq2');
+Route::get('/tutorials', [App\Http\Controllers\MainController::class, 'actionTutorials'])->name('actionTutorials');
 Route::get('/feedback', [App\Http\Controllers\MainController::class,'actionFeedback'])->name('actionFeedback');
 Route::get('/fire-saftey-vvip', [App\Http\Controllers\MainController::class, 'actionFireSafteyVVIP'])->name('actionFireSafteyVVIP');
 
@@ -1018,6 +1038,7 @@ Route::get('/fire-service-day', [App\Http\Controllers\MainController::class,'act
 Route::get('/fire-service-week', [App\Http\Controllers\MainController::class,'actionFireServiceWeek'])->name('actionFireServiceWeek');
 Route::get('/fire-units', [App\Http\Controllers\MainController::class,'actionFireUnits'])->name('actionFireUnits');
 Route::get('/firefighting', [App\Http\Controllers\MainController::class,'actionFireFighting'])->name('actionFireFighting');
+Route::get('/emergency-contact', [App\Http\Controllers\MainController::class,'actionEmergencyContact'])->name('actionEmergencyContact');
 
 Route::get('/flagday', [App\Http\Controllers\MainController::class,'actionFlagday'])->name('actionFlagday');
 Route::get('/G1', [App\Http\Controllers\MainController::class,'actionG1'])->name('actionG1');
@@ -1026,9 +1047,11 @@ Route::get('/growth-in-staff-strength', [App\Http\Controllers\MainController::cl
 Route::get('/history', [App\Http\Controllers\MainController::class,'actionHistory'])->name('actionHistory');
 Route::get('/hyperlinking-policy', [App\Http\Controllers\MainController::class,'actionHyperlinkingPolicy'])->name('actionHyperlinkingPolicy');
 Route::get('/medal-winner', [App\Http\Controllers\MainController::class,'actionMedalWinner'])->name('actionMedalWinner');
+Route::get('/awards', [App\Http\Controllers\MainController::class,'actionAwards'])->name('actionAwards');
 Route::get('/mission-vision', [App\Http\Controllers\MainController::class,'actionMissionVision'])->name('actionMissionVision');
 Route::get('/noc1', [App\Http\Controllers\MainController::class,'actionNoc1'])->name('actionNoc1');
 Route::get('/objective', [App\Http\Controllers\MainController::class,'actionObjective'])->name('actionObjective');
+Route::get('/objective2', [App\Http\Controllers\MainController::class,'actionObjective2'])->name('actionObjective2');
 Route::get('/organisation-structure', [App\Http\Controllers\MainController::class,'actionOrganisationStructure'])->name('actionOrganisationStructure');
 Route::get('/priority-list-of-fire-station', [App\Http\Controllers\MainController::class,'actionPriorityListOfFireStation'])->name('actionPriorityListOfFireStation');
 

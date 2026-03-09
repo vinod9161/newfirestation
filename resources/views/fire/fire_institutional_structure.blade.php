@@ -4,12 +4,12 @@
 <section class="breadcrumb-section">
   <div class="overlay"></div>
     <div class="breadcrumb-content">
-    <h1 class="breadcrumb-item">Academy Institutional Structure</h1>
+    <h1 class="breadcrumb-item">Institutional Structure</h1>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('actionIndex') }}">Home <i class="fa fa-angle-double-right"></i></a></li>
         <li class="breadcrumb-item"><a href="#">Academy <i class="fa fa-angle-double-right"></i></a> </li>
-        <li class="breadcrumb-item active" aria-current="page">Academy Institutional Structure</li>
+        <li class="breadcrumb-item active" aria-current="page">Institutional Structure</li>
         </ol>
     </nav>
   </div>
@@ -19,7 +19,7 @@
 <div class="container" style="margin-bottom: 40px;">
    <div class="row">
       <div class="col-md-12">
-         <h3 style="margin-top: 40px;"><h2>Academy Institutional Structure</h2></h3>
+         <h3 style="margin-top: 40px;"><h2>Institutional Structure</h2></h3>
          <!-- <p>List of Public Information Officers / Appellate Officers in Uttarakhand Fire Service under RTI Act 2005</p> -->
       </div>
    </div>

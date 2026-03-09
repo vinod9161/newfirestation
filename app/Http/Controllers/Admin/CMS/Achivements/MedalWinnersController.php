@@ -137,4 +137,88 @@ class MedalWinnersController extends Controller
         return redirect()->route('admin.achivements.medal_winners')->with('success', 'Madel Winners deleted successfully.');
     }
 
+    public function medalCategory(){
+        $tbl = "medal_category";
+        $data['medal_category'] = $this->commonModel->getData($tbl);
+        return view('admin.CMS.Achivements.medal_category.index', $data);
+    }
+
+    public function addMedalCategory(){
+        return view('admin.CMS.Achivements.medal_category.add');
+    }
+
+    public function saveMedalCategory(Request $request){
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $data = [
+            'category_name' => $request->category_name,
+        ];
+
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();  
+            $request->image->move(public_path('medal_category_images'), $imageName);
+            $data['image'] = 'medal_category_images/' . $imageName;
+        }
+
+        $insertData = $this->commonModel->insertData('medal_category', $data);
+        if($insertData){
+            return redirect()->route('admin.achivements.medal_category')
+                 ->with('success', 'Medal Category added successfully.');
+        }else{
+            return redirect()->route('admin.achivements.medal_category')
+                 ->with('error', 'Medal Category not added successfully.');
+        }
+    }
+
+    public function editMedalCategory($id){
+        $tbl = "medal_category";
+        $data['medal_category'] = $this->commonModel->getDataByOneCondition($tbl, ['id'=>$id]);
+        // echo "<pre>";print_r($data); die;
+        return view('admin.CMS.Achivements.medal_category.edit',$data);
+    }
+
+    public function updateMedalCategory(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $data = [
+            'category_name' => $request->category_name,
+        ];
+
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();  
+            $request->image->move(public_path('medal_category_images'), $imageName);
+            $data['image'] = 'medal_category_images/' . $imageName;
+        }
+
+        $updateData = $this->commonModel->updateDataByOneCondition('medal_category', ['id'=>$id], $data);
+        if($updateData){
+            return redirect()->route('admin.achivements.medal_category')
+                    ->with('success', 'Medal Category updated successfully.');
+        }else{
+            return redirect()->route('admin.achivements.medal_category')
+                    ->with('error', 'Medal Category not updated successfully.');
+        }
+    }
+
+    public function destroyMedalCategory($id){
+        $this->commonModel->deleteDataByOneCondition('medal_category', array('id'=>$id));
+        return redirect()->route('admin.achivements.medal_category')->with('success', 'Medal Category deleted successfully.');
+    }   
+
+
 }

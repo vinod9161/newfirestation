@@ -1,403 +1,721 @@
 @extends('layouts.fire_new')
 @section('content')
+
+<div class="breaking" style="padding-bottom: 24px;">
+    <div id="breHead" style="width: 200px;">
+        RECENT UPDATE
+    </div>
+    <div id="breContant">
+        <marquee onmouseover="this.stop()" onmouseout="this.start()" scrollamount="7">
+            <nobr>
+                <span>केदारनाथ धाम में हैलीक्रेश सम्बन्धी मॉक ड्रिल</span>
+                <span>चारधाम यात्रा के मध्यनजर अग्नि सुरक्षा सम्बन्धी चैकिंग</span>
+                <span>Uttarakhand burning since 4 days, nearly 50 acres of land destroyed?</span>
+                <span>Uttarakhand Home Guard</span>
+                <span>Uttarakhand Police Building Construction Corporation</span>
+            </nobr>
+        </marquee>
+    </div>
+</div>
+
 <section id="hero-2" class="hero-section division">
     <script type="text/javascript" src="{{ asset('public/new_assets/slide/jquery-1.9.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/new_assets/slide/jssor.slider.min.js') }}"></script>
 
-    <div id="jssor_1" style="position:relative; margin:0 auto; top:0px; left:0px; width:1900px; height:800px; overflow:hidden; visibility:hidden; margin-top: -25px;">
+    <div id="jssor_1" style="position:relative; margin:0 auto; top:0px; left:0px; width:2200px; height:550px; overflow:hidden; visibility:hidden; margin-top: -25px;">
 
-    <div data-u="slides" style="cursor:default; position:relative; top:0px; left:0px; width:1900px; height:800px; overflow:hidden; ">
-        @forelse($getbanner as $banner)
+        <div data-u="slides" style="cursor:default; position:relative; top:0px; left:0px; width:2200px; height:550px; overflow:hidden; ">
+            @forelse($getbanner as $banner)
             <div>
                 <img data-u="image"
-                     src="{{ asset('public/fire/service/'. $banner->image) }}"
-                     alt="{{ $banner->title ?? 'Home Banner' }}" />
+                    src="{{ asset('public/fire/service/'. $banner->image) }}"
+                    alt="{{ $banner->title ?? 'Home Banner' }}" />
             </div>
-        @empty
+            @empty
             <div>
                 <img data-u="image"
-                     src="{{ asset('public/new_assets/img/slides/fire-slide5.jpg') }}" />
+                    src="{{ asset('public/new_assets/img/slides/fire-slide5.jpg') }}" />
             </div>
-        @endforelse
-        <!-- <div><img data-u="image" src="{{ asset('public/new_assets/img/slides/fire-slide5.jpg') }}" /></div>
+            @endforelse
+            <!-- <div><img data-u="image" src="{{ asset('public/new_assets/img/slides/fire-slide5.jpg') }}" /></div>
         <div><img data-u="image" src="{{ asset('public/new_assets/img/slides/fire-slide4.avif') }}" /></div>
         <div><img data-u="image" src="{{ asset('public/new_assets/img/slides/fire-slide6.jpg') }}" /></div> -->
-    </div>
+        </div>
 
-    <!-- Arrow Navigator -->
-    <div data-u="arrowleft" class="jssora093" style="width:50px;height:50px;top:0px;left:30px; background:#00258e; border-radius:100%" data-autocenter="2" data-scale="0.75" data-scale-left="0.75">
-        <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
-            <circle class="c" cx="8000" cy="8000" r="5920"></circle>
-            <polyline class="a" points="7777.8,6080 5857.8,8000 7777.8,9920 "></polyline>
-            <line class="a" x1="10142.2" y1="8000" x2="5857.8" y2="8000"></line>
-        </svg>
-    </div>
-    <div data-u="arrowright" class="jssora093" style="width:50px;height:50px;top:0px;right:30px; background:#00258e; border-radius:100%" data-autocenter="2" data-scale="0.75" data-scale-right="0.75">
-        <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%; ">
-            <circle class="c" cx="8000" cy="8000" r="5920"></circle>
-            <polyline class="a" points="8222.2,6080 10142.2,8000 8222.2,9920 "></polyline>
-            <line class="a" x1="5857.8" y1="8000" x2="10142.2" y2="8000"></line>
-        </svg>
-    </div>
+        <!-- Arrow Navigator -->
+        <div data-u="arrowleft" class="jssora093" style="width:50px;height:50px;top:0px;left:30px; background:#00258e; border-radius:100%" data-autocenter="2" data-scale="0.75" data-scale-left="0.75">
+            <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                <circle class="c" cx="8000" cy="8000" r="5920"></circle>
+                <polyline class="a" points="7777.8,6080 5857.8,8000 7777.8,9920 "></polyline>
+                <line class="a" x1="10142.2" y1="8000" x2="5857.8" y2="8000"></line>
+            </svg>
+        </div>
+        <div data-u="arrowright" class="jssora093" style="width:50px;height:50px;top:0px;right:30px; background:#00258e; border-radius:100%" data-autocenter="2" data-scale="0.75" data-scale-right="0.75">
+            <svg viewBox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%; ">
+                <circle class="c" cx="8000" cy="8000" r="5920"></circle>
+                <polyline class="a" points="8222.2,6080 10142.2,8000 8222.2,9920 "></polyline>
+                <line class="a" x1="5857.8" y1="8000" x2="10142.2" y2="8000"></line>
+            </svg>
+        </div>
     </div>
     <!-- #endregion Jssor Slider End -->
 </section>
-<div class="breaking">
-    <div id="breHead">
-    Helpline
-    </div>
-    <div id="breContant">
-    <marquee onmouseover="this.stop()" onmouseout="this.start()" scrollamount="7">
-        <nobr>
-            <span>Helpline Number: <b>0135-2716201</b></span>
-            <span>Child Protection: <b>1098</b></span>
-            <span>Women Helpline: <b>181</b></span>
-            <span>Cyber Crime: <b>1930</b></span>
-            <span>Prohibition: <b>15545</b></span>
-            <span>Emergency Helpline (ERSS): <b>112</b></span>
-        </nobr>
-    </marquee>
-    </div>
-</div>
-<section id="blog-1" class="pt-40 blog-section division">
+
+<section id="blog-1" class="blog-section division flagday-section py-5">
     <div class="container">
-    <div class="row">
-        <div class="col-md-3 pb-40 text-center">
-            <img src="{{ asset('public/new_assets/img/cm-uk.png') }}" alt="Shri Pushkar Singh Dhami" class="img-fluid" style="height: 200px;">
-            <h5 class="profile-name">Shri Pushkar Singh Dhami</h5>
-            <p class="profile-info pb-40">Honourable Chief Minister, Uttarakhand</p>
-        </div>
-        <div class="col-md-6 pb-40">
-            <div class="row">
-                <div class="col-md-12">
-                <h3 class="mb-3">Uttarakhand Fire Services</h3>
-                <p align="justify" style="line-height: 30px;">Uttarakhand Fire Services is a specialized department of the State Government dedicated to fire safety, prevention, and emergency response. Working 24x7, the department’s mission is to protect lives and property during fire emergencies and related incidents. Uttarakhand Fire Services issues Fire No-Objection Certificates (FIRE NOC) for new buildings, conducts fire safety audits of existing structures, and promotes public awareness through education and social media platforms.</p>
+        <div class="row content-card content-text">
+            <div class="col-md-3 text-center">
+                <div style="box-shadow: 0px 0px 10px 4px #eee; padding: 20px 10px;border-radius: 5px;">
+                    <img src="{{ asset('public/new_assets/img/cm-uk.png') }}" alt="Shri Pushkar Singh Dhami" class="img-fluid" style="height: 200px;">
+                    <h5 class="profile-name">Shri Pushkar Singh Dhami</h5>
+                    <p class="profile-info">Honourable Chief Minister, Uttarakhand</p>
                 </div>
-                <div class="col-md-3 ml-md-auto form-group" style="visibility: visible; animation-delay: 1s; animation-name: fadeInUp;">
-                <a href="javascript:void(0);" class="btn btn-blue blue-hover form-control"> Read More</a>
+            </div>
+            <!-- <div class="col-md-6 pb-40">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="mb-3">Uttarakhand Fire Services</h3>
+                        <p align="justify" style="line-height: 30px;">
+                            The Uttarakhand Fire & Emergency Service stands as the state’s primary emergency response authority, committed to safeguarding life, property, and the environment. As a frontline public safety organization, the department delivers rapid, professional, and coordinated response to fire incidents, natural disasters, road traffic accidents, industrial emergencies, hazardous material incidents, and complex rescue operations.
+                            With strategically located fire stations across the state, highly trained personnel, and modern firefighting and rescue equipment, the Service ensures timely intervention even in Uttarakhand’s challenging mountainous terrain and remote regions. The department functions as a critical component of the state’s disaster response and emergency management framework.
+                            Beyond emergency response, the Uttarakhand Fire & Emergency Service represents preparedness, professionalism, and public trust. Its continuous efforts in prevention, preparedness, and rapid intervention significantly reduce risk, protect communities, and strengthen the state’s overall safety infrastructure.
+                        </p>
+                    </div>
+                    <div class="col-md-3 ml-md-auto form-group" style="visibility: visible; animation-delay: 1s; animation-name: fadeInUp;">
+                        <a href="{{ asset('public/fire/pdf/MoM-Website (12-02-2026).pdf') }}" class="btn btn-blue blue-hover form-control" target="_blank"> Read More</a>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="mb-3">Uttarakhand Fire Services</h3>
+
+                        <p id="fireText" align="justify" style="line-height: 30px;">
+                            The Uttarakhand Fire & Emergency Service stands as the state’s primary emergency response authority, committed to safeguarding life, property, and the environment. As a frontline public safety organization, the department delivers rapid, professional, and coordinated response to fire incidents, natural disasters, road traffic accidents, industrial emergencies, hazardous material incidents, and complex rescue operations.
+                            With strategically located fire stations across the state, highly trained personnel, and modern firefighting and rescue equipment, the Service ensures timely intervention even in Uttarakhand’s challenging mountainous terrain and remote regions. The department functions as a critical component of the state’s disaster response and emergency management framework.
+                            Beyond emergency response, the Uttarakhand Fire & Emergency Service represents preparedness, professionalism, and public trust. Its continuous efforts in prevention, preparedness, and rapid intervention significantly reduce risk, protect communities, and strengthen the state’s overall safety infrastructure.
+                        </p>
+
+                        <button id="toggleBtn" class="btn btn-primary btn-sm" style="color: #fff; background-color: #006270; border-color: #006270;">
+                            Read More
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-3 ml-md-auto text-center">
+                <div style="box-shadow: 0px 0px 10px 4px #eee; padding: 20px 10px;border-radius: 5px;">
+                    <img src="{{ asset('public/new_assets/img/dgp.png') }}" alt="Smt Shoba Ohatker (IPS)" class="img-fluid" style="height: 180px;margin-top:20px">
+                    <h5 class="profile-name">Dr. Deepam Seth</h5>
+                    <p class="profile-info">Director General of Police <br/> Uttarakhand Fire Service</p>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3 ml-md-auto pb-40 text-center">
-            <img src="{{ asset('public/new_assets/img/dgp.png') }}" alt="Smt Shoba Ohatker (IPS)" class="img-fluid" style="height: 180px;margin-top:20px">
-            <h5 class="profile-name">Dr. Deepam Seth</h5>
-            <p class="profile-info">Director General of Police, Uttarakhand Fire Service</p>
-        </div>
-    </div>
     </div>
 </section>
 
-<section id="blog-1" class="blog-section division" style="margin-bottom: 50px;">
+<section id="blog-1" class="blog-section division flagday-section">
     <div class="container">
-    <div class="row">
-        <div class="col-md-8 body1">
-            <style>
-                .container1 {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 20px;
-                }
-
-                .card {
-                    text-align: center;
-                    padding: 20px;
-                    border-radius: 10px;
-                }
-
-                @media (max-width: 992px) {
+        <div class="row content-card content-text">
+            <div class="col-md-12 body1">
+                <style>
                     .container1 {
-                        grid-template-columns: repeat(2, 1fr);
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 20px;
                     }
-                }
-
-                @media (max-width: 576px) {
-                    .container1 {
-                        grid-template-columns: repeat(1, 1fr);
+                    .card:hover {
+                        transform: translateY(-10px) !important;
                     }
-                }
-                
-                .body1 {
-                    align-self: flex-start;
-                }
 
-                .services {
-                    text-align: center;
-                    padding: 0px 20px;
-                }
-                .service-card {
-                    padding: 14px 15px;
-                }
+                    .card {
+                        text-align: center;
+                        padding: 20px;
+                        border-radius: 10px;
+                    }
 
-            </style>
-            <h2 style="text-align: center; font-weight: 600;color: #fff; margin-bottom: 30px;">Services We Offer</h2>
-            <div class="container1">
+                    @media (max-width: 992px) {
+                        .container1 {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
 
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s1.png') }}" style="height: 120px">
-                <h3>24 hour emergency support</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s2.png') }}" style="height: 120px">
-                <h3>Consultation in case of fire and life safety</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s3.png') }}" style="height: 120px">
-                <h3>Fire saftey Certificate</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s4.png') }}" style="height: 120px">
-                <h3>Public awareness program/Mock drills</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s5.png') }}" style="height: 120px">
-                <h3>Fire saftey to all sensitive places of state</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s6.png') }}" style="height: 120px">
-                <h3>fire saftey in all public events</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s7.png') }}" style="height: 120px">
-                <h3>Training Course</h3>
-                </div>
-                <div class="card">
-                <img src="{{ asset('public/new_assets/img/content/s8.jpeg') }}" style="height: 120px">
-                <h3>Disaster search, rescue and relief work</h3>
+                    @media (max-width: 576px) {
+                        .container1 {
+                            grid-template-columns: repeat(1, 1fr);
+                        }
+                    }
+
+                    .body1 {
+                        align-self: flex-start;
+                        background-color:#00627080 !important;
+                    }
+
+                    .services {
+                        text-align: center;
+                        padding: 0px 20px;
+                    }
+
+                    .service-card {
+                        padding: 14px 15px;
+                    }
+                    .card h3 {
+                        font-size: 20px;
+                        font-weight: 700;
+                    }
+                    .service-card p {
+                        font-weight: 700;
+                    }
+                </style>
+                <h2 style="text-align: center; font-weight: 600;color: #00258e; margin-bottom: 10px;">Services We Offer</h2>
+                <div class="container1">
+                    
+                    <div class="card">
+                        <a href="{{route('actionConsultation')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s2.png') }}" style="height: 120px">
+                            <h3>Consultation in case of fire and life safety</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionFireSafteyCertificate')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s3.png') }}" style="height: 120px">
+                            <h3>Fire saftey Certificate/NOC</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionPublicAwareness')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s4.png') }}" style="height: 120px">
+                            <h3>Public awareness program/Mock drills</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionStandby')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s6.png') }}" style="height: 120px">
+                            <h3>Fire saftey in all public events</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionDisasterSearch')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s8.jpeg') }}" style="height: 120px">
+                            <h3>Disaster search, rescue and relief work</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionIncidentReport')}}">
+                            <img src="{{ asset('/public/fire/service/fire_safety_all_places.png') }}" style="height: 120px">
+                            <h3>Fire / Rescue / Other Incident Report</h3>
+                        </a>
+                    </div>
+                    <div class="card">
+                        <a href="{{route('actionPumpingWork')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s8.jpeg') }}" style="height: 120px">
+                            <h3>Pumping work</h3>
+                        </a>
+                    </div>                    
+                    <div class="card">
+                        <a href="{{route('actionRTI')}}">
+                            <img src="{{ asset('public/new_assets/img/content/s7.png') }}" style="height: 120px">
+                            <h3>RTI</h3>
+                        </a>
+                    </div>
+                    
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="services">
-                <h2>Overview</h2>
-                <div class="service-grid">
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/1.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Fire Stations</p>
-                </div>
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/2.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Fire Call</p>
-                </div>
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/3.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Total Emergency Call</p>
-                </div>
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/4.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Total Strength</p>
-                </div>
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/5.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Fire Vehicle</p>
-                </div>
-                <div class="service-card">
-                    <img src="{{ asset('public/new_assets/img/content/6.png') }}">
-                    <h3 class="service-number">50</h3>
-                    <p class="service-title">Life Saved</p>
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 </section>
-
-
-<section id="blog-1" class="blog-section division" style="margin-bottom: 50px;">
+<section id="blog-1" class="blog-section division flagday-section py-5">
     <div class="container">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10">
-            <div class="row">
-                <div class="article">
-                <div class="entry-block-small">
-                    <div class="entry-image"><a class="img-link" href="#"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/objective.png') }}" style="height: 180px"></a></div>
-                    <div class="entry-content text-center">
-                        <h4><span class="day">Our Objective</span></h4>
-                        <p>The motto of Uttarakhand Fire and Emergency service is<br /><strong>“WE SERVE TO SAVE”</strong></p>
+        <div class="row content-card content-text">
+            <div class="col-md-12 ">
+                <div class="services">
+                    <h2>Overview</h2>
+                    <div class="service-grid">
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/1.png') }}" width="80px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Fire Stations</p>
+                        </div>
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/2.png') }}" width="80px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Fire Calls</p>
+                        </div>
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/3.png') }}" width="80px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Total Emergency Calls</p>
+                        </div>
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/4.png') }}" width="80px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Total Strength</p>
+                        </div>
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/5.png') }}" width="90px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Fire Vehicles</p>
+                        </div>
+                        <div class="service-card">
+                            <img src="{{ asset('public/new_assets/img/content/6.png') }}" width="80px">
+                            <h3 class="service-number">50</h3>
+                            <p class="service-title">Lives Saved</p>
+                        </div>
                     </div>
-                </div>
-                <div class="entry-block-small">
-                    <div class="entry-image"><a class="img-link" href="#"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/faq.png') }}" style="height: 180px"></a></div>
-                    <div class="entry-content text-center">
-                        <h4><span class="day">FAQ's</span></h4>
-                        <p>Here you will find the questions we get asked the most.</p>
-                    </div>
-                </div>
-                <div class="entry-block-small">
-                    <div class="entry-image"><a class="img-link" href="#"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/kavach.png') }}" style="height: 180px"></a></div>
-                    <div class="entry-content text-center">
-                        <h4><span class="day">Safety Corner</span></h4>
-                        <p>This section shall provide the knowledge of primary saftey points surrounding you</p>
-                    </div>
-                </div>
                 </div>
             </div>
-
         </div>
-        <div class="col-md-1"></div>
-
-    </div>
     </div>
 </section>
 
-<section id="blog-1" class="blog-section division">
+
+<!-- <section id="blog-1" class="blog-section division" style="margin-bottom: 50px;">
     <div class="container">
-    <div class="row">
-        <div class="col-md-6 pb-40">
-            <h5 class="divHeader">RECENT UPDATE</h5>
-            <div class="marquee-container">
-                <div class="marquee-content">
-                <div class="col-12">
-                    <a href="javascript:void(0);" target="_blank">
-                        <div class="vicon-box">
-                            <h6>केदारनाथ धाम में हैलीक्रेश सम्बन्धी मॉक ड्रिल</h6>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="article">
+                        <div class="entry-block-small">
+                            <div class="entry-image"><a class="img-link" href="{{route('actionObjective')}}"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/objective.png') }}" style="height: 180px"></a></div>
+                            <div class="entry-content text-center">
+                                <h4><a href="{{route('actionObjective')}}"><span class="day">Our Objective</span></a></h4>
+                                <p>The motto of Uttarakhand Fire and Emergency service is<br /><strong>“WE SERVE TO SAVE”</strong></p>
+                            </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <a href="javascript:void(0);" target="_blank">
-                        <div class="vicon-box">
-                            <h6>चारधाम यात्रा के मध्यनजर अग्नि सुरक्षा सम्बन्धी चैकिंग</h6>
+                        <div class="entry-block-small">
+                            <div class="entry-image"><a class="img-link" href="{{route('actionFaq')}}"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/faq.png') }}" style="height: 180px"></a></div>
+                            <div class="entry-content text-center">
+                                <h4><a href="{{route('actionFaq')}}"><span class="day">FAQ's</span></a></h4>
+                                <p>Here you will find the questions we get asked the most.</p>
+                            </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <a href="javascript:void(0);" target="_blank">
-                        <div class="vicon-box">
-                            <h6>Uttarakhand burning since 4 days, nearly 50 acres of land destroyed?</h6>
+                        <div class="entry-block-small">
+                            <div class="entry-image"><a class="img-link" href="{{route('actionSafetyCorner')}}"><img class="img-responsive img-full" src="{{ asset('public/new_assets/img/content/kavach.png') }}" style="height: 180px"></a></div>
+                            <div class="entry-content text-center">
+                                <h4><a href="{{route('actionSafetyCorner')}}"><span class="day">Safety Corner</span></a></h4>
+                                <p>This section shall provide the knowledge of primary saftey points surrounding you</p>
+                            </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <a href="javascript:void(0);" target="_blank">
-                        <div class="vicon-box">
-                            <h6>Uttarakhand Home Guard</h6>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <a href="javascript:void(0);" target="_blank">
-                        <div class="vicon-box">
-                            <h6>Uttarakhand Police Building Construction Corporation</h6>
-                        </div>
-                    </a>
+                    </div>
                 </div>
 
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+    </div>
+</section> -->
+
+<!-- <section id="blog-1" class="blog-section division">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 pb-40">
+                <h5 class="divHeader">RECENT UPDATE</h5>
+                <div class="marquee-container">
+                    <div class="marquee-content">
+                        <div class="col-12">
+                            <a href="javascript:void(0);" target="_blank">
+                                <div class="vicon-box">
+                                    <h6>केदारनाथ धाम में हैलीक्रेश सम्बन्धी मॉक ड्रिल</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="javascript:void(0);" target="_blank">
+                                <div class="vicon-box">
+                                    <h6>चारधाम यात्रा के मध्यनजर अग्नि सुरक्षा सम्बन्धी चैकिंग</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="javascript:void(0);" target="_blank">
+                                <div class="vicon-box">
+                                    <h6>Uttarakhand burning since 4 days, nearly 50 acres of land destroyed?</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="javascript:void(0);" target="_blank">
+                                <div class="vicon-box">
+                                    <h6>Uttarakhand Home Guard</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="javascript:void(0);" target="_blank">
+                                <div class="vicon-box">
+                                    <h6>Uttarakhand Police Building Construction Corporation</h6>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-6 pb-40">
-            <h5 class="divHeader">USEFUL VIDEOS LINK</h5>
-            <iframe style="width:100%; height: 310px;" src="https://www.youtube.com/embed/gy5WfxiP0RI" title="Building fire NOC for construction /फायर एन0ओ0सी0 के लिए कैसे आवेदन करें #UttarakhandFireService" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <div class="col-md-6 pb-40">
+                <h5 class="divHeader">USEFUL VIDEOS LINK</h5>
+                <iframe style="width:100%; height: 310px;" src="https://www.youtube.com/embed/gy5WfxiP0RI" title="Building fire NOC for construction /फायर एन0ओ0सी0 के लिए कैसे आवेदन करें #UttarakhandFireService" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
-    </div>
-</section>
+</section> -->
 
 
-<section id="blog-1" class="blog-section division">
+<!-- <section id="blog-1" class="blog-section division">
     <div class="container">
 
-    <div class="row">
-        <div class="col-md-12">
-            <h5 class="divHeader">OUR EVENTS</h5>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 pb-40">
-            <div class="row">
-                <div class="col-6 col-md-4 col-lg-3">
-                <a href="javascript:void(0);" target="_blank">
-                    <div class="icon-box">
-                        <img src="{{ asset('public/new_assets/img/content/event1.jpg') }}" style="width: 100%">
-                        <h6>Official Event</h6>
-                        <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
-                    </div>
-                </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                <a href="javascript:void(0);" target="_blank">
-                    <div class="icon-box">
-                        <img src="{{ asset('public/new_assets/img/content/event2.jpg') }}" style="width: 100%">
-                        <h6>Indoor Event</h6>
-                        <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
-                    </div>
-                </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                <a href="javascript:void(0);" target="_blank">
-                    <div class="icon-box">
-                        <img src="{{ asset('public/new_assets/img/content/event3.jpg') }}" style="width: 100%">
-                        <h6>Outdoor Event</h6>
-                        <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
-                    </div>
-                </a>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                <a href="javascript:void(0);" target="_blank">
-                    <div class="icon-box">
-                        <img src="{{ asset('public/new_assets/img/content/event4.jpg') }}" style="width: 100%">
-                        <h6>Annual Event</h6>
-                        <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
-                    </div>
-                </a>
-                </div>
-
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="divHeader">OUR EVENTS</h5>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 pb-40">
+                <div class="row">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="javascript:void(0);" target="_blank">
+                            <div class="icon-box">
+                                <img src="{{ asset('public/new_assets/img/content/event1.jpg') }}" style="width: 100%">
+                                <h6>Official Event</h6>
+                                <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="javascript:void(0);" target="_blank">
+                            <div class="icon-box">
+                                <img src="{{ asset('public/new_assets/img/content/event2.jpg') }}" style="width: 100%">
+                                <h6>Indoor Event</h6>
+                                <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="javascript:void(0);" target="_blank">
+                            <div class="icon-box">
+                                <img src="{{ asset('public/new_assets/img/content/event3.jpg') }}" style="width: 100%">
+                                <h6>Outdoor Event</h6>
+                                <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="javascript:void(0);" target="_blank">
+                            <div class="icon-box">
+                                <img src="{{ asset('public/new_assets/img/content/event4.jpg') }}" style="width: 100%">
+                                <h6>Annual Event</h6>
+                                <p>Dedicated and best community focused Fire & Rescue Services ensuring a safe and secure environment for all.</p>
+                            </div>
+                        </a>
+                    </div>
 
+                </div>
+            </div>
+
+        </div>
     </div>
-    </div>
 
-</section>
+</section> -->
+<style>
+.divHeader {
+    line-height: 10px !important;
+    width: 100%;
+}
 
-<section id="blog-1" class="blog-section division">
+.important-section{
+    padding:60px 40px;
+    text-align:center;
+}
+
+.important-section h2{
+    font-size:42px;
+    margin-bottom:40px;
+}
+
+/* Slider Wrapper */
+.slider-container{
+    position:relative;
+    overflow:hidden;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* Slider Track */
+.slider-track{
+    display:flex;
+    gap:30px;
+    transition:transform 0.5s ease-in-out;
+}
+
+/* Link Box */
+.link-box{
+    min-width:220px;
+    height:150px; /* increased height */
+    background:#fff;
+    display:flex;
+    flex-direction:column;   /* important */
+    align-items:center;
+    justify-content:center;
+    border-radius:6px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    transition:0.3s;
+    padding:10px;
+    text-align:center;
+}
+
+.link-box img{
+    max-width:90%;
+    max-height:80%;
+    margin-bottom:10px;
+    object-fit: contain;
+}
+
+.link-box p{
+    margin:0;
+    font-size:14px;
+    font-weight:600;
+    color:#333;
+}
+
+/* Arrows */
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:#4b2e83;
+    color:#fff;
+    border:none;
+    font-size:22px;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:10;
+}
+
+.arrow-left{ left:10px; }
+.arrow-right{ right:10px; }
+
+.arrow:hover{
+    background:#2e1b57;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .link-box{
+        min-width:180px;
+        height:100px;
+    }
+}
+</style>
+<section id="blog-1" class="blog-section division flagday-section pb-5">
     <div class="container">
-    <div class="row">
-        <div class="col-md-8 pb-40">
-            <h5 class="divHeader">OTHERS LINKS</h5>
-            <div class="row text-center">
-                <div class="col-md-3">
-                <a href="#"><img src="{{ asset('public/new_assets/img/content/fire-service.png') }}" style="width: 80%; height: 130px; object-fit: contain; margin-bottom: 15px;"></a>
-                <h6>Acts & Rules</h6>
-                </div>
-                <div class="col-md-3">
-                <a href="#"><img src="{{ asset('public/new_assets/img/content/rti2.png') }}" style="width: 80%; height: 130px; object-fit: contain; margin-bottom: 15px;"></a>
-                <h6>Right to Information</h6>
-                </div>
-                <div class="col-md-3">
-                <a href="#"><img src="{{ asset('public/new_assets/img/content/organisational-structure.png') }}" style="width: 80%; height: 130px; object-fit: contain; margin-bottom: 15px;"></a>
-                <h6>Organisational Structure</h6>
-                </div>
-                <div class="col-md-3">
-                <a href="#"><img src="{{ asset('public/new_assets/img/content/fire-station.png') }}" style="width: 80%; height: 130px; object-fit: contain; margin-bottom: 15px;"></a>
-                <h6>Fire Stations List</h6>
-                </div>
+        <div class="row content-card content-text">
+            <h6 class="divHeader">Useful Links</h6>
+            <div class="col-md-12">
+                <div class="row text-center justify-content-center">
 
+                    <div class="col-md-12">
+                        <div class="slider-container">
+                            <button class="arrow arrow-left">&#10094;</button>
+                            <button class="arrow arrow-right">&#10095;</button>
+                    
+                            <div class="slider-track" id="sliderTrack">
+                    
+                                <a href="{{ route('actionActs')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/fire-service.png') }}">
+                                        <p>Acts & Rules</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionOrganisationStructure')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/organisational-structure.png') }}">
+                                        <p>Organisational Structure</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionFireUnits')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/fire-station.png') }}">
+                                        <p>Fire Stations List</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionFaq')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/faq.png') }}">
+                                        <p>FAQ's</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="{{ route('actionTutorials')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/tutorials.png') }}">
+                                        <p>Tutorials</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/kavach.png') }}">
+                                        <p>Safety Corner</p>
+                                    </div>
+                                </a>
+                                
+                                
+                                <a href="{{ route('actionActs')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/fire-service.png') }}">
+                                        <p>Acts & Rules</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionOrganisationStructure')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/organisational-structure.png') }}">
+                                        <p>Organisational Structure</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionFireUnits')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/fire-station.png') }}">
+                                        <p>Fire Stations List</p>
+                                    </div>
+                                </a>
+                    
+                                <a href="{{ route('actionFaq')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/faq.png') }}">
+                                        <p>FAQ's</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="{{ route('actionTutorials')}}" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/tutorials.png') }}">
+                                        <p>Tutorials</p>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" style="margin: 5px 0px;">
+                                    <div class="link-box">
+                                        <img src="{{ asset('public/new_assets/img/content/kavach.png') }}">
+                                        <p>Safety Corner</p>
+                                    </div>
+                                </a>
+                                
+                                
+                    
+                            </div>
+                        </div>
+                        
+                    </div>
 
+                    
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-4 pb-40">
-            <h5 class="divHeader">SOCIAL MEDIA FEED</h5>
-            <a href="#"><img style="width: 70px; margin-right: 15px" src="{{ asset('public/new_assets/img/content/x-icon.webp') }}" alt=""></a>
-            <a href="#"><img style="width: 70px; margin-right: 20px" src="{{ asset('public/new_assets/img/content/facebook-icon.webp') }}" alt=""></a>
-            <a href="#"><img style="width: 70px; margin-right: 20px" src="{{ asset('public/new_assets/img/content/instagram-icon.webp') }}" alt=""></a>
-            <a href="#"><img style="width: 70px; border-radius: 13px;" src="{{ asset('public/new_assets/img/content/youtube-icon.png') }}" alt=""></a>
         </div>
-    </div>
     </div>
 </section>
+<script>
+const track = document.getElementById('sliderTrack');
+const leftBtn = document.querySelector('.arrow-left');
+const rightBtn = document.querySelector('.arrow-right');
 
+let position = 0;
+const moveAmount = 250; // width + gap
+let autoSlide;
+
+/* Right Arrow */
+rightBtn.addEventListener('click', () => {
+    position -= moveAmount;
+    if(Math.abs(position) >= track.scrollWidth - track.clientWidth){
+        position = 0;
+    }
+    track.style.transform = `translateX(${position}px)`;
+});
+
+/* Left Arrow */
+leftBtn.addEventListener('click', () => {
+    position += moveAmount;
+    if(position > 0){
+        position = -(track.scrollWidth - track.clientWidth);
+    }
+    track.style.transform = `translateX(${position}px)`;
+});
+
+/* Auto Slide */
+function startAutoSlide(){
+    autoSlide = setInterval(()=>{
+        rightBtn.click();
+    },3000);
+}
+
+function stopAutoSlide(){
+    clearInterval(autoSlide);
+}
+
+track.addEventListener('mouseenter', stopAutoSlide);
+track.addEventListener('mouseleave', startAutoSlide);
+
+startAutoSlide();
+</script>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var fullText = document.getElementById("fireText").innerHTML;
+        var maxLength = 350;
+        var shortText = fullText.substring(0, maxLength) + "...";
+
+        var isExpanded = false;
+
+        if (fullText.length > maxLength) {
+            document.getElementById("fireText").innerHTML = shortText;
+        } else {
+            document.getElementById("toggleBtn").style.display = "none";
+        }
+
+        document.getElementById("toggleBtn").addEventListener("click", function () {
+            if (isExpanded) {
+                document.getElementById("fireText").innerHTML = shortText;
+                this.innerHTML = "Read More";
+            } else {
+                document.getElementById("fireText").innerHTML = fullText;
+                this.innerHTML = "Show Less";
+            }
+            isExpanded = !isExpanded;
+        });
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function(){
+
+    $("#faqToggle").click(function(e){
+        e.stopPropagation();
+        $("#faqPopup").fadeToggle(200);
+    });
+
+    $(document).click(function(){
+        $("#faqPopup").fadeOut(200);
+    });
+
+});
+</script>
 @endsection
 @section('scripts')
 @stop

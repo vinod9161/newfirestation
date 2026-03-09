@@ -129,17 +129,18 @@ class StationsController extends Controller
 
 	public function updateStation(Request $request)
     {
-        unset($request['_token']);
-        unset($request['_method']);
+        $data = $request->except(['_token', '_method', 'PolygonCoordinates']);
 
-        if ($request->has('PolygonCoordinates')) {
-            $data['polygon_coordinates'] = json_encode(json_decode($request->input('PolygonCoordinates'), true));
+        if ($request->filled('PolygonCoordinates')) {
+            $data['polygon_coordinates'] = json_encode(
+                json_decode($request->PolygonCoordinates, true)
+            );
         }
 
+        Station::where('id', $request->id)->update($data);
 
-         DB::table('fire_stations')->where('id', $request->id)->update($data);
-
-        return redirect()->route('admin.stations')->with('success', 'Station Updated Successfully!');
+        return redirect()->route('admin.stations')
+            ->with('success', 'Station Updated Successfully!');
     }
 
 

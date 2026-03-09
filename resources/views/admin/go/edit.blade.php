@@ -123,6 +123,31 @@
                                                 <span id="fileErr" class="text-danger"></span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        @php
+                                        $visibility = explode(',', $getData->visibility ?? '');
+                                        @endphp
+
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Visibility <sup class="text-danger">*</sup></label><br>
+
+                                                <input type="checkbox" name="visibility[]" value="HQ"
+                                                {{ in_array('HQ',$visibility) ? 'checked' : '' }}>
+                                                HQ (Employees except CFO & FSO)
+                                                <br>
+
+                                                <input type="checkbox" name="visibility[]" value="FIELD"
+                                                {{ in_array('FIELD',$visibility) ? 'checked' : '' }}>
+                                                Field Staff (CFO & FSO)
+                                                <br>
+
+                                                <input type="checkbox" name="visibility[]" value="PUBLIC"
+                                                {{ in_array('PUBLIC',$visibility) ? 'checked' : '' }}>
+                                                Public (View on Website)
+                                            </div>
+                                        </div>
 
 
                                         <div class="col-md-4" style="margin:0 auto; margin-top:30px">

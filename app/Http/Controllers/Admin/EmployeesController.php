@@ -40,9 +40,9 @@ class EmployeesController extends Controller{
             'employee_code.unique' => 'The employee code already exists.'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        // if ($validator->fails()) {
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // }
 
 
         $request['assigned_to'] = Auth::user()->id;

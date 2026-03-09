@@ -14,11 +14,10 @@
   </div>
 </section>
 <!--Sub Header End-->
-
-    <section class="contact" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+    <section class="contact flagday-section py-5" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
         <div class="container">
   
-          <div class="row">
+          <div class="row content-card content-text">
   
             <div class="col-lg-6">
   
@@ -91,17 +90,11 @@
               </form>
             </div>
   
-          </div>
-  
-        </div>
-      </section><!-- End Contact Section -->
-  
-      <!-- ======= Map Section ======= -->
-      <section class="map mt-2">
-        <div class="container-fluid p-0">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3444.142184363954!2d78.03797076545017!3d30.318473281783376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39092995a877e34d%3A0xd501c1e577d4d8cb!2spolice%20Fire%20Station!5e0!3m2!1sen!2sin!4v1599112175596!5m2!1sen!2sin" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>  
-        </section>
-        <!-- End Map Section -->
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3444.142184363954!2d78.03797076545017!3d30.318473281783376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39092995a877e34d%3A0xd501c1e577d4d8cb!2spolice%20Fire%20Station!5e0!3m2!1sen!2sin!4v1599112175596!5m2!1sen!2sin" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>  
+    </div>
+  </div>
+</section>
+  <!-- End Map Section -->
 @endsection
 @section('scripts')
 @stop

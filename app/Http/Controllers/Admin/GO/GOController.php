@@ -21,7 +21,7 @@ class GOController extends Controller
     {
         $tbl = 'fs_go_circular';
         $getGo = $this->commonModel->getData($tbl);
-        //echo "<pre>"; print_r($getGo);die;
+        // echo "<pre>"; print_r($getGo);die;
         return view('admin.go.gocircular', compact('getGo'));
     }
 
@@ -41,8 +41,9 @@ class GOController extends Controller
             'subject' => 'required|string|max:1024',
             'file'    => 'required|file|mimes:pdf',
             'id'      => 'required|integer',
+            'visibility' => 'required|array'
         ]);
-    
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -53,6 +54,9 @@ class GOController extends Controller
         $title      = $request->input('title');
         $subject    = $request->input('subject');
         $userId     = $request->input('id');
+
+        // visibility convert array to string
+        $visibility = implode(',', $request->visibility);
 
         $goFile = null;
 
@@ -68,17 +72,20 @@ class GOController extends Controller
         }
 
         $tbl = 'fs_go_circular';
+
         $data = [
-            'number'    => $number,
-            'title'     => $title,
-            'user_id'   => $userId,
-            'type'      => $type,
-            'subject'   => $subject,
-            'file'      => $goFile,
-            'date'      => $date
+            'number'     => $number,
+            'title'      => $title,
+            'user_id'    => $userId,
+            'type'       => $type,
+            'subject'    => $subject,
+            'file'       => $goFile,
+            'date'       => $date,
+            'visibility' => $visibility
         ];
 
         $result = $this->commonModel->insertData($tbl,$data);
+
         if($result)
         {
             return redirect()->back()->with('success', 'Go Circular Added Successfully');
@@ -105,6 +112,7 @@ class GOController extends Controller
             'title'   => 'required|string|max:1024',
             'subject' => 'required|string|max:1024',
             'file'    => 'nullable|file|mimes:pdf',
+            'visibility' => 'required|array'
         ]);
 
         if ($validator->fails()) {
@@ -119,13 +127,17 @@ class GOController extends Controller
         $goid       = $request->input('goid');
         $userId     = Auth::user()->id;
 
+        // convert array to string
+        $visibility = implode(',', $request->visibility);
+
         $data = [
-            'number'   => $number,
-            'title'    => $title,
-            'user_id'  => $userId,
-            'type'     => $type,
-            'subject'  => $subject,
-            'date'     => $date,
+            'number'     => $number,
+            'title'      => $title,
+            'user_id'    => $userId,
+            'type'       => $type,
+            'subject'    => $subject,
+            'date'       => $date,
+            'visibility' => $visibility
         ];
 
         if ($request->hasFile('file')) {

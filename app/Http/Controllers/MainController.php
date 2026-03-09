@@ -120,8 +120,32 @@ class MainController extends Controller{
 
     ////////////////////////////////////
 
-    public function actionAchivementsPrevious(){
-        return view('fire.achivements_in_previous_year');
+    // public function actionAchivementsPrevious(){
+    //     return view('fire.achivements_in_previous_year');
+    // }
+    public function actionAchivementsPrevious(Request $request)
+    {
+
+        // get all available years
+        $years = DB::table('fs_achievements')
+                    ->orderBy('year','DESC')
+                    ->pluck('year');
+
+        // if year selected from dropdown
+        if ($request->filled('year')) {
+            $year = $request->year;
+        } 
+        else {
+            // default latest year
+            $year = $years->first();
+        }
+
+        // fetch achievement of selected year
+        $achievement = DB::table('fs_achievements')
+                        ->where('year', $year)
+                        ->first();
+
+        return view('fire.achivements_in_previous_year', compact('achievement','years','year'));
     }
 
     /////////////////////////////////////////
@@ -137,14 +161,21 @@ class MainController extends Controller{
 
     public function actionActs(){
 
-        $goCircular  = $this->commonModel->getDataByDesc('fs_go_circular','date','DESC');
+        $goCircular = DB::table('fs_go_circular')
+                        ->where('visibility','LIKE','%PUBLIC%')
+                        ->orderBy('date','DESC')
+                        ->get();
+
         $circularType = [];
+
         foreach($goCircular as $circular){
             array_push($circularType,$circular->type);
         }
+
         $circularType = array_unique($circularType);
-        $circularType = array_combine(range(0, count($circularType) - 1), $circularType);
-        return view('fire.acts_rules',compact('circularType', 'goCircular'));
+        $circularType = array_values($circularType);
+
+        return view('fire.acts_rules',compact('circularType','goCircular'));
     }
 
     /////////////////////////////////////
@@ -172,7 +203,11 @@ class MainController extends Controller{
 
     public function actionConsultation()
     {
-        return view('fire.consultation');
+        $district     =  $this->commonModel->getData('districts');
+        $firestation =  $this->commonModel->getData('fire_stations');
+        $officers     = $this->commonModel->getData('users');
+        // echo "<pre>"; print_r($firestation);die;
+        return view('fire.consultation')->with('district',$district)->with('firestation',$firestation)->with('officers', $officers);
     }
 
     /////////////////////////////////////////////////
@@ -223,6 +258,13 @@ class MainController extends Controller{
         $tbl = "faq";
         $faq = $this->commonModel->getData($tbl);
         return view('fire.faq',compact('faq'));
+    }
+    
+    public function actionTutorials()
+    {
+        $tbl = "faq";
+        $faq = $this->commonModel->getData($tbl);
+        return view('fire.tutorials',compact('faq'));
     }
 
     /////////////////////////////////////////////////
@@ -318,15 +360,19 @@ class MainController extends Controller{
 
     public function actionFireUnits()
     {
-        // $station = Station::with('district.state')->get();
-        // $data['stations'] = $station;
+        $getData = DB::table('fire_stations as fs')
+            ->leftJoin('districts as d', 'fs.district_id', '=', 'd.id')
+            ->leftJoin('users as u', 'u.station_id', '=', 'fs.id')
+            ->select(
+                'fs.id',
+                'fs.name',
+                'd.name as district_name',
+                'fs.fs_contact_no',
+                'u.email as fs_email_address',
+                'u.number as fs_mobile_no'
+            )
+            ->get();
 
-        // echo "<pre>"; print_r($station);die;
-        // return view('fire.fire_units',$data);
-
-        //echo "all ok";
-
-        $getData = $this->commonModel->getAllStationByDistrict();
         return view('fire.fire_units', compact('getData'));
     }
 
@@ -335,6 +381,11 @@ class MainController extends Controller{
     public function actionFireFighting()
     {
         return view('fire.firefighting');
+    }
+
+    public function actionEmergencyContact()
+    {
+        return view('fire.emergency_contact');
     }
 
     /////////////////////////////////////////////////
@@ -351,9 +402,19 @@ class MainController extends Controller{
 
     public function actionG1(){
         $tbl = "gallery";
-        $data['galalry'] = $this->commonModel->getData($tbl);
-        return view('fire.G1',$data);
+        $galleryData = $this->commonModel->getDataByOneCondition($tbl, ['status' => 'Active']);
+
+        $groupedGallery = [];
+
+        foreach ($galleryData as $row) {
+            $groupedGallery[$row->category][] = $row;
+        }
+
+        $data['gallery'] = $groupedGallery;
+
+        return view('fire.G1', $data);
     }
+
 
     /////////////////////////////////////////////////
 
@@ -390,28 +451,83 @@ class MainController extends Controller{
     /////////////////////////////////////////////////
 
 
+    // public function actionMedalWinner()
+    // {
+    //     $medalCategotryList = $this->commonModel->getMedalCategory();
+        
+    //     $meddalArray = [];
+    //     foreach ($medalCategotryList as $row) {
+    //         $medalCategotryId = !empty($row->id) ? $row->id : '';
+
+    //         // Fetch the list of medal winners for the current category
+    //         $medalWinners = $this->commonModel->getMedalWinnerList($medalCategotryId);
+
+    //         // Store the results grouped by category
+    //         $meddalArray[$medalCategotryId] = [
+    //             'category_name' => $row->category_name ?? 'Unknown',
+    //             'medals' => $medalWinners
+    //         ];
+    //     }
+
+    //    // echo "<pre>"; print_r($meddalArray);
+    //     $data['grouped_medal_winners'] = $meddalArray;
+    //     return view('fire.medal_winner', $data);
+    // }
+
     public function actionMedalWinner()
     {
-        $medalCategotryList = $this->commonModel->getMedalCategory();
-        
-        $meddalArray = [];
-        foreach ($medalCategotryList as $row) {
-            $medalCategotryId = !empty($row->id) ? $row->id : '';
+        // Get only categories that have medals (with total count)
+        $categories = DB::table('medal_category as mc')
+            ->join('medals as m', 'mc.id', '=', 'm.medal_category')
+            ->select(
+                'mc.id',
+                'mc.category_name',
+                'mc.image',
+                DB::raw('COUNT(m.id) as total')
+            )
+            ->groupBy('mc.id', 'mc.category_name', 'mc.image')
+            ->get();
 
-            // Fetch the list of medal winners for the current category
-            $medalWinners = $this->commonModel->getMedalWinnerList($medalCategotryId);
-
-            // Store the results grouped by category
-            $meddalArray[$medalCategotryId] = [
-                'category_name' => $row->category_name ?? 'Unknown',
-                'medals' => $medalWinners
-            ];
-        }
-
-       // echo "<pre>"; print_r($meddalArray);
-        $data['grouped_medal_winners'] = $meddalArray;
-        return view('fire.medal_winner', $data);
+        return view('fire.medal_winner', compact('categories'));
     }
+
+    public function actionAwards(Request $request)
+    {
+        $categoryId = $request->id;
+
+        // $awards = DB::table('medals')
+        //     ->where('medal_category', $categoryId)
+        //     ->get();
+        $awards = DB::table('medals')
+            ->join('medal_category', 'medals.medal_category', '=', 'medal_category.id')
+            ->where('medals.medal_category', $categoryId)
+            ->select('medals.*', 'medal_category.category_name')
+            ->get();
+
+        return view('fire.awards', compact('awards'));
+    }
+    // public function actionAwards()
+    // {
+    //     $medalCategotryList = $this->commonModel->getMedalCategory();
+        
+    //     $meddalArray = [];
+    //     foreach ($medalCategotryList as $row) {
+    //         $medalCategotryId = !empty($row->id) ? $row->id : '';
+
+    //         // Fetch the list of medal winners for the current category
+    //         $medalWinners = $this->commonModel->getMedalWinnerList($medalCategotryId);
+
+    //         // Store the results grouped by category
+    //         $meddalArray[$medalCategotryId] = [
+    //             'category_name' => $row->category_name ?? 'Unknown',
+    //             'medals' => $medalWinners
+    //         ];
+    //     }
+
+    //    // echo "<pre>"; print_r($meddalArray);
+    //     $data['grouped_medal_winners'] = $meddalArray;
+    //     return view('fire.awards', $data);
+    // }
 
 
 
@@ -483,6 +599,14 @@ class MainController extends Controller{
         return view('fire.objective',compact('objective'));
     }
 
+    public function actionObjective2()
+    {
+        $tbl = "pages_card";
+        $where = array('page_name' => 'our_objective');
+        $objective = $this->commonModel->getDataByOneCondition($tbl,$where);
+        return view('fire.objective2',compact('objective'));
+    }
+
     /////////////////////////////////////////////////
 
     public function actionOrganisationStructure()
@@ -490,6 +614,9 @@ class MainController extends Controller{
         $headquater  = Organisational::where('status', '=', '1')->where('type', '=', '1')->orderBy('rank', 'asc')->get();
         $district  = Organisational::where('status', '=', '1')->where('type', '=', '2')->orderBy('rank', 'asc')->get();
         $firestation  = Organisational::where('status', '=', '1')->where('type', '=', '3')->orderBy('rank', 'asc')->get();
+        // echo "<pre>"; print_r($headquater);
+        // echo "<pre>"; print_r($district); die;
+        // echo "<pre>"; print_r($firestation);die;
         return view('fire.organisation_structure')->with('headquater',$headquater)->with('district',$district)->with('firestation',$firestation);
     }
 

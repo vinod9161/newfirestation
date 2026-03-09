@@ -4,7 +4,7 @@
             {!! $statusMessage !!}
         </div>
     </div>
-    <div class="row AwarenessProgram" style="margin-left:90px; margin-right:90px;">
+    <div class="AwarenessProgram" style="margin-left:90px; margin-right:90px;">
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -167,9 +167,9 @@
             @endif
         </div>
     </div>
-    <div class="row fireNoc" style="margin-left:50px; margin-right:50px;">
-         <table class="table table-bordered">
-            <thead>
+    <div class="fireNoc table-responsive">
+        <table class="table table-bordered">
+            <thead style="background-color:#006270; color: white;">
                 <tr>
                     <th>Sn.</th>
                     <th>Application No</th>

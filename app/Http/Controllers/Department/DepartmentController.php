@@ -239,7 +239,7 @@ class DepartmentController extends Controller
         }
         $application->status = 'pre approval';
         $historys = new stdClass();
-        $historys->history = 'Application has been Sent for Pre appoval..!';
+        $historys->history = 'Application has been sent for Pre appoval';
         $historys->date = date('m/d/Y h:i:s a', time());
         if(empty($application->history))
         {
@@ -305,7 +305,7 @@ class DepartmentController extends Controller
         $application->remark_by_dd = json_encode($remark);
         $application->status = 'pre approved';
         $historys = new stdClass();
-        $historys->history = 'Application has been Pre approved..!';
+        $historys->history = 'Application has been pre approved';
         $historys->date = date('m/d/Y h:i:s a', time());
         if(empty($application->history))
         {
@@ -322,7 +322,7 @@ class DepartmentController extends Controller
         $application->dd_approve_date = Carbon::now();
         $application->dd_name = Auth::user()->name;
         $application->update();
-        return back()->with('application',$application)->with("message","Application has been Pre approved");        
+        return back()->with('application',$application)->with("message","Application has been pre approved");        
     }
     public function applicationAssignedToCFO(Request $request)
     {
@@ -502,7 +502,7 @@ class DepartmentController extends Controller
         $application->revert = json_encode($revert);
         $history = array();
         $historys = new stdClass();
-        $historys->history = 'Application has been Reverted..! Please review Remark and update application again';
+        $historys->history = 'Application has been Reverted Please review Remark and update application again';
         $historys->date = date('m/d/Y h:i:s a', time());
         if(empty($application->history))
         {
@@ -700,7 +700,7 @@ class DepartmentController extends Controller
             $application = $this->commonModel->getDataByOneCondition($tbl, array('application_no' => $request->application_no));
         }
         $historys = array();
-        $historys['history'] = 'Application has been Sent for appoval..!';
+        $historys['history'] = 'Application has been sent for appoval';
         $historys['date'] = date('m/d/Y h:i:s a', time());
                
         if(!empty($application[0]->history))
@@ -724,7 +724,7 @@ class DepartmentController extends Controller
         ];
         $this->commonModel->updateDataByOneCondition($tbl, array('application_no' => $application[0]->application_no), $data);
 
-        return back()->with('application',$application)->with("message","Application has been Sent for appoval!");        
+        return back()->with('application',$application)->with("message","Application has been sent for appoval!");        
     }
     public function get_user_name_by_district($district_id)
     {

@@ -41,38 +41,33 @@
 </section>
 @endforeach
 @else
-<section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
+<section class="flagday-section py-5">
     <div class="container">
-
-        <div class="row">
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/fsd.jpg')}}" class="img-fluid" alt="">
+        <div class="row align-items-stretch">
+            <div class="col-lg-6 mb-4">
+                <div class="content-card h-100">
+                    <img src="{{asset('/public/fire/gallery/fsd.jpg')}}" class="img-fluid rounded" alt="">
+                </div>
             </div>
-            <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/f1.jpg')}}" class="img-fluid" alt="">
+            <div class="col-lg-6 mb-4">
+                <div class="content-card h-100">
+                    <img src="{{asset('/public/fire/gallery/f1.jpg')}}" class="img-fluid rounded" alt="">
+                </div>
             </div>
-
-            <div class="col-lg-12 d-flex flex-column justify-content-center p-5">
-
-                <p>Fire Service Week celebrated from 14th April to 20 april every year to enhance general public
-                    awareness about the necessity of minimizing losses due to fire. 14th April will also be observed as
-                    <strong>“MARTYR’S DAY”</strong> to pay homage to those brave firefighters who sacrificed their lives
-                    while discharging their duties.
-                </p>
-                <p> Lectures, workshops and presentations including demonstrations on fire prevention and fire
-                    protection organize by the Fire Service personnel at busy public places. Fire Prevention hands-out
-                    distributed to members of the public during these functions. All India Radio FM Channels,
-                    Doordarshan & other TV Channels (Regional channels) are also requested to broadcast fire safety
-                    related audio material so that the campaign is worked-out on sound lines to create maximum impact.
-                    In addition, discussions on common fire hazards in industries, commercial and office complexes,
-                    schools as well as in residential premises and the appropriate fire prevention measures for these
-                    premises may be arranged for broadcast/telecast through local radio/T.V. stations. </p>
-
+            <div class="col-12">
+                <div class="content-card content-text">
+                    <p>
+                        Every year, <strong>14 April</strong> is observed as Fire Service Day. <strong>14 April</strong> is also observed as <strong>“Martyrs’ Day”</strong> to pay homage to the brave firefighters who laid down their lives in the line of duty.
+                        <strong>Fire Service Week</strong> is observed every year from <strong>14 April to 20 April</strong> to raise public awareness about the importance of minimizing losses caused by fire. 
+                        During this week, Fire Service personnel organize <strong>lectures, workshops, presentations, and live demonstrations</strong> on fire prevention and fire protection at busy public places. <strong>Fire safety handouts</strong> are distributed to the general public as part of these activities.
+                        <strong>All India Radio FM channels, Doordarshan, and other regional TV channels</strong> are requested to broadcast fire safety–related audio and visual material to ensure the campaign achieves maximum reach and impact. In addition, discussions on <strong>common fire hazards</strong> in industries, commercial and office complexes, schools, and residential premises, along with appropriate <strong>fire prevention measures</strong>, may be arranged for broadcast or telecast through local radio and television stations.
+                    </p>
+                    
+                </div>
             </div>
         </div>
-
     </div>
-</section><!-- End Why Us Section -->
+</section>
 
 @endif
 

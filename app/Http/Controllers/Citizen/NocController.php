@@ -278,6 +278,17 @@ class NocController extends Controller
 
         return view('admin.Noc.list_noc', ['applications' => $application,'projects' => $projects,'categories' => $categories, 'noc_type' => $noc_type]);
     }
+
+    public function applyTempNOC($noc_type)
+    {
+        $user = Auth::user();
+        $districts = $this->commonModel->getData('districts');
+        $tehsil = $this->commonModel->getData('tehsils');
+        $block = $this->commonModel->getData('blocks');
+        $panchayat = $this->commonModel->getData('panchayats');
+        return view('citizen.temporary.apply_temporary_noc', compact('districts', 'tehsil', 'block', 'panchayat','noc_type'));
+    }
+
     public function adminviewNocDetail($id)
     {
 
@@ -1087,11 +1098,11 @@ class NocController extends Controller
         
         if($large_small_category ==1)
         {
-            $historys['history'] = 'Application has been Submitted to Deputy Director';
+            $historys['history'] = 'Application has been submitted to Deputy Director';
         }
         else
         {
-            $historys['history'] = 'Application has been Submitted to CFO';
+            $historys['history'] = 'Application has been submitted to CFO';
         }
         $historys['date'] = date('m/d/Y h:i:s a', time());
         if(empty($application[0]->history))

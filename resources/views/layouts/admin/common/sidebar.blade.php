@@ -379,6 +379,12 @@
                             </a>
                             <ul class="slide-menu child2" style="display: block; box-sizing: border-box;">
                                 <li class="slide">
+                                    <a href="{{route('admin.achievement')}}" class="side-menu__item">Achievements</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{route('admin.achivements.medal_category')}}" class="side-menu__item">Medal Category</a>
+                                </li>
+                                <li class="slide">
                                     <a href="{{route('admin.achivements.medal_winners')}}" class="side-menu__item">Medal Winners</a>
                                 </li>
                             </ul>

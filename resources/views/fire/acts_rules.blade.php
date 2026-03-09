@@ -115,20 +115,97 @@
     margin-bottom: 15px;
   }
 </style>
+<style>
 
-<section class="services">
-  <div class="container d-flex mt-20">
-    <div class="tab-vertical d-flex" style="width:100%;">
+/* Make vertical layout */
+#myTab3 {
+    width: 280px;
+    border-bottom: none;
+    list-style: none;     /* removes dots */
+    padding-left: 0;      /* removes left space */
+    margin-left: 0;
+}
+
+#myTab3 .nav-item {
+    width: 100%;
+    margin-bottom: 20px;
+    list-style: none;
+}
+
+/* Card Style */
+#myTab3 .nav-link {
+    background: #e9ecef;
+    border: none;
+    padding: 18px 25px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Left color strip */
+#myTab3 .nav-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    border-radius: 20px 0 0 20px;
+    background: linear-gradient(180deg, #28a745, #1e7e34);
+}
+
+/* Hover effect */
+#myTab3 .nav-link:hover {
+    transform: translateY(-4px);
+}
+
+/* Active tab */
+#myTab3 .nav-link.active {
+    background: linear-gradient(90deg, rgb(17, 94, 89) 0%, rgb(17, 94, 89, 1) 60%, rgb(0, 37, 142, .8) 100%);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #006270;
+    border-color: #006270;
+    color: #fff;
+}
+
+.btn-primary{
+    background-color: #006270;
+    border-color: #006270;
+    color: #fff;
+}
+/* Layout side by side */
+.tab-wrapper {
+    display: flex;
+    gap: 30px;
+}
+
+/* Content side */
+#myTabContent3 {
+    flex: 1;
+}
+
+</style>
+
+<section class="services flagday-section py-5">
+  <div class="container d-flex">
+    <div class="tab-vertical d-flex content-card content-text" style="width:100%;">
       <ul class="nav nav-tabs" id="myTab3" role="tablist">
         @foreach($circularType as $type)
             <li class="nav-item">
                 <a class="nav-link {{ $loop->first ? 'active' : '' }}" id="{{ str_replace(' ','_',strtolower($type)) }}-vertical-tab" data-toggle="tab" href="javascript:void(0);" data-target="#{{ str_replace(' ','_',strtolower($type)) }}" role="tab" aria-controls="{{ str_replace(' ','_',strtolower($type)) }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}">{{ ucfirst($type) }}</a>
             </li>
+            
         @endforeach
       </ul>
       <div class="tab-content" id="myTabContent3">
         @foreach($circularType as $type)
-            <div class="tab-pane fade {{ $loop->first ? 'show active' : 'd-none' }}" id="{{ str_replace(' ','_',strtolower($type)) }}" role="tabpanel" aria-labelledby="{{ str_replace(' ','_',strtolower($type)) }}-vertical-tab">
+            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ str_replace(' ','_',strtolower($type)) }}" role="tabpanel" aria-labelledby="{{ str_replace(' ','_',strtolower($type)) }}-vertical-tab">
               @foreach($goCircular as $circular)
                 @if($circular->type == $type)
                 <div class="col-md-12 d-flex" style="border-bottom:1px solid #eee;padding:10px 0;">
@@ -145,10 +222,49 @@
             </div>
         @endforeach
       </div>
+      <!-- <div class="d-flex">
+    
+        <div class="vertical-nav nav flex-column nav-pills" role="tablist">
+
+          @foreach($circularType as $type)
+              <a 
+                  class="nav-link nav-card {{ $loop->first ? 'active' : '' }}"
+                  id="{{ str_replace(' ','_',strtolower($type)) }}-tab"
+                  data-toggle="pill"
+                  href="#{{ str_replace(' ','_',strtolower($type)) }}"
+                  role="tab">
+                  
+                  {{ ucfirst($type) }}
+              </a>
+          @endforeach
+
+        </div>
+
+        <div class="tab-content flex-grow-1 ml-4">
+          @foreach($circularType as $type)
+              <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ str_replace(' ','_',strtolower($type)) }}" role="tabpanel" aria-labelledby="{{ str_replace(' ','_',strtolower($type)) }}-vertical-tab">
+                @foreach($goCircular as $circular)
+                  @if($circular->type == $type)
+                  <div class="col-md-12 d-flex" style="border-bottom:1px solid #eee;padding:10px 0;">
+                      <div class="col-md-10">
+                        <h5>{{ ucfirst($circular->title) }}</h5>
+                        <p>{{ ucfirst($circular->subject) }}</p>
+                      </div>
+                      <div class="col-md-2">
+                        <a href="{{ asset('/public/'.$circular->file) }}" alt="client" class="btn btn-primary mb-2" title="View File" target="_blank">Download</a>
+                      </div>
+                  </div>
+                  @endif
+                @endforeach
+              </div>
+          @endforeach
+        </div>
+      </div> -->
+      
     </div>
   </div>
 </section>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function(){

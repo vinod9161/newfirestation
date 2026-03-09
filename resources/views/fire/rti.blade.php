@@ -18,91 +18,93 @@
 </section>
 <!--Sub Header End-->
 <!-- ======= About Section ======= -->
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
-      <div class="col-md-12">
-         <h3 style="margin-top: 40px;">Right To Information</h3>
-         <p>List of Public Information Officers / Appellate Officers in Uttarakhand Fire Service under RTI Act 2005</p>
+<section class="flagday-section py-5">
+   <div class="container">
+      <div class="row content-card content-text">
+         <div class="col-md-12">
+            <h3 style="margin-top: 40px;">Right To Information</h3>
+            <p>List of Public Information Officers / Appellate Officers in Uttarakhand Fire Service under RTI Act 2005</p>
+         </div>
+
+         <?php if(!empty($getData)):?>
+            <?php foreach($getData as $key => $value):?>
+               <div class="col-md-12 mb-3">
+                  <h3 style="margin-top: 40px;">{{ $value->category_name??'NA'}}</h3>
+                  <table class="table table-bordered table-striped text-center">
+                     <thead style="background-color:#006270; color: white;">
+                        <tr>
+                           <th scope="col">S.No.</th>
+                           <th scope="col">Name of Officer </th>
+                           <th scope="col">Address </th>
+                           <th scope="col">Contact Number</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <th scope="row">1</th>
+                           <td>{{ $value->name??'NA' }}</td>
+                           <td>{{ strip_tags($value->address)??'NA' }}</td>
+                           <td>{{ $value->phone??'NA' }}</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            <?php endforeach;?>   
+            <?php else: ?>
+               <div class="col-md-12">
+                  <h3 style="margin-top: 40px;">Headquarter level public information officer</h3>
+               </div>
+               <table class="table table-bordered table-responsive-sm">
+                  <thead>
+                     <tr>
+                        <th scope="col">S.No.</th>
+                        <th scope="col">Name of Officer </th>
+                        <th scope="col">Address </th>
+                        <th scope="col">Contact Number</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <th scope="row">1</th>
+                        <td>Shri S.K. Rana <br>Deputy Director (Technical)</td>
+                        <td>Police Headquarter 12-subhash Road, Dehradun, Uttarakhand</td>
+                        <td>9412028879</td>
+                     </tr>
+                  </tbody>
+               </table>
+
+
+               <div class="col-md-12">
+                  <h3 style="margin-top: 40px;">Headquarter level appellate authority</h3>
+               </div>
+               <table class="table table-bordered table-responsive-sm">
+                  <thead>
+                     <tr>
+                        <th scope="col">S.No.</th>
+                        <th scope="col">Name of Officer </th>
+                        <th scope="col">Address </th>
+                        <th scope="col">Contact Number</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <th scope="row">1</th>
+                        <td>Smt. NEERU GARG<br>DIG FIRE SERVICE</td>
+                        <td>Police Headquarter 12-subhash Road, Dehradun, Uttarakhand</td>
+                        <td>0135-2712685</td>
+                     </tr>
+                  </tbody>
+               </table>
+         <?php endif;?>        
+         <div class="col-md-12 mb-3">
+            <p>
+               To file an RTI application, please visit: <a href="https://rtionline.uk.gov.in/guidelines.php?request" style="color:blue" target="_blank">RTI Online</a>
+            </p>
+         </div>
       </div>
+
    </div>
-</div>
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
-
-      <?php if(!empty($getData)):?>
-         <?php foreach($getData as $key => $value):?>
-            <div class="col-md-12">
-               <h3 style="margin-top: 40px;">{{ $value->category_name??'NA'}}</h3>
-            </div>
-            <table class="table table-bordered table-responsive-sm">
-               <thead>
-                  <tr>
-                     <th scope="col">S.No.</th>
-                     <th scope="col">Name of Officer </th>
-                     <th scope="col">Address </th>
-                     <th scope="col">Contact Number</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <th scope="row">1</th>
-                     <td>{{ $value->name??'NA' }}</td>
-                     <td>{{ strip_tags($value->address)??'NA' }}</td>
-                     <td>{{ $value->phone??'NA' }}</td>
-                  </tr>
-               </tbody>
-            </table>
-         <?php endforeach;?>   
-         <?php else: ?>
-            <div class="col-md-12">
-               <h3 style="margin-top: 40px;">Headquarter level public information officer</h3>
-            </div>
-            <table class="table table-bordered table-responsive-sm">
-               <thead>
-                  <tr>
-                     <th scope="col">S.No.</th>
-                     <th scope="col">Name of Officer </th>
-                     <th scope="col">Address </th>
-                     <th scope="col">Contact Number</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <th scope="row">1</th>
-                     <td>Shri S.K. Rana <br>Deputy Director (Technical)</td>
-                     <td>Police Headquarter 12-subhash Road, Dehradun, Uttarakhand</td>
-                     <td>9412028879</td>
-                  </tr>
-               </tbody>
-            </table>
-
-
-            <div class="col-md-12">
-               <h3 style="margin-top: 40px;">Headquarter level appellate authority</h3>
-            </div>
-            <table class="table table-bordered table-responsive-sm">
-               <thead>
-                  <tr>
-                     <th scope="col">S.No.</th>
-                     <th scope="col">Name of Officer </th>
-                     <th scope="col">Address </th>
-                     <th scope="col">Contact Number</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr>
-                     <th scope="row">1</th>
-                     <td>Smt. NEERU GARG<br>DIG FIRE SERVICE</td>
-                     <td>Police Headquarter 12-subhash Road, Dehradun, Uttarakhand</td>
-                     <td>0135-2712685</td>
-                  </tr>
-               </tbody>
-            </table>
-      <?php endif;?>        
-      
-   </div>
-</div>
-</div>
+</section>
 @endsection
 @section('scripts')
 @stop

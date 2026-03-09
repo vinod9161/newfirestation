@@ -4,12 +4,12 @@
 <section class="breadcrumb-section">
   <div class="overlay"></div>
     <div class="breadcrumb-content">
-    <h1 class="breadcrumb-item">Vehicle</h1>
+    <h1 class="breadcrumb-item">Vehicle & Equipment</h1>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('actionIndex') }}">Home <i class="fa fa-angle-double-right"></i></a></li>
         <li class="breadcrumb-item"><a href="#">Establishment <i class="fa fa-angle-double-right"></i></a> </li>
-        <li class="breadcrumb-item active" aria-current="page">Vehicle</li>
+        <li class="breadcrumb-item active" aria-current="page">Vehicle & Equipment</li>
         </ol>
     </nav>
   </div>

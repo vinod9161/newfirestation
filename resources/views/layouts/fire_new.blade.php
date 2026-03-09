@@ -43,9 +43,61 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- <script src="{{ asset('../cdn.jsdelivr.net/npm/bootstrap%405.0.2/dist/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
     <script src="{{ asset('/public/fire/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
+    <style>
+        .btn-primary:hover {
+            background-color: #006270;
+            border-color: #006270;
+            color: #fff;
+        }
+
+        .btn-primary{
+            background-color: #006270;
+            border-color: #006270;
+            color: #fff;
+        }
+        .flagday-section {
+            background: #f5f7fb;
+        }
+
+        .content-card {
+            text-align: justify;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .content-text, p, li {
+            
+            font-size: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .detail-box, p, ul, li{
+            
+            font-weight: 400;
+            color: #333;
+            font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .content-card ul, .objective-detail ul {
+            margin: revert;
+            padding: revert;
+            list-style: revert;
+        }
+
+        .form-group {
+            margin-bottom: 20px !important;
+        }
+
+        .form-control, .custom-select {
+            padding: 5px;
+        }
+  </style>
 
 </head>
 
@@ -64,7 +116,7 @@
             </div>
 
             <div class="headtoppart bg-steelblue clearfix">
-                <div class="headerwp clearfix">
+                <div class="headerwp clearfix" style="margin-top: -5px;">
                     <!-- Address -->
                     <div class="headertopleft">
                         <div class="address clearfix">
@@ -88,7 +140,7 @@
                 <div class="container-fluid">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-6 col-xl-8">
-                            <div class="desktoplogo"><a href=""><img src="{{ asset('public/new_assets/img/logo_header.png') }}" height="80px" alt="header-logo"></a></div>
+                            <div class="desktoplogo"><a href=""><img src="{{ asset('public/new_assets/img/logo_header.png') }}" height="100px" alt="header-logo"></a></div>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -97,7 +149,7 @@
                                     <div class="header-widget icon-xs">
                                         <span class="flaticon-092-clock blue-color"></span>
                                         <div class="header-widget-txt">
-                                            <a href="tel: 112"><img src="{{ asset('public/new_assets/img/help.png') }}" width="200"></a>
+                                            <a href="tel: 112"><img src="{{ asset('public/new_assets/img/help.png') }}" width="220"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +159,7 @@
                                         <div class="header-widget icon-xs">
                                             <span class="flaticon-092-clock blue-color"></span>
                                             <div class="header-widget-txt">
-                                                <img src="{{ asset('public/new_assets/img/uttarakhand-sasan.png') }}" height="75">
+                                                <img src="{{ asset('public/new_assets/img/uttarakhand-sasan.png') }}" height="90">
                                             </div>
                                         </div>
                                     </a>
@@ -126,8 +178,11 @@
                     <nav class="wsmenu clearfix">
                         <ul class="wsmenu-list">
                             <!-- DROPDOWN MENU -->
-                            <li aria-haspopup="true"><a href="{{ route('actionIndex') }}">Home </a> </li>
-                            <li aria-haspopup="true"><a href="#">About Us<span class="wsarrow"></span></a>
+                            <li class="{{ request()->routeIs('actionIndex') ? 'active' : '' }}">
+                                <a href="{{ route('actionIndex') }}">Home</a>
+                            </li>
+                            <li class="{{ request()->routeIs('actionMissionVision','actionHistory','actionOrganisationStructure','actionFireServiceDay','actionFlagday','actionObjective','actionDgMsg','actionFireUnits','actionFaq','actionTutorials') ? 'active' : '' }}">
+                                <a href="#">About Us<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
                                     <li><a href="{{ route('actionMissionVision')}}">Mission & Vision</a></li>
                                     <li><a href="{{ route('actionHistory')}}">History</a></li>
@@ -137,16 +192,18 @@
                                     <li><a href="{{ route('actionObjective')}}">Our Objective</a></li>
                                     <li><a href="{{ route('actionDgMsg')}}">DG's Message</a></li>
                                     <li><a href="{{ route('actionFireUnits')}}">Fire Station List</a></li>
-                                    <li><a href="{{ route('actionStaffStrength')}}">Staff Strength</a></li>
+                                    <!-- <li><a href="{{ route('actionStaffStrength')}}">Sanctioned strength</a></li> -->
                                     <li><a href="{{ route('actionFaq')}}">FAQ's</a></li>
+                                    <li><a href="{{ route('actionTutorials')}}">Tutorial </a></li>
                                 </ul>
                             </li>
-                            <li aria-haspopup="true"><a href="">Services<span class="wsarrow"></span></a>
+                            <li aria-haspopup="true" class="{{ request()->routeIs('nocdocrequiredata','checklistdata','actionRTI','rtsAction','applicationtrackstatus','applicationverificationtrackstatus','actionFireFighting','actionStandby','actionPumpingWork','actionPublicAwareness','actionIncidentReport') ? 'active' : '' }}">
+                                <a href="">Services<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
                                     <li aria-haspopup="true"><a href="#">NOC<span class="wsarrow"></span></a>
                                         <ul class="sub-menu">
                                             <li><a href="{{ route('login')}}">Apply For NOC</a></li>
-                                            <li><a href="{{ route('nocdocrequiredata') }}">Required Document for NOC</a></li>
+                                            <li><a href="{{ route('nocdocrequiredata') }}">Require Documents for NOC</a></li>
                                             <li><a href="{{ route('checklistdata') }}">Checklist for NOC</a></li>
                                             <li><a href="{{ route('login') }}" >Check NOC Status</a></li>
                                             <li><a href="{{ route('login') }}">NOC Verification</a></li>
@@ -159,9 +216,8 @@
                                             <li><a href="{{ route('rtsAction') }}" target="_blank">Right to Service</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="{{ route('applicationtrackstatus')}}">Track Application Status</a></li>
+                                    <li><a href="{{ route('applicationtrackstatus')}}">Application Status</a></li>
                                     <li><a href="{{ route('applicationverificationtrackstatus')}}">NOC Verification</a></li>
-
                                     <li aria-haspopup="true"><a href="#">Help<span class="wsarrow"></span></a>
                                         <ul class="sub-menu">
                                             <li><a href="{{ asset('/public/fire/pdf/ukfireservices_SWCS.pdf') }}" target="_blank">Filling NOC Through Single Window</a></li>
@@ -170,77 +226,90 @@
                                             <li><a href="{{ asset('/public/fire/pdf/required_documents.pdf') }}" target="_blank">Documents Required for Fire NOC</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="{{ route('actionFireFighting')}}">Fire fighting & rescue Operation</a></li>
+                                    <li><a href="{{ route('actionFireFighting')}}">Fire Fighting & Rescue Opretion</a></li>
                                     <li><a href="{{ route('actionStandby')}}">Standby Duties</a></li>
                                     <li><a href="{{ route('actionPumpingWork')}}">Pumping Works</a></li>
                                     <li><a href="{{ route('actionPublicAwareness')}}">Awareness classes/Mock Drills</a></li>
-                                    <li><a href="{{ route('login') }}">Training</a></li>
-                                    <li><a href="{{ route('actionIncidentReport')}}">Fire / Rescue / Other Incident Reports</a></li>
-                                    <li><a href="{{ route('actionServicerenderunpaid')}}">Services Rendered Unpaid</a></li>
-                                    <li><a href="{{ route('actionServicerenderedpaid')}}">Services Rendered Paid</a></li>
+                                    <!-- <li><a href="{{ route('login') }}">Training</a></li> -->
+                                    <li><a href="{{ route('actionIncidentReport')}}">Fire Service / Incident Report</a></li>
+                                    <!-- <li><a href="{{ route('actionServicerenderunpaid')}}">Service rendered unpaid</a></li> -->
+                                    <!-- <li><a href="{{ route('actionServicerenderedpaid')}}">Service rendered paid</a></li> -->
                                 </ul>
                             </li>
-                            <li aria-haspopup="true"><a href="#">Achievements<span class="wsarrow"></span></a>
+                            <li class="{{ request()->routeIs('actionAchivementsPrevious','actionMedalWinner','actionCallDetails','actionAwarenessProgramme') ? 'active' : '' }}">
+                                <a href="#">Achievements<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
-                                    <li><a href="{{ route('actionAchivementsPrevious')}}">Achievements in previous years</a></li>
+                                    <li><a href="{{ route('actionAchivementsPrevious')}}">Achievement in previous year</a></li>
                                     <li><a href="{{ route('actionMedalWinner')}}">Medal Winners</a></li>
-                                    <li><a href="{{ route('actionGrowthInStaffStrength')}}">Growth in Staff Strength</a></li>
-                                    <li><a href="{{ route('actionCallDetails')}}">Call Details 2000-2019</a></li>
-                                    <li><a href="#">Seminars</a></li>
+                                    <li><a href="{{ route('actionCallDetails')}}">Emergency Calls (Fire & Rescue)</a></li>
+                                    <li><a href="{{ route('actionAwarenessProgramme')}}">Awareness Programme</a></li>
+                                    <!-- <li><a href="{{ route('actionSpecialRiskArea')}}">Identified Special Risk Area</a></li> -->
+                                    <!-- <li><a href="{{ route('actionGrowthInStaffStrength')}}">Growth In Staff strength</a></li> -->
+                                    <!-- <li><a href="#">Seminars</a></li>
                                     <li><a href="#">Conferences</a></li>
                                     <li><a href="{{ asset('/public/fire/pdf/9 fire unit.pdf') }}" target="_blank">New station Opening</a></li>
-                                    <li><a href="{{ route('actionPriorityListOfFireStation')}}">Priority List of Stations</a></li>
-                                    <li><a href="{{ route('actionAwarenessProgramme')}}">Awareness Programme</a></li>
-                                    <li><a href="{{ route('actionSpecialRiskArea')}}">Special Risk Area</a></li>
+                                    <li><a href="{{ route('actionPriorityListOfFireStation')}}">Priority List of Stations</a></li> -->
+                                    
+                                    
                                 </ul>
                                 
                             </li>
-                            <li aria-haspopup="true"><a href="{{ route('actionActs')}}">Acts & Rules</a> </li>
-                            <li aria-haspopup="true"><a href="#">Activities<span class="wsarrow"></span></a>
+                            <li class="{{ request()->routeIs('actionActs') ? 'active' : '' }}">
+                                <a href="{{ route('actionActs') }}">Acts & Rules</a>
+                            </li>
+                            <li aria-haspopup="true" class="{{ request()->routeIs('actionG1','publicarticledata','actionFireServiceWeek') ? 'active' : '' }}">
+                                <a href="#">Activities<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
                                     <li><a href="{{ route('actionG1')}}">Gallery</a></li>
-                                    <li><a href="{{ route('actionG1')}}">Present Activities</a></li>
+                                    <!-- <li><a href="{{ route('actionG1')}}">Present Activities</a></li> -->
                                     <li><a href="{{ route('publicarticledata')}}">Public Articles</a></li>
                                     <li><a href="{{ route('actionFireServiceWeek')}}">Fire Service Week </a></li>
                                 </ul>
                             </li>
-                            <li aria-haspopup="true"><a href="#">Establishment<span class="wsarrow"></span></a>
+                            <li aria-haspopup="true" class="{{ request()->routeIs('serviceorderdata','welfareamenitydata') ? 'active' : '' }}">
+                                <a href="#">Establishment<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
                                     <li><a href="{{ route('serviceorderdata') }}">Service Orders</a></li>
-                                    <li><a href="{{ route('actionStaffStrength')}}">Strength Statement</a></li>
-                                    <li><a href="{{ route('actionVehicle')}}">Vehicles & Equipment</a></li>
+                                    <!-- <li><a href="{{ route('actionStaffStrength')}}">Statement of available strength</a></li> -->
+                                    <!-- <li><a href="{{ route('actionVehicle')}}">Vehicle & Equipment</a></li> -->
                                     <li><a href="{{ route('welfareamenitydata') }}">Welfare and Amenity Fund</a></li>
                                 </ul>
                             </li>
-                            <li aria-haspopup="true"><a href="#">Academy<span class="wsarrow"></span></a>
+                            <!-- <li aria-haspopup="true"><a href="#">Academy<span class="wsarrow"></span></a>
 
                                 <ul  class="sub-menu">
                                     <li><a href="{{ route('recruitmentdata')}}">Recruitments</a></li>
-                                    <!-- <li><a href="{{ route('actionHistory')}}">History</a></li> -->
+                                    <li><a href="{{ route('actionHistory')}}">History</a></li>
                                     <li><a href="{{ route('historydata') }}">History</a></li>
                                     <li><a href="{{ route('routemapdata') }}">Route Map</a></li>
-                                    <li><a href="{{ route('istitutionalstructuredata') }}">Instituational Structure</a></li>
+                                    <li><a href="{{ route('istitutionalstructuredata') }}">Institutional Structure</a></li>
                                     <li><a href="{{ route('coursedata') }}">Courses</a></li>
                                     <li><a href="{{ route('trainingscheduledata') }}">Training Schedule</a></li>
                                     <li><a href="{{ route('resultdata') }}">Result </a></li>
                                 </ul>
+                            </li> -->
+                            <li class="{{ request()->routeIs('actionContact') ? 'active' : '' }}">
+                                <a href="{{ route('actionContact')}}">Contact</a>
                             </li>
-                            <li><a href="{{ route('actionContact')}}">Contact</a></li>
                             @if(auth()->user()!='')
                             @if(auth()->user()->type!=4)
-                            <li><a href="{{route('admin.home')}}">My Account</a></li>
+                            <li class="{{ request()->routeIs('admin.home') ? 'active' : '' }}">
+                                <a href="{{route('admin.home')}}">My Account</a>
+                            </li>
                             @else
-                            <li><a href="{{route('citizen.account')}}">My Account</a></li>
+                            <li class="{{ request()->routeIs('citizen.account') ? 'active' : '' }}">
+                                <a href="{{route('citizen.account')}}">My Account</a>
+                            </li>
                             @endif
                             @if(auth()->user()->type==4)
-                            <li>
+                            <li class="{{ request()->routeIs('citizenLogout') ? 'active' : '' }}">
                                 <a href="{{ route('citizenLogout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign Out</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             </li>
                             @else
-                            <li>
+                            <li class="{{ request()->routeIs('logout') ? 'active' : '' }}">
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign Out</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
@@ -249,7 +318,9 @@
                             @endif
                             @else
                             @if(!(request()->is('apuni-sarkar') || request()->is('single-window')))
-                            <li><a href="{{ route('login')}}">Login</a></li>
+                            <li class="{{ request()->routeIs('login') ? 'active' : '' }}">
+                                <a href="{{ route('login')}}">Login</a>
+                            </li>
                             @endif
                             @endif
                             </li>
@@ -268,10 +339,10 @@
                 <!-- FOOTER CONTENT -->
                 <div class="row">
                     <!-- FOOTER INFO -->
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-4 col-lg-4">
                         <div class="footer-info mb-20">
                             <img src="{{ asset('public/new_assets/img/logo_footer.png') }}" height="55px" alt="footer-logo">
-                            <p class="para pt-2">Welcome to the official website of the Uttarakhand Fire Service. We are dedicated to ensuring the safety and well-being of our community through rapid response to fire emergencies and fire safety awareness </p>
+                            <!-- <p class="para pt-2">Welcome to the official website of the Uttarakhand Fire Service. We are dedicated to ensuring the safety and well-being of our community through rapid response to fire emergencies and fire safety awareness </p> -->
                             <div class="footer-socials-links mt-20">
                                 <ul class="foo-socials text-center clearfix">
                                     <li><a href="https://www.facebook.com/UttarakhandFireService/" class="ico-facebook" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
@@ -284,13 +355,21 @@
                     </div>
 
                     <!-- FOOTER CONTACTS -->
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-4 col-lg-4">
                         <div class="footer-box mb-20">
                             <!-- Title -->
                             <h5 class="h5-xs">Our Location</h5>
                             <!-- Address -->
                             <p class="para"><b>Office Address: </b><a href="https://maps.app.goo.gl/PvQanqsL2yZ3FXKm9" class="text-white" target="_blank"><i class="fas fa-route text-white"></i>
                                     Uttarakhand Fire & Emergency Services, 4th Floor, Sardar Patel Bhavan Court Road, Opposite Doon hospital Dehradun, Uttarakhand</a></p>
+                        </div>
+                    </div>
+                    <!-- FOOTER WORKING HOURS -->
+                     <!-- FOOTER CONTACTS -->
+                    <div class="col-md-4 col-lg-4">
+                        <div class="footer-box mb-20">
+                            <!-- Title -->
+                            <h5 class="h5-xs">Our Contacts</h5>
                             <!-- Email -->
                             <p class="foo-email mt-20">Email ID: <a href="mailto:dig.ukfs@gmail.com">dig.ukfs@gmail.com</a></p>
                             <!-- Phone -->
@@ -301,9 +380,8 @@
                     <!-- FOOTER WORKING HOURS -->
 
                     <!-- FOOTER PHONE NUMBER -->
-                    <div class="col-md-6 col-lg-4">
+                    <!-- <div class="col-md-6 col-lg-4">
                         <div class="footer-box mb-20">
-                            <!-- Title -->
                             <h5 class="h5-xs">Quick Links</h5>
                             <ul>
                                 <li><a href="javascript:void(0);" style="color:#fff"><i class="fas fa-angle-double-right"></i> Urban Development & Housing Department</a></li>
@@ -313,7 +391,7 @@
                                 <li><a href="javascript:void(0);" style="color:#fff"><i class="fas fa-angle-double-right"></i> GRS Departmental Login</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
                 </div> <!-- END FOOTER CONTENT -->
 
                 <!-- FOOTER COPYRIGHT -->
@@ -370,6 +448,7 @@
 
     <script src="{{ asset('public/new_assets/js/changer.js') }}"></script>
     <script defer src="{{ asset('public/new_assets/js/styleswitch.js') }}"></script>
+    <script src="https://cdn.ux4g.gov.in/tools/accessibility-widget.js" async></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const VISIT_KEY = "site_visit_home";

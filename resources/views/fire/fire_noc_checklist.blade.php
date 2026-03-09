@@ -16,19 +16,15 @@
   </div>
 </section>
 <!--Sub Header End-->
-<!-- ======= About Section ======= -->
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
-      <div class="col-md-12">
-         <h3 style="margin-top: 40px;"><h2>NOC Checklist</h2></h3>
-         <!-- <p>List of Public Information Officers / Appellate Officers in Uttarakhand Fire Service under RTI Act 2005</p> -->
-      </div>
-   </div>
-</div>
-<div class="container" style="margin-bottom: 40px;">
-   <div class="row">
 
-        <?php if(!empty($getData)):?>
+<section class="flagday-section py-5">
+   <div class="container" style="margin-bottom: 40px;">
+      <div class="row content-card content-text">
+         <div class="col-md-12 pb-3">
+            <h3><h2>NOC Checklist</h2></h3>
+         </div>
+
+         <?php if(!empty($getData)):?>
 
             <table class="table table-bordered table-responsive-sm">
                <thead>
@@ -39,27 +35,27 @@
                   </tr>
                </thead>
                <tbody>
-            <?php foreach($getData as $key => $value):?>
-                <tr>
-                    <th>{{ $key+1 }}</th>
-                    <th>{{ $value->hadding ?? 'NA' }}</th>
-                    <th>
-                        <a href="{{ asset('public/fire/service/'. $value->image) }}" class="btn btn-danger"><i class="fa fa-file"></i> Download File</a>
-                    </th>
-                </tr>
-            <?php endforeach;?>        
-            <?php else:?>
-                <tr>
-                    <th colspan="3">No Data Found</th>
-                </tr>
-            <?php endif;?>         
-                  
-               </tbody>
-            </table>
-            
+               <?php foreach($getData as $key => $value):?>
+                  <tr>
+                     <th>{{ $key+1 }}</th>
+                     <th>{{ $value->hadding ?? 'NA' }}</th>
+                     <th>
+                           <a href="{{ asset('public/fire/service/'. $value->image) }}" class="btn btn-danger"><i class="fa fa-file"></i> Download File</a>
+                     </th>
+                  </tr>
+               <?php endforeach;?>        
+               <?php else:?>
+                  <tr>
+                     <th colspan="3">No Data Found</th>
+                  </tr>
+               <?php endif;?>         
+                     
+                  </tbody>
+               </table>
+               
+      </div>
    </div>
-</div>
-</div>
+</section>
 @endsection
 @section('scripts')
 @stop

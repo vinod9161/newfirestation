@@ -4,12 +4,12 @@
 <section class="breadcrumb-section">
   <div class="overlay"></div>
     <div class="breadcrumb-content">
-    <h1 class="breadcrumb-item">Staff Strength of Fire Service</h1>
+    <h1 class="breadcrumb-item">Sanctioned strength</h1>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('actionIndex') }}">Home <i class="fa fa-angle-double-right"></i></a></li>
-        <li class="breadcrumb-item"><a href="#">Establishment <i class="fa fa-angle-double-right"></i></a> </li>
-        <li class="breadcrumb-item active" aria-current="page">Staff Strength of Fire Service</li>
+        <li class="breadcrumb-item"><a href="#">About Us <i class="fa fa-angle-double-right"></i></a> </li>
+        <li class="breadcrumb-item active" aria-current="page">Sanctioned strength</li>
         </ol>
     </nav>
   </div>
@@ -19,7 +19,7 @@
     <!-- ======= Table Section ======= -->
     <div class="container">
         <div class="row">
-            <h3 class="table-heading">Staff Strength of Fire Service</h3>
+            <h3 class="table-heading">Sanctioned strength</h3>
             <table class="table table-bordered table-responsive-sm">
                 <thead>
                     <tr>

@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.pandal')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'pandal'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -29,7 +29,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.public.function')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'public-function'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -43,7 +43,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.entertainment.activity')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'entertainment-activity'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -57,7 +57,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.film.shooting')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'film-shooting'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -71,7 +71,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.games')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'games'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -85,7 +85,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.helipad')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'helipad'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -99,7 +99,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.kerosene')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'kerosene'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -113,7 +113,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.fire.crackers')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'fire-crackers'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -127,7 +127,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.transportation')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'transportation'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>
@@ -141,7 +141,7 @@
     </div>
     <div class="col-sm-6 col-md-6 col-xl-3"> 
         <div class="card custom-card"> 
-            <a href="{{route('citizen.other.services')}}">
+            <a href="{{route('apply.temp.noc', ['type' => 'other-services'])}}">
                 <div class="card-body d-flex justify-content-between align-items-center">  
                     <div class="service-image" style="width: 20%;text-align: center;font-size: 45px;"> 
                         <i class="fe fe-book" style="color:#63ba16;"></i>

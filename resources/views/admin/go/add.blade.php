@@ -122,6 +122,23 @@
                                                 <span id="fileErr" class="text-danger"></span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Visibility<sup class="text-danger">*</sup></label><br>
+
+                                                <input type="checkbox" name="visibility[]" value="HQ"> HQ (Employees except CFO & FSO)
+                                                <br>
+
+                                                <input type="checkbox" name="visibility[]" value="FIELD"> Field Staff (CFO & FSO)
+                                                <br>
+
+                                                <input type="checkbox" name="visibility[]" value="PUBLIC"> Public (View on Website)
+
+                                                <span id="visibilityErr" class="text-danger"></span>
+                                            </div>
+                                        </div>
 
 
                                         <div class="col-md-4" style="margin:0 auto; margin-top:30px">

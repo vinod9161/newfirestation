@@ -1,158 +1,237 @@
 @extends('layouts.fire_new')
 @section('content')
+<style>
+  body {
+    background: #f4f6f9;
+  }
 
+  .status-card {
+    border-radius: 15px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .card:hover {
+    transform: translateY(-10px) !important;
+  }
+
+  .status-card .card-body {
+    padding: 15px;
+  }
+
+  .left-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    border-radius: 15px 0 0 15px;
+  }
+
+  .count-badge {
+    font-size: 20px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .status-title {
+    font-size: 14px;
+    color: #6c757d;
+  }
+
+  .status-text {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .icon-style {
+    font-size: 30px;
+  }
+</style>
 <!--Sub Header Start-->
 <section class="breadcrumb-section">
-    <div class="overlay"></div>
-    <div class="breadcrumb-content">
+  <div class="overlay"></div>
+  <div class="breadcrumb-content">
     <h1 class="breadcrumb-item">Fire Fighting and Rescue Operation</h1>
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+      <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('actionIndex') }}">Home <i class="fa fa-angle-double-right"></i></a></li>
         <li class="breadcrumb-item"><a href="#">Services <i class="fa fa-angle-double-right"></i></a> </li>
         <li class="breadcrumb-item active" aria-current="page">Fire Fighting and Rescue Operation</li>
-        </ol>
+      </ol>
     </nav>
-    </div>
+  </div>
 </section>
 <!--Sub Header End-->
-    
 
-    <section class="services">
-        <div class="container">
-  
-          <div class="row" style="margin-top: 40px;">
-              <div class="col-md-12">
-                  <h5 class="text-center"> Fire and Emergency service department is entrusted with the task of fire fighting and rescue operations in times of emergency and disasters. Fire and emergency service provide its services during following emergencies in Uttarakhand. </h5>
-              </div>
+<section class="services flagday-section py-5">
+  <div class="container">
+    <div class="row content-card content-text">
+      <div class="col-md-12">
+        <h3 class="text-center">Fire Fighting and Rescue operation </h3>
+        <p class="why-us section-bg aos-init aos-animate">
+          The Uttarakhand <b>Fire and Emergency Service</b> is entrusted with the responsibility of <b>firefighting and rescue operations</b> during emergencies and disasters. In Uttarakhand, the department provides its services during the following types of emergencies:
+        </p>
+        <h3 class="text-center heading pb-4">Fire Fighting </h3>
+      </div>
 
-                <div class="col-lg-12" style="margin-top: 30px; margin-bottom: 20px;">
-                  <h3 class="text-center">Fire Fighting </h3>
-                </div>
-  
-              <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up">
-                <div class="icon-box icon-box-red" style="background: #d82a2a;">
-                  <img src="{{asset('/public/fire/gallery/firein.png')}}">
-                  <p class="description" style="color:white">Structural and nonstructural fire fighting </p>
-                </div>
-              </div>
-    
-
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up">
-              <div class="icon-box icon-box-red" style="background: #d82a2a;">
-                <img src="{{asset('/public/fire/gallery/firein.png')}}">
-                <p class="description" style="color:white">Aircraft fire fighting</p>
-              </div>
-            </div>
-  
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon-box icon-box-red" style="background: #d82a2a;">
-                <img src="{{asset('/public/fire/gallery/firein.png')}}">
-                <p class="description" style="color:white">Forest fire fighting </p>
-              </div>
-            </div>
-  
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-              <div class="icon-box icon-box-red" style="background: #d82a2a;">
-                <img src="{{asset('/public/fire/gallery/firein.png')}}">
-                <p class="description" style="color:white">Industrial and chemical fire fighting </p>
-              </div>
-            </div>
-  
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-              <div class="icon-box icon-box-red" style="background: #d82a2a;">
-                <img src="{{asset('/public/fire/gallery/firein.png')}}">
-                <p class="description" style="color:white">Other fire fighting</p>
-              </div>
-            </div>
-  
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-success"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Structural and non-structural fire fighting</div>
           </div>
-  
-        </div>
-
-   
-  
-
-      </section><!-- End Services Section -->
-  
-      <!-- ======= Why Us Section ======= -->
-      <section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
-        <div class="container">
-       
-          <div class="row">
-            <div class="col-md-12">
-                <h2 class="heading">Rescue</h2>
-            </div>
-  
-           
-          
-  
-            <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
-  
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                  <p class="description">Industrial accidents </p>
-              </div>
-  
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>   
-                  <p class="description">Chemical spillage </p>
-              </div>
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Structure collapse</p>
-              </div>
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Vehicle accidents </p>
-              </div>
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Earthquake & Landslide  </p>
-              </div>
-            </div>
-            <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Flash flood</p>
-              </div>
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Flood  </p>
-              </div>
-
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Mountain search and rescue  </p>
-              </div>
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Highrise building rescue  </p>
-              </div>
-              <div class="icon-box">
-                <div class="icon"><img src="{{asset('/public/fire/gallery/vision.png')}}" ></div>
-                <p class="description">Other type of rescue  </p>
-              </div>
-  
-            </div>
-          </div>
-  
-        </div>
-      </section><!-- End Why Us Section -->
-      <div class="container">
-
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="text-center">Contact to fire service during emergency<br><a href="tel:112">call 112 </a><br><a href="{{route('actionFireUnits')}}" target="_blank">or direct contact to fire stations</a></h3>
-
         </div>
       </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-primary"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Aircraft fire fighting</div>
+          </div>
+        </div>
       </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#6f42c1;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Forest fire fighting</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-warning"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Industrial and chemical fire fighting </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#00258e;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Confined Space Firefighting</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#f44336;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Other specialized fire fighting</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <h3 class="text-center heading py-4">Rescue </h3>
+      </div>
+      
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-success"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Industrial accidents</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-primary"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Chemical spillage</div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#6f42c1;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Structure collapse</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border bg-warning"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Vehicle accidents</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#00258e;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Earthquake & Landslide </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#f44336;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Flash flood</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#8bc34a;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Flood</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#9e9e9e;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Mountain search and rescue</div>
+          </div>
+        </div>
+      </div>     
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#2a16e9d1;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Highrise building rescue </div>
+          </div>
+        </div>
+      </div>     
+      <div class="col-md-4 mb-4">
+        <div class="status-card">
+          <div class="left-border" style="background:#fa00d8d1;"></div>
+          <div class="card-body">
+            <div class="status-text text-dark">Other type of rescue  </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-12 pt-5">
+        <h3 class="text-center">Contact to fire service during emergency<br><a href="tel:112">call 112 </a><br><a href="{{route('actionFireUnits')}}" target="_blank">or direct contact to fire stations</a></h3>
+
+      </div>  -->
+    </div>
+  </div>
+</section>
+
 @endsection
 @section('scripts')
 @stop

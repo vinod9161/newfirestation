@@ -1,11 +1,5 @@
 @extends('layouts.fire_new')
 @section('content')
-<!-- DataTables CSS -->
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> -->
-
-<!-- jQuery & DataTables JS -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> -->
 
 <!--Sub Header Start-->
 <section class="breadcrumb-section">
@@ -23,11 +17,11 @@
 </section>
 <!--Sub Header End-->
 
-
+<section class="flagday-section py-5">
     <div class="container">
-        <div class="row"><h3 class="table-heading">Uttarakhand Fire Station List</h3>
+        <div class="row content-card content-text"><h3 class="table-heading">Fire Station List</h3>
         <table class="table table-bordered table-responsive-sm" id="fireStationsTable">
-          <thead>
+          <thead style="background-color:#006270; color: white;">
               <tr>
                   <th>S.No.</th>
                   <th>District</th>
@@ -38,48 +32,31 @@
               </tr>
           </thead>
           <tbody>
-              <?php if (!empty($getData)): ?>
-                  <?php $serial = 1; ?>
-                  <?php foreach ($getData as $districtData): ?>
-                      <?php
-                      $districtName = $districtData['district']->name;
-                      $fireStations = $districtData['fireStations'];
+            @if($getData->isNotEmpty())
+                @php $serial = 1; @endphp
 
-                      // Check if the district has fire stations
-                      if (!empty($fireStations)) {
-                          $rowCount = count($fireStations);
-                          $firstRow = true;
+                @foreach($getData as $row)
+                    <tr>
+                        <td>{{ $serial++ }}</td>
+                        <td>{{ $row->district_name ?? 'N/A' }}</td>
+                        <td>{{ $row->name }}</td>
+                        <td>{{ $row->fs_contact_no ?? 'N/A' }}</td>
+                        <td>{{ $row->fs_mobile_no ?? 'N/A' }}</td>
+                        <td>{{ $row->fs_email_address ?? 'N/A' }}</td>
+                    </tr>
+                @endforeach
 
-                          foreach ($fireStations as $station): ?>
-                              <tr>
-                                  <td><?= $serial++; ?></td>
-                                  <?php if ($firstRow): ?>
-                                      <td rowspan="<?= $rowCount; ?>"><?= $districtName; ?></td>
-                                      <?php $firstRow = false; ?>
-                                  <?php endif; ?>
-                                  <td><?= $station->name; ?></td>
-                                  <td><?= $station->fs_contact_no ?: 'N/A'; ?></td>
-                                  <td><?= $station->fs_mobile_no ?: 'N/A'; ?></td>
-                                  <td><?= $station->fs_email_address ?: 'N/A'; ?></td>
-                              </tr>
-                          <?php endforeach;
-                      } else { ?>
-                          <tr>
-                              <td><?= $serial++; ?></td>
-                              <td><?= $districtName; ?></td>
-                              <td colspan="4" class="text-center text-muted">No Fire Stations</td>
-                          </tr>
-                      <?php } ?>
-                  <?php endforeach; ?>
-              <?php else: ?>
-                  <tr>
-                      <td class="text-danger text-center" colspan="6">No Data Found</td>
-                  </tr>
-              <?php endif; ?>
-          </tbody>
+            @else
+                <tr>
+                    <td class="text-danger text-center" colspan="6">
+                        No Data Found
+                    </td>
+                </tr>
+            @endif
+        </tbody>
       </table>
     </div>
-
+</div>
 
     <!-- <script>
     $(document).ready(function () {

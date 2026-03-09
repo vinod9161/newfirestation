@@ -44,29 +44,27 @@
 </section>
 <!--Sub Header End-->
 <!-- ======= About Section ======= -->
-<section class="why-us section-bg" data-aos="fade-up" date-aos-delay="200">
+<section class="why-us section-bg flagday-section py-5" data-aos="fade-up" date-aos-delay="200">
     <div class="container">
-        <div class="row">
+        <div class="row content-card content-text">
             <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/mockdrill.jpg')}}" class="img-fluid img-reponsive" alt="">
+                <img src="{{asset('/public/fire/gallery/mockdrill.jpg')}}" class="img-fluid img-reponsive rounded" alt="">
             </div>
-            <div class="col-lg-6 d-flex flex-column justify-content-center p-5">
-                <h4 class="title">Awareness Classes/Mock Drills/Training</a></h4>
-                <p class="description"> Fire department provide training of firefighting, organize mock drills and
-                    awareness program. Industries, societies, school or other institutions can raise their request to
-                    fire department for organizing awareness program, mock drills, talk on show, seminar or conference.
-                    Fire department provide its services free of cost subject to availability. Public /schools/
-                    institutions can schedule their visit to fire station with prior consent of concern fire Station
-                    Officer. Contact directly to nearest fire station or email the concern fire station.
+            <div class="col-lg-6 d-flex flex-column justify-content-center">
+                <p class="description"> 
+                    Uttarakhand Fire & Emergency Service conducts firefighting training, mock drills, and fire safety awareness programmes. Industries, residential societies, schools, and other institutions may submit requests to the Fire Department for organizing awareness programmes, mock drills, talk shows, seminars, or conferences.
+                    These services are provided free of cost, subject to the availability of resources. Members of the public, schools, and institutions may also schedule visits to fire stations with prior permission from the concerned Fire Station Officer.
+                    For requests or coordination, please contact the nearest fire station directly or communicate via email with the concerned fire station.
+
                 </p>
             </div>
         </div>
     </div>
 </section>
 
-<section>
+<section class="flagday-section pb-5">
     <div class="container">
-        <div class="row">
+        <div class="row content-card content-text">
             <div class="col-md-12">
                 <h4 style="margin:20px ;" class="text-center">Request for awareness program/mock drills/talk on
                     show/seminar/conference/others</h4>

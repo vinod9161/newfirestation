@@ -35,7 +35,7 @@ class PandalNocController extends Controller
         $data = [
             'application_no' => $application_no,
             'user_id' => $user_id,
-            'noc_type' => 'pandal',
+            'noc_type' => $request->noc_type,
             'applicant_type' => $request->applicant_type,
         ];
         $result = $this->commonModel->insertData('temp_pandal_applications', $data);

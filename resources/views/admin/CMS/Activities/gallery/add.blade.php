@@ -69,9 +69,12 @@
                                                     <label>Select Category <sup class="text-danger">*</sup></label>
                                                     <select name="category_id" class="form-control">
                                                         <option value="">Select Category</option>
-                                                        <option value="Indoor_Event">Indoor Event</option>
+                                                        <option value="Firefighting_Operations">Firefighting Operations</option>
+                                                        <option value="Rescue_Operations">Rescue Operations</option>
+                                                        <option value="Other_Events">Other Events</option>
+                                                        <!-- <option value="Indoor_Event">Indoor Event</option>
                                                         <option value="Outdoor_Event">Outdoor Event</option>
-                                                        <option value="Official_Event">Official Event</option>
+                                                        <option value="Official_Event">Official Event</option> -->
                                                     </select>
                                                     <span class="text-danger" id="card_categoryError"></span>
                                                 </div>
