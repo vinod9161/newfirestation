@@ -42,6 +42,7 @@
     <link href="{{ asset('public/new_assets/css/my-style.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -97,6 +98,53 @@
         .form-control, .custom-select {
             padding: 5px;
         }
+        .fa-x-twitter:before {
+            padding: 3px 0;
+        }
+        .footer-socials-links .fa-x-twitter:before {
+            padding: 8px 0;
+        }
+
+        .headertopright a{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:30px;
+            height:30px;
+            border-radius:50%;
+            color:#fff;
+            transition:all 0.3s ease;
+            margin-top: 3px;
+        }
+
+        .headertopright a i{
+            line-height:1;
+        }
+
+        .headertopright a:hover{
+            background:#e30613;   /* red */
+            color:#fff;
+        }
+        /* .headertopright a{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:30px;
+            height:30px;
+            border-radius:50%;
+            transition:0.3s;
+        }
+
+        .headertopright a:hover{
+            background:#ffffff;
+            color:#333;
+        } */
+
+        #scrollUp {
+            color: white;
+            text-align: center;
+            line-height: 45px;
+        }
   </style>
 
 </head>
@@ -120,18 +168,27 @@
                     <!-- Address -->
                     <div class="headertopleft">
                         <div class="address clearfix">
-                            <span>Government Of Uttarakhand | उत्तराखंड सरकार</span>
+                            <a href="https://uk.gov.in/" target="_blank"><span>Government Of Uttarakhand | उत्तराखंड सरकार</span></a>
                             <a href="mailto:dig.ukfs@gmail.com"><i class="fas fa-envelope"></i><strong>dig.ukfs@gmail.com</strong></a>
                         </div>
                     </div>
 
                     <div class="headertopright">
-                        <a href="https://www.youtube.com/@UttarakhandFireService" class="ico-youtube" target="_blank"><i class="fab fa-youtube" style="line-height: 3 !important"></i></a>
-                        <a href="https://x.com/UKFireServices" class="ico-twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i><i class="fab fa-x-twitter" style="padding: 5px 0px;"></i></a>
-                        <a href="https://www.instagram.com/uttarakhandfireservice/?hl=en" class="ico-instagram" target="_blank"><i class="fab fa-instagram" style="line-height: 3 !important"></i></a>
-                        <a href="https://www.facebook.com/UttarakhandFireService/" class="ico-facebook" target="_blank"><i class="fab fa-facebook-f" style="line-height: 3 !important;"></i></a>
-                        <!--a class="lngbtn"  data-bs-toggle="modal" data-bs-target="#exampleModal">हिन्दी</a-->
-                        <!-- Modal -->
+                        <a href="https://www.youtube.com/@UttarakhandFireService" class="ico-youtube" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+
+                        <a href="https://x.com/UKFireServices" class="ico-twitter" target="_blank">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+
+                        <a href="https://www.instagram.com/uttarakhandfireservice/?hl=en" class="ico-instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+
+                        <a href="https://www.facebook.com/UttarakhandFireService/" class="ico-facebook" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -155,7 +212,7 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <a href="https://state.Uttarakhand.gov.in/gad/" target="_blank">
+                                    <a href="https://uk.gov.in/" target="_blank">
                                         <div class="header-widget icon-xs">
                                             <span class="flaticon-092-clock blue-color"></span>
                                             <div class="header-widget-txt">
@@ -184,13 +241,13 @@
                             <li class="{{ request()->routeIs('actionMissionVision','actionHistory','actionOrganisationStructure','actionFireServiceDay','actionFlagday','actionObjective','actionDgMsg','actionFireUnits','actionFaq','actionTutorials') ? 'active' : '' }}">
                                 <a href="#">About Us<span class="wsarrow"></span></a>
                                 <ul class="sub-menu">
-                                    <li><a href="{{ route('actionMissionVision')}}">Mission & Vision</a></li>
                                     <li><a href="{{ route('actionHistory')}}">History</a></li>
+                                    <li><a href="{{ route('actionMissionVision')}}">Mission & Vision</a></li>
+                                    <li><a href="{{ route('actionObjective')}}">Our Objective</a></li>
                                     <li><a href="{{ route('actionOrganisationStructure')}}">Organization Structure</a></li>
+                                    <li><a href="{{ route('actionDgMsg')}}">DG's Message</a></li>
                                     <li><a href="{{ route('actionFireServiceDay')}}">Fire Service Day </a></li>
                                     <li><a href="{{ route('actionFlagday')}}">Flag Day</a></li>
-                                    <li><a href="{{ route('actionObjective')}}">Our Objective</a></li>
-                                    <li><a href="{{ route('actionDgMsg')}}">DG's Message</a></li>
                                     <li><a href="{{ route('actionFireUnits')}}">Fire Station List</a></li>
                                     <!-- <li><a href="{{ route('actionStaffStrength')}}">Sanctioned strength</a></li> -->
                                     <li><a href="{{ route('actionFaq')}}">FAQ's</a></li>
@@ -343,10 +400,11 @@
                         <div class="footer-info mb-20">
                             <img src="{{ asset('public/new_assets/img/logo_footer.png') }}" height="55px" alt="footer-logo">
                             <!-- <p class="para pt-2">Welcome to the official website of the Uttarakhand Fire Service. We are dedicated to ensuring the safety and well-being of our community through rapid response to fire emergencies and fire safety awareness </p> -->
+                            
                             <div class="footer-socials-links mt-20">
                                 <ul class="foo-socials text-center clearfix">
                                     <li><a href="https://www.facebook.com/UttarakhandFireService/" class="ico-facebook" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="https://x.com/UKFireServices" class="ico-twitter" target="_blank"><i class="fa fa-x-twitter"></i></a></li>
+                                    <li><a href="https://x.com/UKFireServices" class="ico-twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i></a></li>
                                     <li><a href="https://www.instagram.com/uttarakhandfireservice/?hl=en" class="ico-instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
                                     <li><a href="https://www.youtube.com/@UttarakhandFireService" class="ico-youtube" target="_blank"><i class="fab fa-youtube"></i></a></li>
                                 </ul>
@@ -398,7 +456,8 @@
                 <div class="bottom-footer">
                     <div class="row text-center">
                         <div class="col-md-12">
-                            <p class="footer-copyright">&copy; <span>Uttarakhand Fire Service </span>| All Rights Reserved | <a href="#" class="text-white">Website Policies</a></p>
+                            <!-- <p class="footer-copyright">&copy; <span>Uttarakhand Fire Service </span>| All Rights Reserved | <a href="#" class="text-white">Website Policies</a></p> -->
+                            <p class="footer-copyright"><span>Copyright &copy; Uttarakhand Fire & Emergency Service. Designed and Managed by <a href="https://itda.uk.gov.in/" class="text-white" target="_blank" style="text-decoration: underline;">Information Technology Development Agency (ITDA)</a>, Department of IT, Good Governance & Science & Technology, Government of Uttarakhand. All rights reserved.</span></p>
                         </div>
                     </div>
                 </div>

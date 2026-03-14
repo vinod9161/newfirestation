@@ -13,9 +13,9 @@
         <h5 class="main-content-title text-default  fs-24  mg-b-4 mb-0">Manage Recent Updates</h5>
     </div>
     <div class="d-flex app-header-btn">
-        
+
         <div>
-            <a href="<?php echo route('admin.recentupdates');?>" class="btn ripple btn-wave  btn-success mb-0">
+            <a href="<?php echo route('admin.recentupdates'); ?>" class="btn ripple btn-wave  btn-success mb-0">
                 <i class="fe fe-eye me-1"></i> View Recent Updates List
             </a>
         </div>
@@ -62,6 +62,13 @@
                             </div>
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
+                                    <label class="form-label">Route URL</label>
+                                    <input type="text" class="form-control" name="route_url" value="{{ $recentupdates[0]->route_url }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
                                     <label class="form-label">Document <span class="text-danger">*</span></label>
                                     <input type="file" class="form-control" id="document" name="document">
                                     <span class="text-danger" id="error_2"></span>
@@ -78,6 +85,11 @@
                                     <span class="text-danger" id="error_3"></span>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="form-label">Highlight</label><br> 
+                                    <input type="checkbox" name="is_highlight" value="1" {{ $recentupdates[0]->is_highlight == 1 ? 'checked' : '' }}> Enable Highlight </div>
+                            </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label class="form-label">Rank <span class="text-danger">*</span></label>
@@ -90,7 +102,7 @@
                                 <button type="submit" id="addRecentUpdates" class="btn btn-primary btn-sm" style="width:20%">Submit</button>
                             </div>
                         </div>
-                    </form>  
+                    </form>
                 </div>
             </div>
         </div>
@@ -111,64 +123,55 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-$(function(e) {
+    $(function(e) {
 
-    // file export datatable
-    $('#datatable-basic').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        language: {
-            searchPlaceholder: 'Search...',
-            sSearch: '',
-        },
+        // file export datatable
+        $('#datatable-basic').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+            },
+        });
     });
-});
 
 
-// form validation
+    // form validation
 
-$(document).ready(function(){
-    $('#addRecentUpdates').on('click', function(){
-        let title = $('#title').val();
-        let document = $('#document').val();
-        let status = $('#status').val();
-        let description = $('#description').val();
-        if(title == '')
-        {
-            var msg = "Title field is required.";
-            $('#error_1').text(msg);
-            return false;
-        }
-        else if(status == '')
-        {
-            var msg = "Status field is required.";
-            $('#error_1').text('');
-            $('#error_2').text('');
-            $('#error_3').text(msg);
-            return false;
-        }
-        else if(description == '')
-        {
-            var msg = "Description field is required.";
-            $('#error_1').text('');
-            $('#error_2').text('');
-            $('#error_3').text('');
-            $('#error_4').text(msg);
-            return false;
-        }
-        else
-        {
-            $('#error_1').text('');
-            $('#error_2').text('');
-            $('#error_3').text('');
-            $('#error_4').text('');
-            return true;
-        }
+    $(document).ready(function() {
+        $('#addRecentUpdates').on('click', function() {
+            let title = $('#title').val();
+            let document = $('#document').val();
+            let status = $('#status').val();
+            let description = $('#description').val();
+            if (title == '') {
+                var msg = "Title field is required.";
+                $('#error_1').text(msg);
+                return false;
+            } else if (status == '') {
+                var msg = "Status field is required.";
+                $('#error_1').text('');
+                $('#error_2').text('');
+                $('#error_3').text(msg);
+                return false;
+            } else if (description == '') {
+                var msg = "Description field is required.";
+                $('#error_1').text('');
+                $('#error_2').text('');
+                $('#error_3').text('');
+                $('#error_4').text(msg);
+                return false;
+            } else {
+                $('#error_1').text('');
+                $('#error_2').text('');
+                $('#error_3').text('');
+                $('#error_4').text('');
+                return true;
+            }
+        });
     });
-});
-
-
 </script>
 @stop

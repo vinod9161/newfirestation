@@ -11,6 +11,7 @@ use Auth;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use App\Models\Activities\FireServiceWeekModel;
+use App\Models\LeadershipSection;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +51,14 @@ class MainController extends Controller{
         $employeeCount = Employee::count();
         $count['employeeCount'] = $employeeCount;
 
+        $fireCallsCount      = $this->commonModel->getData('fs_fire_report');
+        $fire_Calls_Count    = count($fireCallsCount)??0;
+        $count['fireCallsCount'] = $fire_Calls_Count;
+
+        $manpowerCount       = $this->commonModel->getData('users');
+        $man_power_count     = count($manpowerCount)??0;
+        $count['manpowerCount'] = $man_power_count;
+
         $vehicleCount = Vehicle::count();
         $count['vehicleCount'] = $vehicleCount;
 
@@ -64,8 +73,9 @@ class MainController extends Controller{
 
         $getBanner = $this->commonModel->getDataByOneCondition($tbl,$where);
         $recentfireincidents = $this->commonModel->getDataByOneCondition('recentfireincidents',array('status' => '1'));
-
-        return view('fire.index')->with('count',$count)->with('recentupdates',$recentupdates)->with('getbanner',$getBanner)->with('recentfireincidents',$recentfireincidents);
+        $leadership = LeadershipSection::where('status',1)->first();
+    
+        return view('fire.index')->with('count',$count)->with('recentupdates',$recentupdates)->with('getbanner',$getBanner)->with('recentfireincidents',$recentfireincidents)->with('leadership',$leadership);
     }
 
     public function actionSarkar(){

@@ -1,5 +1,18 @@
 @extends('layouts.fire_new')
 @section('content')
+<style>
+    .cm-img{
+        height:300px;
+        object-fit:contain;
+        padding:15px;
+    }
+
+    .dgp-img{
+        height:200px;
+        object-fit:contain;
+        padding:15px;
+    }
+</style>
 
 <div class="breaking" style="padding-bottom: 24px;">
     <div id="breHead" style="width: 200px;">
@@ -7,12 +20,33 @@
     </div>
     <div id="breContant">
         <marquee onmouseover="this.stop()" onmouseout="this.start()" scrollamount="7">
-            <nobr>
+            <!-- <nobr>
                 <span>केदारनाथ धाम में हैलीक्रेश सम्बन्धी मॉक ड्रिल</span>
                 <span>चारधाम यात्रा के मध्यनजर अग्नि सुरक्षा सम्बन्धी चैकिंग</span>
                 <span>Uttarakhand burning since 4 days, nearly 50 acres of land destroyed?</span>
                 <span>Uttarakhand Home Guard</span>
                 <span>Uttarakhand Police Building Construction Corporation</span>
+                @foreach($recentupdates as $ru)
+                <span><a href="{{route('actionRecentUpdates')}}" style="color: #1d4ed8;">{{$ru->title}}</a></span>
+                @endforeach
+            </nobr> -->
+            <nobr>
+                @foreach($recentupdates as $ru)
+
+                    <span>
+                    <a href="{{ $ru->route_url ? url($ru->route_url) : asset($ru->document) }}"
+                    style="color: {{ $ru->is_highlight ? '#dc2626' : '#00258e' }}; font-weight: {{ $ru->is_highlight ? '700' : '600' }}">
+
+                    @if($ru->is_highlight)
+                    🔥
+                    @endif
+
+                    {{$ru->title}}
+
+                    </a>
+                    </span>
+
+                @endforeach
             </nobr>
         </marquee>
     </div>
@@ -60,63 +94,74 @@
     </div>
     <!-- #endregion Jssor Slider End -->
 </section>
-
+@if($leadership)
 <section id="blog-1" class="blog-section division flagday-section py-5">
+
     <div class="container">
-        <div class="row content-card content-text">
+        <div class="row content-card content-text align-items-center">
+
+            {{-- CM SECTION (Larger Image) --}}
+            <div class="col-md-4 text-center">
+                <!-- <div style="box-shadow:0px 0px 10px 4px #eee;padding:20px 10px;border-radius:5px;"> -->
+
+                <img src="{{ url('public/'.$leadership->cm_image) }}"
+                    alt="{{ $leadership->cm_name }}"
+                    class="img-fluid cm-img">
+
+                <h5 class="profile-name">
+                    {{ $leadership->cm_name }}
+                </h5>
+
+                <p class="profile-info">
+                    {{ $leadership->cm_designation }}
+                </p>
+
+            </div>
+
+
+
+            {{-- CENTER CONTENT --}}
+            <div class="col-md-5">
+
+                <h3 class="mb-3">
+                    {{ $leadership->subject }}
+                </h3>
+
+                <p id="fireText" align="justify" style="line-height:30px;">
+                    {{ $leadership->content }}
+                </p>
+
+                <button id="toggleBtn"
+                    class="btn btn-primary btn-sm"
+                    style="color:#fff;background-color:#006270;border-color:#006270;">
+                    Read More
+                </button>
+
+            </div>
+
+
+
+            {{-- DGP SECTION (Smaller Image) --}}
             <div class="col-md-3 text-center">
-                <div style="box-shadow: 0px 0px 10px 4px #eee; padding: 20px 10px;border-radius: 5px;">
-                    <img src="{{ asset('public/new_assets/img/cm-uk.png') }}" alt="Shri Pushkar Singh Dhami" class="img-fluid" style="height: 200px;">
-                    <h5 class="profile-name">Shri Pushkar Singh Dhami</h5>
-                    <p class="profile-info">Honourable Chief Minister, Uttarakhand</p>
-                </div>
-            </div>
-            <!-- <div class="col-md-6 pb-40">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="mb-3">Uttarakhand Fire Services</h3>
-                        <p align="justify" style="line-height: 30px;">
-                            The Uttarakhand Fire & Emergency Service stands as the state’s primary emergency response authority, committed to safeguarding life, property, and the environment. As a frontline public safety organization, the department delivers rapid, professional, and coordinated response to fire incidents, natural disasters, road traffic accidents, industrial emergencies, hazardous material incidents, and complex rescue operations.
-                            With strategically located fire stations across the state, highly trained personnel, and modern firefighting and rescue equipment, the Service ensures timely intervention even in Uttarakhand’s challenging mountainous terrain and remote regions. The department functions as a critical component of the state’s disaster response and emergency management framework.
-                            Beyond emergency response, the Uttarakhand Fire & Emergency Service represents preparedness, professionalism, and public trust. Its continuous efforts in prevention, preparedness, and rapid intervention significantly reduce risk, protect communities, and strengthen the state’s overall safety infrastructure.
-                        </p>
-                    </div>
-                    <div class="col-md-3 ml-md-auto form-group" style="visibility: visible; animation-delay: 1s; animation-name: fadeInUp;">
-                        <a href="{{ asset('public/fire/pdf/MoM-Website (12-02-2026).pdf') }}" class="btn btn-blue blue-hover form-control" target="_blank"> Read More</a>
-                    </div>
-                </div>
-            </div> -->
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="mb-3">Uttarakhand Fire Services</h3>
 
-                        <p id="fireText" align="justify" style="line-height: 30px;">
-                            The Uttarakhand Fire & Emergency Service stands as the state’s primary emergency response authority, committed to safeguarding life, property, and the environment. As a frontline public safety organization, the department delivers rapid, professional, and coordinated response to fire incidents, natural disasters, road traffic accidents, industrial emergencies, hazardous material incidents, and complex rescue operations.
-                            With strategically located fire stations across the state, highly trained personnel, and modern firefighting and rescue equipment, the Service ensures timely intervention even in Uttarakhand’s challenging mountainous terrain and remote regions. The department functions as a critical component of the state’s disaster response and emergency management framework.
-                            Beyond emergency response, the Uttarakhand Fire & Emergency Service represents preparedness, professionalism, and public trust. Its continuous efforts in prevention, preparedness, and rapid intervention significantly reduce risk, protect communities, and strengthen the state’s overall safety infrastructure.
-                        </p>
+                <img src="{{ url('public/'.$leadership->dgp_image) }}"
+                    alt="{{ $leadership->dgp_name }}"
+                    class="img-fluid dgp-img">
 
-                        <button id="toggleBtn" class="btn btn-primary btn-sm" style="color: #fff; background-color: #006270; border-color: #006270;">
-                            Read More
-                        </button>
+                <h5 class="profile-name">
+                    {{ $leadership->dgp_name }}
+                </h5>
 
-                    </div>
-                </div>
+                <p class="profile-info">
+                    {!! nl2br(e($leadership->dgp_designation)) !!}
+                </p>
+
             </div>
 
-
-            <div class="col-md-3 ml-md-auto text-center">
-                <div style="box-shadow: 0px 0px 10px 4px #eee; padding: 20px 10px;border-radius: 5px;">
-                    <img src="{{ asset('public/new_assets/img/dgp.png') }}" alt="Smt Shoba Ohatker (IPS)" class="img-fluid" style="height: 180px;margin-top:20px">
-                    <h5 class="profile-name">Dr. Deepam Seth</h5>
-                    <p class="profile-info">Director General of Police <br/> Uttarakhand Fire Service</p>
-                </div>
-            </div>
         </div>
     </div>
 </section>
-
+@endif
 <section id="blog-1" class="blog-section division flagday-section">
     <div class="container">
         <div class="row content-card content-text">
@@ -217,7 +262,7 @@
                     </div>                    
                     <div class="card">
                         <a href="{{route('actionRTI')}}">
-                            <img src="{{ asset('public/new_assets/img/content/s7.png') }}" style="height: 120px">
+                            <img src="{{ asset('public/new_assets/img/content/rti2.png') }}" style="height: 120px">
                             <h3>RTI</h3>
                         </a>
                     </div>
@@ -235,34 +280,42 @@
                     <h2>Overview</h2>
                     <div class="service-grid">
                         <div class="service-card">
-                            <img src="{{ asset('public/new_assets/img/content/1.png') }}" width="80px">
-                            <h3 class="service-number">50</h3>
-                            <p class="service-title">Fire Stations</p>
+                            <a href="{{route('actionFireUnits')}}">
+                                <img src="{{ asset('public/new_assets/img/content/1.png') }}" width="80px">
+                                <h3 class="service-number">{{$count['fireStationCount'] ?? 0}}</h3>
+                                <p class="service-title">Fire Stations</p>
+                            </a>
                         </div>
                         <div class="service-card">
-                            <img src="{{ asset('public/new_assets/img/content/2.png') }}" width="80px">
-                            <h3 class="service-number">50</h3>
-                            <p class="service-title">Fire Calls</p>
+                            <a href="{{route('actionCallDetails')}}">
+                                <img src="{{ asset('public/new_assets/img/content/2.png') }}" width="80px">
+                                <h3 class="service-number">{{$count['fireCallsCount'] ?? 0}}</h3>
+                                <p class="service-title">Fire Calls</p>
+                            </a>
                         </div>
                         <div class="service-card">
-                            <img src="{{ asset('public/new_assets/img/content/3.png') }}" width="80px">
-                            <h3 class="service-number">50</h3>
-                            <p class="service-title">Total Emergency Calls</p>
+                            <a href="{{route('actionCallDetails')}}">
+                                <img src="{{ asset('public/new_assets/img/content/3.png') }}" width="80px">
+                                <h3 class="service-number">{{$count['emergencyCallCount'] ?? 0}}</h3>
+                                <p class="service-title">Total Emergency Calls</p>
+                            </a>
                         </div>
                         <div class="service-card">
                             <img src="{{ asset('public/new_assets/img/content/4.png') }}" width="80px">
-                            <h3 class="service-number">50</h3>
+                            <h3 class="service-number">{{$count['manpowerCount'] ?? 0}}</h3>
                             <p class="service-title">Total Strength</p>
                         </div>
                         <div class="service-card">
                             <img src="{{ asset('public/new_assets/img/content/5.png') }}" width="90px">
-                            <h3 class="service-number">50</h3>
+                            <h3 class="service-number">{{$count['vehicleCount'] ?? 0}}</h3>
                             <p class="service-title">Fire Vehicles</p>
                         </div>
                         <div class="service-card">
-                            <img src="{{ asset('public/new_assets/img/content/6.png') }}" width="80px">
-                            <h3 class="service-number">50</h3>
-                            <p class="service-title">Lives Saved</p>
+                            <a href="{{route('actionCallDetails')}}">
+                                <img src="{{ asset('public/new_assets/img/content/6.png') }}" width="80px">
+                                <h3 class="service-number">{{$count['lifeSaveCount'] ?? 0}}</h3>
+                                <p class="service-title">Lives Saved</p>
+                            </a>
                         </div>
                     </div>
                 </div>

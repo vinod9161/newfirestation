@@ -66,7 +66,7 @@
                         <td>{{ $row->status == 1 ? 'Active' : 'Inactive' }}</td>
                         <td>
                            <!-- Edit Button -->
-                           <a href="{{ route('admin.editRecentUpdatesForm', $row->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-eye"></i></a> 
+                           <a href="{{ route('admin.editRecentUpdatesForm', $row->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a> 
                            <!-- Delete Button -->
                            <a href="{{ route('admin.deleteRecentUpdates', $row->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this recent updates?');"><i class="fe fe-trash"></i></a>
                         </td>

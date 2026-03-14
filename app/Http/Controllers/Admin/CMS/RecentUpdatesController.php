@@ -25,13 +25,12 @@ class RecentUpdatesController extends Controller
     public function saveRecentUpdates(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'  => 'required',
-            'description'  => 'required',
-            'status'  => 'required',
-            'document' => 'required|mimes:pdf',
-        ], 
-        [
-            'document.required' => 'Please upload a PDF document',
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+            'document' => 'nullable|mimes:pdf',
+            'route_url' => 'nullable|string|max:500'
+        ],[
             'document.mimes' => 'Only PDF files are allowed'
         ]);
 
@@ -41,29 +40,34 @@ class RecentUpdatesController extends Controller
                 ->withInput();
         }
 
+        $document = null;
+
         if ($request->hasFile('document')) {
-            
-            $fileName = time() . '.' . $request->document->getClientOriginalExtension();
+
+            $fileName = time().'.'.$request->document->getClientOriginalExtension();
 
             $request->file('document')->move(public_path('admin/recentupdates'), $fileName);
 
-            $document = 'admin/recentupdates/' . $fileName;
+            $document = 'admin/recentupdates/'.$fileName;
         }
 
         $data = [
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'status' => $request->input('status'),
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'route_url' => $request->route_url,
+            'is_highlight' => $request->has('is_highlight') ? 1 : 0,
             'document' => $document
         ];
 
         $result = $this->commonModel->insertData('recentupdates', $data);
-        print_r($result);die;
+
         if($result)
         {
             return redirect()->back()->with('success', 'Recent Updates saved successfully');
         }
-        else{
+        else
+        {
             return redirect()->back()->with('failed', 'Something Went Wrong Try Later!');
         }
     }
@@ -75,9 +79,10 @@ class RecentUpdatesController extends Controller
     public function updateRecentUpdates(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'  => 'required',
-            'description'  => 'required',
-            'status'  => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+            'route_url' => 'nullable|string|max:500'
         ]);
 
         if ($validator->fails()) {
@@ -86,40 +91,31 @@ class RecentUpdatesController extends Controller
                 ->withInput();
         }
 
-        $id   = $request->input('id');
-        $where =['id' => $id];
-        if($request->hasFile('document'))
-        {
-            $document = "";
-            if ($request->hasFile('document')) 
-            {
-                $fileName = time() . '.' . $request->document->getClientOriginalExtension();
-                $request->file('document')->move(public_path('admin/recentupdates'), $fileName);
-                $document = 'admin/recentupdates/' . $fileName;
-            }
-            
-            $data = [
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-                'status' => $request->input('status'),
-                'document' => $document
-            ];
-        }
-        else
-        {
-            $data = [
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-                'status' => $request->input('status')
-            ];
+        $id = $request->id;
+        $where = ['id' => $id];
+
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'route_url' => $request->route_url,
+            'is_highlight' => $request->has('is_highlight') ? 1 : 0
+        ];
+
+        if ($request->hasFile('document')) {
+
+            $fileName = time().'.'.$request->document->getClientOriginalExtension();
+
+            $request->file('document')->move(public_path('admin/recentupdates'), $fileName);
+
+            $data['document'] = 'admin/recentupdates/'.$fileName;
         }
 
         $result = $this->commonModel->updateDataByOneCondition('recentupdates', $where, $data);
-        if($result)
-        {
+
+        if($result){
             return redirect()->back()->with('success', 'Recent Updates updated successfully');
-        }
-        else{
+        }else{
             return redirect()->back()->with('failed', 'Something Went Wrong Try Later!');
         }
     }

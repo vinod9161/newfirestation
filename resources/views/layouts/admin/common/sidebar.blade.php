@@ -291,6 +291,11 @@
                             <a href="{{ route('admin.getwelfareamenity') }}" class="side-menu__item"
                                 style="padding-left: 35px;">Welfare and Amenity</a>
                         </li>
+                        
+                        <li class="slide">
+                            <a href="{{ route('admin.leadershipSectionList') }}" class="side-menu__item"
+                                style="padding-left: 35px;">Leadership Section</a>
+                        </li>
 
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">About <i

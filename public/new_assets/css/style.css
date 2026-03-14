@@ -1044,7 +1044,7 @@ span.id-color {
 }
 
 .headertopright a:hover {
-  background-color: #00258e;
+  /* background-color: #00258e; */
 }
 
 .headertopright a.facebookicon:hover {
@@ -4758,8 +4758,8 @@ p.footer-copyright span {
   color: #c5d1dc;
 }
 
-.foo-socials a.ico-facebook:hover { background-color: #3b5998; border-color: #3b5998; color: #fff; }
-.foo-socials a.ico-twitter:hover { background-color: #000000; border-color: #000000; color: #fff; }
+.foo-socials a.ico-facebook:hover { background-color: #dc3c59; border-color: #dc3c59; color: #fff; }
+.foo-socials a.ico-twitter:hover { background-color: #dc3c59; border-color: #dc3c59; color: #fff; }
 .foo-socials a.ico-instagram:hover { background-color: #dc3c59; border-color: #dc3c59; color: #fff; }
 .foo-socials a.ico-dribbble:hover { background-color: #d92d84; border-color: #d92d84; color: #fff; }
 .foo-socials a.ico-behance:hover { background-color: #2473f6; border-color: #2473f6; color: #fff; }

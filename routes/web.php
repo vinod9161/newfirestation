@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\Equipment\EquipmentController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\Admin\CMS\LeadershipSectionController;
 
 
 Route::get('/', function () {
@@ -1203,4 +1204,11 @@ Route::post('/get-categories-by-subcategory', [CommonController::class, 'getCate
 Route::post('/get-occupancy-input-type', [CommonController::class, 'getOccupancyInputType'])
     ->name('getOccupancyInputType');
 
+
+Route::get('admin/leadership-section/add',[LeadershipSectionController::class,'addLeadershipSectionForm'])->name('admin.addLeadershipSection');
+Route::post('admin/leadership-section/save',[LeadershipSectionController::class,'saveLeadershipSection'])->name('admin.saveLeadershipSection');
+Route::get('admin/leadership-section',[LeadershipSectionController::class,'leadershipSectionList'])->name('admin.leadershipSectionList');
+Route::get('admin/edit-leadership-section/{id}',[LeadershipSectionController::class,'editLeadershipSectionForm'])->name('admin.editLeadershipSectionForm');
+Route::post('admin/update-leadership-section',[LeadershipSectionController::class,'updateLeadershipSection'])->name('admin.updateLeadershipSection');
+Route::get('admin/delete-leadership-section/{id}',[LeadershipSectionController::class,'deleteLeadershipSection'])->name('admin.deleteLeadershipSection');
 

@@ -1,0 +1,26 @@
+12/03/2026
+
+ALTER TABLE recentupdates
+ADD COLUMN route_url VARCHAR(500) NULL AFTER title,
+ADD COLUMN is_highlight TINYINT(1) DEFAULT 0 AFTER route_url;
+
+
+CREATE TABLE leadership_section (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    cm_name VARCHAR(200),
+    cm_designation VARCHAR(200),
+    cm_image VARCHAR(255),
+
+    dgp_name VARCHAR(200),
+    dgp_designation VARCHAR(200),
+    dgp_image VARCHAR(255),
+
+    subject VARCHAR(255),
+    content TEXT,
+
+    status TINYINT(1) DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL
+);
