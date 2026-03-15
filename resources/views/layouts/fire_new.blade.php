@@ -145,6 +145,9 @@
             text-align: center;
             line-height: 45px;
         }
+        .hero-widget {
+            padding: 6px 0;
+        }
   </style>
 
 </head>
@@ -283,7 +286,7 @@
                                             <li><a href="{{ asset('/public/fire/pdf/required_documents.pdf') }}" target="_blank">Documents Required for Fire NOC</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="{{ route('actionFireFighting')}}">Fire Fighting & Rescue Opretion</a></li>
+                                    <li><a href="{{ route('actionFireFighting')}}">Fire Fighting & Rescue Operation</a></li>
                                     <li><a href="{{ route('actionStandby')}}">Standby Duties</a></li>
                                     <li><a href="{{ route('actionPumpingWork')}}">Pumping Works</a></li>
                                     <li><a href="{{ route('actionPublicAwareness')}}">Awareness classes/Mock Drills</a></li>

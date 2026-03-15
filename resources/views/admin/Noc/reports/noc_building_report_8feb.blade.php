@@ -147,7 +147,7 @@
                            <td style="text-align: center;
                               font-size: 14px;" colspan="3">{{json_decode($applicationDetail->max_height_building)->max_height_building}}</td>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="3">No. of Floors तलों की संखया</td>
+                              font-size: 14px;" colspan="3">No. of Floors तलों की संख्या</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="3">{{$applicationDetail->no_of_floor}}</td>
                         </tr>
@@ -205,7 +205,7 @@
                         </tr>
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Does any high tension electric line passing over the site? कया कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</td>
+                              font-size: 14px;" colspan="6">Does any high tension electric line passing over the site? क्या कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->physical_ins)->line ?? ''}}</td>
                         </tr>
@@ -224,7 +224,7 @@
                         </tr>
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Does any high inflammable installation situated nearby the building? क्या प्रश्नगत भवन के आस-पास अति ज्वलनशील पदार्थ सथापित है?</td>
+                              font-size: 14px;" colspan="6">Does any high inflammable installation situated nearby the building? क्या प्रश्नगत भवन के आस-पास अति ज्वलनशील पदार्थ स्थापित है?</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->physical_ins)->inflammable ?? ''}}</td>
                         </tr>
@@ -242,7 +242,7 @@
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->physical_ins)->specific ?? ''}}</td>
                         </tr>
                         <tr>
-                           <th style="font-size: 14px;background-color:lightgray;" colspan="12"  class="text-center;" >Required fire fighting Provision in Building भवन मे आवशयक अग्निशमन व्यवस्था</th>
+                           <th style="font-size: 14px;background-color:lightgray;" colspan="12"  class="text-center;" >Required fire fighting Provision in Building भवन मे आवश्यक अग्निशमन व्यवस्था</th>
                         </tr>
                         <tr>
                            <th  colspan="6" style="background-color:lightgray;">Fire Equipment अग्निशमन उपकरण</th>
@@ -252,7 +252,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->is_under_ground) && json_decode($applicationDetail->fire_provission)->is_under_ground =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Under-ground Static Water Storage Tank भूमिगत स्थैतिक जल संग्रहण टैक</td>
+                              font-size: 14px;" colspan="6">Under-ground Static Water Storage Tank भूमिगत स्थैतिक जल संग्रहण टैंक</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->fire_provission)->is_under_ground ?? ''}}</td>
                         </tr>
@@ -345,7 +345,7 @@
 
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Pump with minimum Pressure of 3.5 kg/cm² at Remotest Location) भूमिगत स्थैतिक जल भंडारण टैक के पास पम्प (न्यूनतम 3.5 किगा/भार सेमी का दबाब)</td>
+                              font-size: 14px;" colspan="6">Pump with minimum Pressure of 3.5 kg/cm² at Remotest Location) भूमिगत स्थैतिक जल भंडारण टैंक के पास पम्प (न्यूनतम 3.5 किग्रा/भार सेमी का दबाब)</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->fire_provission)->under_ground_tank ?? ''}}</td>
                         </tr>
@@ -475,7 +475,7 @@
 
 
                         <tr style="background-color:lightgray">
-                           <th  colspan="6" style="font-weight: 600;">Building Status भवन की स्थ्ति</th>
+                           <th  colspan="6" style="font-weight: 600;">Building Status भवन की स्थिति</th>
                            <th  colspan="6" style="font-weight: 600;">Details विवरण</th>
                         </tr>
                         <tr>
@@ -525,7 +525,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->alt_electric) && json_decode($applicationDetail->fire_provission)->alt_electric =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Alternative Electric Supply वैकल्पिक विधुत व्यवस्था</td>
+                              font-size: 14px;" colspan="6">Alternative Electric Supply वैकल्पिक विद्युतव्यवस्था</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->building_status)->alt_electric ?? ''}}</td>
                         </tr>
@@ -534,7 +534,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->emergency_light) && json_decode($applicationDetail->fire_provission)->emergency_light =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Emergency lighting system आपातकालीन विधुत व्यवस्था
+                              font-size: 14px;" colspan="6">Emergency lighting system आपातकालीन विद्युतव्यवस्था
                            </td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->building_status)->emergency_light ?? ''}}</td>
@@ -580,7 +580,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->elec_install) && json_decode($applicationDetail->fire_provission)->elec_install =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Electric Installation(ELCB,MCB)विधुत स्थापन(ईएलसीबी, एमसीबी) </td>
+                              font-size: 14px;" colspan="6">Electric Installation(ELCB,MCB)विद्युतस्थापन(ईएलसीबी, एमसीबी) </td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->building_status)->elec_install ?? ''}}</td>
                         </tr>
@@ -603,7 +603,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->fresh_air) && json_decode($applicationDetail->fire_provission)->fresh_air =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Fresh air induction system ताजा हवा प्रेरण प्रणाली</td>
+                              font-size: 14px;" colspan="6">Fresh air induction system ताज़ा हवा प्रेरण प्रणाली</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->special_provission)->fresh_air ?? ''}}</td>
                         </tr>
@@ -684,7 +684,7 @@
                         @if(isset(json_decode($applicationDetail->fire_provission)->trained_staff) && json_decode($applicationDetail->fire_provission)->trained_staff =='Required')
                         <tr>
                            <td style="padding-left:10px;
-                              font-size: 14px;" colspan="6">Fire safety trained staff अग्निसुक्षा प्रशिक्षित स्टाफ</td>
+                              font-size: 14px;" colspan="6">Fire safety trained staff अग्निसुरक्षा प्रशिक्षित स्टाफ</td>
                            <td style="text-align: center;
                               font-size: 14px;" colspan="6">{{ json_decode($applicationDetail->special_provission)->trained_staff ?? ''}}</td>
                         </tr>

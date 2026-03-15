@@ -1312,7 +1312,7 @@
                                     <span>{{json_decode($applicationDetail->ess_provision_detail)->electric_suppy ?? ''}} </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Emergency Lighting System आपातकालीन पर्काश व्यवस्था : </label><br>
+                                    <label class="form-label">Emergency Lighting System आपातकालीन प्रकाश व्यवस्था : </label><br>
                                     <span>{{json_decode($applicationDetail->ess_provision_detail)->emergency_lighting_system ?? ''}} </span>
                                 </div>
                                 <div class="col-md-4">
@@ -1320,7 +1320,7 @@
                                     <span>{{json_decode($applicationDetail->ess_provision_detail)->provision_of_smoke ?? ''}} </span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">Emergency Lighting System आपातकालीन पर्काश व्यवस्था : </label><br>
+                                    <label class="form-label">Emergency Lighting System आपातकालीन प्रकाश व्यवस्था : </label><br>
                                     <span>{{json_decode($applicationDetail->ess_provision_detail)->emergency_lighting_system ?? ''}} </span>
                                 </div>
                                 <div class="col-md-4">
@@ -1732,7 +1732,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-sm-10 col-xs-12 is_terrace_pump">
                                                         <div class="form-group">
-                                                            <label class="form-label">Terrace pump Capacity (LPM) टैरेस पम्प की क्षमता (लीटर पर्ति मिनट) <span class="span_required">*</span></label>
+                                                            <label class="form-label">Terrace pump Capacity (LPM) टैरेस पम्प की क्षमता (लीटर प्रति मिनट) <span class="span_required">*</span></label>
                                                             <input type="text" class="form-control" id="terrace_pump_capacity" name="terrace_pump_capacity" placeholder="Terrace pump capacity (LPM)" value="{{ json_decode($applicationDetail->fire_provission)->terrace_pump_capacity ?? ''}}">
                                                             <span class="error errorFireIns14"></span>
                                                         </div>
@@ -2000,7 +2000,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-sm-10 col-xs-12">
                                                         <div class="form-group">
-                                                            <label class="form-label">Emergency lighting system आपातकालीन पर्काश व्यवस्था <span class="span_required">*</span></label>
+                                                            <label class="form-label">Emergency lighting system आपातकालीन प्रकाश व्यवस्था <span class="span_required">*</span></label>
                                                             @if(isset(json_decode($applicationDetail->building_status)->emergency_light))
                                                             @php
                                                             $emergency_light = json_decode($applicationDetail->building_status)->emergency_light;
@@ -2144,7 +2144,7 @@
                                                     </div>
                                                     <div class="col-lg-6 col-sm-10 col-xs-12" style="padding-right: 0;">
                                                         <div class="form-group">
-                                                            <label class="form-control-label" for="">Fresh Air Induction System ताजा वायु प्रेरण प्रणाली <span class="span_required">*</span></label>
+                                                            <label class="form-control-label" for="">Fresh Air Induction System ताज़ा वायु प्रेरण प्रणाली <span class="span_required">*</span></label>
                                                             @if(isset(json_decode($applicationDetail->special_provission)->fresh_air))
                                                             @php
                                                             $fresh_air = json_decode($applicationDetail->special_provission)->fresh_air;

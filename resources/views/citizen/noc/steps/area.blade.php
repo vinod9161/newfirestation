@@ -3,7 +3,7 @@
     <div class="row" style="margin-top:10px;">
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="form-group">
-                <label class="form-label">Total Plot Area प्लॉट का कुल क्षत्रफल<span class="span_required">*</span></label>
+                <label class="form-label">Total Plot Area प्लॉट का कुल क्षेत्रफल<span class="span_required">*</span></label>
                 @php
                 $plot_area = json_decode(data_get($application,'total_plot_area','{}'), true);
                 @endphp
@@ -16,7 +16,7 @@
                 @php
                 $total_covered_area = json_decode(data_get($application,'total_covered_area','{}'), true);
                 @endphp
-                <label class="form-label">Total Covered Area कुल आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                <label class="form-label">Total Covered Area कुल आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                 <input type="number" class="form-control" id="total_covered_area" name="total_covered_area" placeholder="Covered Area" value="{{ old('total_covered_area', $total_covered_area['total_covered_area'] ?? '') }}" step="any" pattern="^\d*(\.\d{0,2})?$" @if(!empty($total_covered_area['total_covered_area'])) readonly @endif>
                 <span class="error" id="error42"></span>
             </div>
@@ -26,7 +26,7 @@
                 @php
                 $ground_floor_covered = json_decode(data_get($application,'ground_floor_covered','{}'), true);
                 @endphp
-                <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                 <input type="number" class="form-control" id="ground_floor_covered" name="ground_floor_covered" placeholder="Ground Floor Covered" value="{{ old('ground_floor_covered', $ground_floor_covered['ground_floor_covered'] ?? '') }}" step="any" pattern="^\d*(\.\d{0,2})?$" @if(!empty($ground_floor_covered['ground_floor_covered'])) readonly @endif>
                 <span class="error" id="error43"></span>
             </div>
@@ -46,7 +46,7 @@
                 @php
                 $basement_covered_area = json_decode(data_get($application,'basement_covered_area','{}'), true);
                 @endphp
-                <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षत्रफल <span class="span_required">*</span></label>
+                <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षेत्रफल <span class="span_required">*</span></label>
                 <input type="number" class="form-control" id="basement_covered_area" name="basement_covered_area" placeholder="Ground Floor Covered" value="{{ old('basement_covered_area', $basement_covered_area['basement_covered_area'] ?? '') }}" step="any" pattern="^\d*(\.\d{0,2})?$" @if(!empty($basement_covered_area['basement_covered_area'])) readonly @endif>
                 <span class="error" id="error45"></span>
             </div>

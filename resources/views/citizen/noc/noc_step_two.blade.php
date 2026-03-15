@@ -156,7 +156,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <label class="form-label">Percentage Share भागीदारी पर्तिशत<span class="span_required">*</span></label>
+                                            <label class="form-label">Percentage Share भागीदारी प्रतिशत<span class="span_required">*</span></label>
                                             <input type="number" class="form-control" id="percentage_share" name="percentage_share" placeholder="Percentage Share" value="{{ json_decode($applicationDetail[0]->owner_detail)->percentage_share ?? '' }}" required>
                                             @if($errors->has('percentage_share'))
                                             <div class="validation-error">{{ $errors->first('percentage_share') }}</div>
@@ -165,7 +165,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <label class="form-control-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है<span class="span_required">*</span></label>
+                                            <label class="form-control-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है<span class="span_required">*</span></label>
                                             <div class="radio-toolbar">
                                                 <input type="radio" id="owner_yes" name="point_of_contact" value="yes" onclick="contactPerson(this.value);" required>
                                                 <label for="owner_yes">Yes</label>
@@ -245,7 +245,7 @@
                                     </div>
                                     <div class="col-md-6  col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <label class="form-control-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है <span class="span_required">*</span></label>
+                                            <label class="form-control-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है <span class="span_required">*</span></label>
                                             <div class="radio-toolbar">
                                                 <input type="radio" id="yes_1" name="p_point_of_contact[]" value="yes">
                                                 <label for="yes_1">Yes</label>

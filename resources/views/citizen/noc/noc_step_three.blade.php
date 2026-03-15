@@ -75,7 +75,7 @@
                         <div class="row" style="margin-top:10px;">
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Total Plot Area प्लॉट का कुल क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Total Plot Area प्लॉट का कुल क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="total_plot_area" name="total_plot_area" placeholder="Total Area" value="{{ json_decode($application[0]->total_plot_area)->total_plot_area ?? old('total_plot_area') ?? ''}}" step="any" pattern="^\d*(\.\d{0,2})?$" required>
                                     @if($errors->has('total_plot_area'))
                                     <div class="validation-error">{{ $errors->first('total_plot_area') }}</div>
@@ -85,7 +85,7 @@
 
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Total Covered Area कुल आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Total Covered Area कुल आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="total_covered_area" name="total_covered_area" placeholder="Covered Area" value="{{ json_decode($application[0]->total_covered_area)->total_covered_area ?? old('total_covered_area') ?? ''}}" step="any" pattern="^\d*(\.\d{0,2})?$" required>
                                     @if($errors->has('total_covered_area'))
                                     <div class="validation-error">{{ $errors->first('total_covered_area') }}</div>
@@ -95,7 +95,7 @@
 
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="ground_floor_covered" name="ground_floor_covered" placeholder="Ground Floor Covered" value="{{ json_decode($application[0]->ground_floor_covered)->ground_floor_covered ?? old('ground_floor_covered') ?? ''}}" step="any" pattern="^\d*(\.\d{0,2})?$" required>
                                     @if($errors->has('ground_floor_covered'))
                                     <div class="validation-error">{{ $errors->first('ground_floor_covered') }}</div>
@@ -117,7 +117,7 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षत्रफल <span class="span_required">*</span></label>
+                                    <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षेत्रफल <span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="basement_covered_area" name="basement_covered_area" placeholder="Ground Floor Covered" value="{{ json_decode($application[0]->basement_covered_area)->basement_covered_area ?? old('basement_covered_area') ?? ''}}" step="any" pattern="^\d*(\.\d{0,2})?$" required>
                                     @if($errors->has('basement_covered_area'))
                                     <div class="validation-error">{{ $errors->first('basement_covered_area') }}</div>

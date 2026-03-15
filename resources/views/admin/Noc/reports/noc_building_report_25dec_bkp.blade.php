@@ -183,7 +183,7 @@
                     <tr>
                         <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Maximum height of Building भवन की अधिकतम ऊचाँई</th>
                         <td style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{json_decode($applicationDetail[0]->max_height_building)->max_height_building}}</td>
-                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">No. of Floors तलों की संखया</th>
+                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">No. of Floors तलों की संख्या</th>
                         <td style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{$applicationDetail[0]->no_of_floor}}</td>
                     </tr>
                     <tr>
@@ -241,7 +241,7 @@
                 <tbody>
                     @if($nocType === $ctoType || $nocType === $eType)
                     <tr>
-                        <th colspan="3" style="color:#000;width:75%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high tension electric line passing over the site? कया कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</th>
+                        <th colspan="3" style="color:#000;width:75%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high tension electric line passing over the site? क्या कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</th>
                         <td style="color:#000;width:25%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ json_decode($applicationDetail[0]->physical_ins)->line ?? ''}}</td>
                     </tr>
                     <tr>
@@ -253,7 +253,7 @@
                         <td style="color:#000;width:25%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ json_decode($applicationDetail[0]->physical_ins)->vehicle_approach ?? ''}}</td>
                     </tr>
                     <tr>
-                        <th colspan="3" style="color:#000;width:75%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high inflammable installation situated nearby the building? क्या प्रश्नगत भवन के आस-पास अति ज्वलनशील पदार्थ सथापित है?</th>
+                        <th colspan="3" style="color:#000;width:75%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high inflammable installation situated nearby the building? क्या प्रश्नगत भवन के आस-पास अति ज्वलनशील पदार्थ स्थापित है?</th>
                         <td style="color:#000;width:25%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ json_decode($applicationDetail[0]->physical_ins)->inflammable ?? ''}}</td>
                     </tr>
 
@@ -279,7 +279,7 @@
                     <tr>
                         <th style="color:#000;background-color: #cccccc; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;"colspan="8">
                         @if($nocType === $eType)    
-                            Required fire fighting Provision in Building भवन मे आवशयक अग्निशमन व्यवस्था
+                            Required fire fighting Provision in Building भवन मे आवश्यक अग्निशमन व्यवस्था
                         @else
                             Provided fire fighting Provision in Building भवन में प्राविधानित अग्नि सुरक्षा व्यवस्था
                         @endif
@@ -303,7 +303,7 @@
                         $fire = json_decode($applicationDetail[0]->fire_provission ?? '', true);
                     @endphp
                     <tr>
-                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Under-ground Static Water Storage Tank भूमिगत स्थैतिक जल संग्रहण टैक</th>
+                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Under-ground Static Water Storage Tank भूमिगत स्थैतिक जल संग्रहण टैंक</th>
                         <td style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $fire['is_under_ground'] }}</td>
                     </tr>
                     
@@ -377,7 +377,7 @@
                     @endif
                     @endif
                     <tr>
-                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Pump with minimum Pressure of 3.5 kg/cm² at Remotest Location) भूमिगत स्थैतिक जल भंडारण टैक के पास पम्प (न्यूनतम 3.5 किगा/भार सेमी का दबाब)</th>
+                        <th style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Pump with minimum Pressure of 3.5 kg/cm² at Remotest Location) भूमिगत स्थैतिक जल भंडारण टैंक के पास पम्प (न्यूनतम 3.5 किग्रा/भार सेमी का दबाब)</th>
                         <td style="color:#000;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $fire['under_ground_tank'] ?? '' }}</td>
                     </tr>
 
@@ -484,7 +484,7 @@
             <table style="width: 100%; border-collapse: collapse; background-color: #ffffff;">
                 <thead>
                     <tr>
-                        <th style="color:#000;background-color: #cccccc; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;">Building Status भवन की स्थ्ति</th>
+                        <th style="color:#000;background-color: #cccccc; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;">Building Status भवन की स्थिति</th>
                         <th style="color:#000;background-color: #cccccc; font-weight: bold; text-align: center; border: 1px solid #dddddd; padding: 5px 10px; text-align: left; vertical-align: middle;text-align:center;">Details विवरण</th>
                     </tr>
                 </thead>
@@ -493,7 +493,7 @@
                         $building = json_decode($applicationDetail[0]->building_status ?? '', true);
                     @endphp
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high tension electric line passing over the site? कया कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</th>
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Does any high tension electric line passing over the site? क्या कोई उच्च तनाव बिजली लाइन प्रश्नगत स्थल से गुजर रही है?</th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ json_decode($applicationDetail[0]->physical_ins)->line ?? ''}}</td>
                     </tr>
                     <tr>
@@ -530,14 +530,14 @@
 
                     @if(in_array($building['alt_electric'] ?? '', ['Required', 'Provided']))
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Alternative Electric Supply वैकल्पिक विधुत व्यवस्था</th>
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Alternative Electric Supply वैकल्पिक विद्युतव्यवस्था</th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $building['alt_electric'] ?? ''}}</td>
                     </tr>
                     @endif
 
                     @if(in_array($building['emergency_light'] ?? '', ['Required', 'Provided']))
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Emergency lighting system आपातकालीन विधुत व्यवस्था
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Emergency lighting system आपातकालीन विद्युतव्यवस्था
                         </th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $building['emergency_light'] ?? ''}}</td>
                     </tr>
@@ -573,7 +573,7 @@
 
                     @if(in_array($building['elec_install'] ?? '', ['Required', 'Provided']))
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Electric Installation(ELCB,MCB)विधुत स्थापन(ईएलसीबी, एमसीबी) </th>
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Electric Installation(ELCB,MCB)विद्युतस्थापन(ईएलसीबी, एमसीबी) </th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $building['elec_install'] ?? ''}}</td>
                     </tr>
                     @endif
@@ -593,7 +593,7 @@
 
                     @if(in_array($special_provission['fresh_air'] ?? '', ['Required', 'Provided']))
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Fresh air induction system ताजा हवा प्रेरण प्रणाली</th>
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Fresh air induction system ताज़ा हवा प्रेरण प्रणाली</th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $special_provission['fresh_air'] ?? ''}}</td>
                     </tr>
                     @endif
@@ -656,7 +656,7 @@
 
                     @if(in_array($special_provission['trained_staff'] ?? '', ['Required', 'Provided']))
                     <tr>
-                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Fire safety trained staff अग्निसुक्षा प्रशिक्षित स्टाफ</th>
+                        <th style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">Fire safety trained staff अग्निसुरक्षा प्रशिक्षित स्टाफ</th>
                         <td style="color:#000;width:12.5%;font-size: 12px;border: 1px solid #dddddd;padding: 5px 10px;text-align: left;vertical-align: middle;color: #000;">{{ $special_provission['trained_staff'] ?? ''}}</td>
                     </tr>
                     @endif

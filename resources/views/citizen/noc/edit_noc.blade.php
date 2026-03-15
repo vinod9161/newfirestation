@@ -507,14 +507,14 @@
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <label class="form-label">Percentage Share भागीदारी पर्तिशत<span class="span_required">*</span></label>
+                                        <label class="form-label">Percentage Share भागीदारी प्रतिशत<span class="span_required">*</span></label>
                                         <input type="number" class="form-control" id="percentage_share" name="percentage_share" placeholder="Percentage Share" value="{{ $ownerDetials->percentage_share ?? '' }}">
                                         <span class="error" id="error26"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-group">
-                                        <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है<span class="span_required">*</span></label>
+                                        <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है<span class="span_required">*</span></label>
                                         <div class="radio-toolbar">
                                             <input @if($owner_point_of_contact == 'yes') checked @endif type="radio" id="owner_yes" name="point_of_contact" value="yes" onclick="contactPerson(this.value);">
                                             <label for="owner_yes">Yes</label>
@@ -591,7 +591,7 @@
                                             </div>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="form-group">
-                                                    <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है <span class="span_required">*</span></label>
+                                                    <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है <span class="span_required">*</span></label>
                                                     <div class="radio-toolbar">
                                                         <input type="radio" id="yes" name="p_point_of_contact[]" value="yes" {{ $partner_point_of_contact == 'yes' ? 'checked' : '' }}>
                                                         <label for="yes">Yes</label>
@@ -662,7 +662,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है <span class="span_required">*</span></label>
+                                            <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है <span class="span_required">*</span></label>
                                             <div class="radio-toolbar">
                                                 <input type="radio" id="yes" name="p_point_of_contact[]" value="yes">
                                                 <label for="yes">Yes</label>
@@ -844,21 +844,21 @@
                         <div class="row" style="margin-top:10px;">
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Total Plot Area प्लॉट का कुल क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Total Plot Area प्लॉट का कुल क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="total_plot_area" name="total_plot_area" placeholder="Total Area" value="{{ json_decode($applicationDetail[0]->total_plot_area)->total_plot_area ?? '' }}" step="any" pattern="^\d*(\.\d{0,2})?$">
                                     <span class="error" id="error41"></span>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Total Covered Area कुल आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Total Covered Area कुल आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="total_covered_area" name="total_covered_area" placeholder="Covered Area" value="{{ json_decode($applicationDetail[0]->total_covered_area)->total_covered_area ?? '' }}" step="any" pattern="^\d*(\.\d{0,2})?$">
                                     <span class="error" id="error42"></span>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षत्रफल<span class="span_required">*</span></label>
+                                    <label class="form-label">Ground Floor Covered Area भू-तल का आच्छादित क्षेत्रफल<span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="ground_floor_covered" name="ground_floor_covered" placeholder="Ground Floor Covered" value="{{ json_decode($applicationDetail[0]->ground_floor_covered)->ground_floor_covered ?? '' }}" step="any" pattern="^\d*(\.\d{0,2})?$">
                                     <span class="error" id="error43"></span>
                                 </div>
@@ -872,7 +872,7 @@
                             </div>
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="form-group">
-                                    <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षत्रफल <span class="span_required">*</span></label>
+                                    <label class="form-label">Basement Covered Area भूमिगत तलों का आच्छादित क्षेत्रफल <span class="span_required">*</span></label>
                                     <input type="number" class="form-control" id="basement_covered_area" name="basement_covered_area" placeholder="Ground Floor Covered" value="{{ json_decode($applicationDetail[0]->basement_covered_area)->basement_covered_area ?? '' }}" step="any" pattern="^\d*(\.\d{0,2})?$">
                                     <span class="error" id="error45"></span>
                                 </div>

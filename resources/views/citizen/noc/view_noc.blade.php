@@ -586,35 +586,35 @@
 										<hr>
 										@if(isset($applicationDetail[0]->remark_by_fso))
 										@foreach(json_decode($applicationDetail[0]->remark_by_fso) as $key => $remark)
-										<div class="row mb-3">
-											<div class="col-md-6">
-												<label class="form-label">{{$key + 1}}. {{$remark->remark}}</label><br>
-											</div>
-											<div class="col-md-4 col-sm-4 col-xs-12">
-												<span>{{$remark->date}}</span>
-											</div>
-										</div>
 
-										<div class="row mb-3">
-											<div class="col-md-12" style="padding-bottom:30px;line-height:2;">
-												<label class="form-label">Reason for Remark : </label><br>
-												@if((json_decode($remark->reason))->reason1 !='')
-												<div class="col-md-12"><span><b>=></b> {{(json_decode($remark->reason))->reason1}}</span></div>
-												@endif
-												@if((json_decode($remark->reason))->reason2 !='')
-												<div class="col-md-12"><span><b>=></b> {{(json_decode($remark->reason))->reason2}}</span></div>
-												@endif
-												@if((json_decode($remark->reason))->reason3 !='')
-												<div class="col-md-12"><span><b>=></b> {{(json_decode($remark->reason))->reason3}}</span></div>
-												@endif
-												@if((json_decode($remark->reason))->reason4 !='')
-												<div class="col-md-12"><span><b>=></b> {{(json_decode($remark->reason))->reason4}}</span></div>
-												@endif
-												@if((json_decode($remark->reason))->reason5 !='')
-												<div class="col-md-12"><span><b>=></b> {{(json_decode($remark->reason))->reason5}}</span></div>
-												@endif
+											@php
+											$reasons = json_decode($remark->reason, true);
+											@endphp
+
+											<div class="row mb-3">
+												<div class="col-md-6">
+													<label class="form-label">{{$key + 1}}. {{$remark->remark}}</label>
+												</div>
+												<div class="col-md-4">
+													<span>{{$remark->date}}</span>
+												</div>
 											</div>
-										</div>
+
+											<div class="row mb-3">
+												<div class="col-md-12" style="padding-bottom:30px;line-height:2;">
+													<label class="form-label">Reason for Remark :</label>
+
+													@foreach($reasons as $reason)
+														@if(!empty($reason))
+															<div class="col-md-12">
+																<span><b>=></b> {{$reason}}</span>
+															</div>
+														@endif
+													@endforeach
+
+												</div>
+											</div>
+
 										@endforeach
 										@else
 										<div class="row mb-12">

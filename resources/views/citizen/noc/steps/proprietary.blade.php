@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="form-group">
-                    <label class="form-label">First Name पर्थम नाम<span class="span_required">*</span></label>
+                    <label class="form-label">First Name प्रथम नाम<span class="span_required">*</span></label>
                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="{{ old('first_name', $owner_detail['first_name'] ?? '') }}" @if(!empty($owner_detail['first_name'])) readonly @endif>
                     <span class="error" id="error23"></span>
                 </div>
@@ -62,14 +62,14 @@
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="form-group">
-                    <label class="form-label">Percentage Share भागीदारी पर्तिशत<span class="span_required">*</span></label>
+                    <label class="form-label">Percentage Share भागीदारी प्रतिशत<span class="span_required">*</span></label>
                     <input type="number" class="form-control" id="percentage_share" name="percentage_share" placeholder="Percentage Share" value="{{ old('percentage_share', $owner_detail['percentage_share'] ?? '') }}">
                     <span class="error" id="error26"></span>
                 </div>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="form-group">
-                    <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है<span class="span_required">*</span></label>
+                    <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है<span class="span_required">*</span></label>
                     <div class="radio-toolbar">
                         <input type="radio" id="owner_yes" name="point_of_contact" class="point_of_contact" value="yes" @checked(old('point_of_contact', $owner_detail['point_of_contact'] ?? '' )=='yes' )>
                         <label for="owner_yes">Yes</label>
@@ -132,7 +132,7 @@
                 </div>
                 <div class="col-md-8 col-sm-6 col-xs-12">
                     <div class="form-group">
-                        <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्परक् किये जाने हेतु है <span class="span_required">*</span></label>
+                        <label class="form-label">Is this person the point of contact क्या यह व्यक्ति सम्पर्क किये जाने हेतु है <span class="span_required">*</span></label>
                         <div class="radio-toolbar">
                             <input type="radio" id="yes_1" name="p_point_of_contact[]" value="yes" @checked(old('p_point_of_contact', $partner_detail['p_point_of_contact'] ?? '' )=='yes' )>
                             <label for="yes_1">Yes</label>

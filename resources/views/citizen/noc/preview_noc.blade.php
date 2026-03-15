@@ -286,7 +286,7 @@
                                 <td>{{ isset($applicationDetail[0]->min_distance_block) ? json_decode($applicationDetail[0]->min_distance_block)->min_distance_block : '' }}</td>
                             </tr>
                             <tr>
-                                <td><b>Approach Road widtd</b></td>
+                                <td><b>Approach Road width</b></td>
                                 <td>{{ isset($applicationDetail[0]->approach_road_width) ? json_decode($applicationDetail[0]->approach_road_width)->approach_road_width : '' }}</td>
                                 <td><b>Provision of no. of entrance</b></td>
                                 <td>{{ ucfirst($applicationDetail[0]->provision_no_enterance) ?? '' }}</td>
@@ -337,7 +337,7 @@
                                 <td>{{ $ess_provision_detail->no_of_stairs ?? '' }}</td>
                             </tr>
                             <tr>
-                                <td><b>Minimum Widtd of Stairs</b></td>
+                                <td><b>Minimum width of Stairs</b></td>
                                 <td>{{ $ess_provision_detail->width_of_stairs ?? '' }}</td>
                                 <td><b>Emergency Exit</b></td>
                                 <td>{{ ucfirst($ess_provision_detail->emergency_exit) ?? '' }}</td>
