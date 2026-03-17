@@ -257,44 +257,44 @@
                             <a href="javascript:void(0)">CMS</a>
                         </li>
                         <!---->
-                        <li class="slide">
-                            <a href="{{ route('admin.organisational') }}" class="side-menu__item" style="padding-left:35px;">Organisational Structure</a>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">Other Page <i
+                                    class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('admin.specialriskarea') }}" class="side-menu__item">Special Risk Area</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.recentfireincidents') }}" class="side-menu__item">Recent Fire Incidents</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.staffstrength') }}" class="side-menu__item">Staff Strength</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.getserviceorder') }}" class="side-menu__item">Service Order</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.getwelfareamenity') }}" class="side-menu__item">Welfare and Amenity</a>
+                                </li>
+                                
+                            </ul>
                         </li>
-                        <li class="slide">
-                            <a href="{{ route('admin.specialriskarea') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Special Risk Area</a>
-                        </li>
-                        <li class="slide">
-                            <a href="{{ route('admin.recentupdates') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Recent Updates</a>
-                        </li>
-                        <li class="slide">
-                            <a href="{{ route('admin.recentfireincidents') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Recent Fire Incidents</a>
-                        </li>
-                        <li class="slide">
-                            <a href="{{ route('admin.staffstrength') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Staff Strength</a>
-                        </li>
-
-                        <li class="slide">
-                            <a href="{{ route('admin.getserviceorder') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Service Order</a>
-                        </li>
-
-                        <li class="slide">
-                            <a href="{{ route('admin.getbannerslider') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Banner Slider</a>
-                        </li>
-
-                        <li class="slide">
-                            <a href="{{ route('admin.getwelfareamenity') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Welfare and Amenity</a>
-                        </li>
-                        
-                        <li class="slide">
-                            <a href="{{ route('admin.leadershipSectionList') }}" class="side-menu__item"
-                                style="padding-left: 35px;">Leadership Section</a>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">Home <i
+                                    class="fe fe-chevron-right side-menu__angle"></i>
+                            </a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="{{ route('admin.recentupdates') }}" class="side-menu__item">Recent Updates</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.getbannerslider') }}" class="side-menu__item">Banner Slider</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.leadershipSectionList') }}" class="side-menu__item">Leadership Section</a>
+                                </li>   
+                            </ul>
                         </li>
 
                         <li class="slide has-sub">
@@ -303,39 +303,33 @@
                             </a>
                             <ul class="slide-menu child2" style="display: block; box-sizing: border-box;">
                                 <li class="slide">
+                                    <a href="{{route('admin.about.history')}}" class="side-menu__item">History</a>
+                                </li>
+                                <li class="slide">
                                     <a href="{{route('admin.about.missionvision')}}"
                                         class="side-menu__item">Mission-Vision</a>
                                 </li>
                                 <li class="slide">
-                                    <a href="{{route('admin.about.history')}}" class="side-menu__item">History</a>
+                                    <a href="{{ route('admin.about.our_objective') }}" class="side-menu__item">Our Objective</a>
                                 </li>
-
                                 <li class="slide">
-                                    <a href="{{ route('admin.about.Fire_Service_Day') }}" class="side-menu__item">Fire
-                                        Service Day</a>
+                                    <a href="{{ route('admin.organisational') }}" class="side-menu__item">Organisational Structure</a>
                                 </li>
-
-                                <li class="slide">
-                                    <a href="{{ route('admin.about.flag_day') }}" class="side-menu__item">Flag Day</a>
-                                </li>
-
-                                <li class="slide">
-                                    <a href="{{ route('admin.about.our_objective') }}" class="side-menu__item">Our
-                                        Objective</a>
-                                </li>
-
                                 <li class="slide">
                                     <a href="{{ route('admin.about.dg_message') }}" class="side-menu__item">DG's Message</a>
                                 </li>
-
-
                                 <li class="slide">
-                                    <a href="{{ route('admin.about.faq') }}" class="side-menu__item">FAQ</a>
+                                    <a href="{{ route('admin.about.Fire_Service_Day') }}" class="side-menu__item">Fire Service Day</a>
                                 </li>
-
                                 <li class="slide">
+                                    <a href="{{ route('admin.about.flag_day') }}" class="side-menu__item">Flag Day</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.about.faq') }}" class="side-menu__item">FAQ's</a>
+                                </li>
+                                <!-- <li class="slide">
                                     <a href="#" class="side-menu__item">Logs</a>
-                                </li>
+                                </li> -->
                             </ul>
                         </li>
 

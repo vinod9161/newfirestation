@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class EquipmentController extends Controller
 {
@@ -19,15 +20,43 @@ class EquipmentController extends Controller
 
     public function equipmentlist()
     {
-        $getData = $this->commonModel->getEquipments();
-        return view('admin.equipments.index',compact('getData'));
+        $query = DB::table('equipment')
+            ->select(
+                'equipment.*',
+                'equipment_category.name as category_name',
+                'fire_stations.name as fire_station_name',
+                'districts.name as district_name',
+                'equipment_name.name as equipment_name'
+            )
+            ->leftJoin('equipment_category', 'equipment.category_id', '=', 'equipment_category.id')
+            ->leftJoin('fire_stations', 'equipment.station_id', '=', 'fire_stations.id')
+            ->leftJoin('districts', 'equipment.district_id', '=', 'districts.id')
+            ->leftJoin('equipment_name', 'equipment.equipment_name', '=', 'equipment_name.id')
+            ->where('equipment.status', '1');
+
+        if (Auth::user()->type == 3) {
+            $query->where('equipment.district_id', Auth::user()->district_id);
+        }
+
+        $getData = $query->orderBy('equipment.id', 'desc')
+                        ->get()
+                        ->toArray();
+
+        return view('admin.equipments.index', compact('getData'));
     }
 
     public function addequipment()
     {
         $tbl='districts';
-        $getDistrict = $this->commonModel->getData($tbl);
+        // $getDistrict = $this->commonModel->getData($tbl);
         $tbl2='equipment_category';
+        if (Auth::user()->type == 3) {
+            $getDistrict = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->get();
+        } else {
+            $getDistrict = $this->commonModel->getData($tbl);
+        }
         $getCategory = $this->commonModel->getData($tbl2);
         return view('admin.equipments.add', compact('getDistrict','getCategory'));
     }
@@ -113,7 +142,14 @@ class EquipmentController extends Controller
     public function editequipment($id)
     {
         $tbl='districts';
-        $getDistrict = $this->commonModel->getData($tbl);
+        // $getDistrict = $this->commonModel->getData($tbl);
+        if (Auth::user()->type == 3) {
+            $getDistrict = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->get();
+        } else {
+            $getDistrict = $this->commonModel->getData($tbl);
+        }
         $tbl2='equipment_category';
         $getCategory = $this->commonModel->getData($tbl2);
         $tbl3='equipment_name';

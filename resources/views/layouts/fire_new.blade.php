@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.ux4g.gov.in/accessibility-v2.22/accessibility-widget.css">
     <!-- <script src="{{ asset('../cdn.jsdelivr.net/npm/bootstrap%405.0.2/dist/js/bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
     <script src="{{ asset('/public/fire/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
@@ -146,7 +146,10 @@
             line-height: 45px;
         }
         .hero-widget {
-            padding: 6px 0;
+            padding: 7px 0;
+        }
+        .uw-widget-custom-trigger {
+            bottom: 62px !important;
         }
   </style>
 
@@ -510,7 +513,33 @@
 
     <script src="{{ asset('public/new_assets/js/changer.js') }}"></script>
     <script defer src="{{ asset('public/new_assets/js/styleswitch.js') }}"></script>
-    <script src="https://cdn.ux4g.gov.in/tools/accessibility-widget.js" async></script>
+    <script src="https://cdn.ux4g.gov.in/tools/accessibility-widget.js?v={{ now()->timestamp }}" defer></script>
+<script>
+function reinitAccessibilityWidget() {
+
+    if (typeof loadSettings === "function") {
+        loadSettings();
+    }
+
+    if (typeof detectRouteChange === "function") {
+        detectRouteChange();
+    }
+}
+
+/* Run when page loads */
+window.addEventListener("load", reinitAccessibilityWidget);
+
+/* Run when browser navigation happens */
+window.addEventListener("popstate", reinitAccessibilityWidget);
+
+/* Run when clicking internal links */
+document.addEventListener("click", function(e){
+    const link = e.target.closest("a");
+    if(link && link.href && link.href.startsWith(window.location.origin)){
+        setTimeout(reinitAccessibilityWidget, 500);
+    }
+});
+</script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const VISIT_KEY = "site_visit_home";
