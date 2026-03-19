@@ -501,86 +501,43 @@ class MainController extends Controller{
         return view('fire.medal_winner', compact('categories'));
     }
 
+    // public function actionAwards(Request $request)
+    // {
+    //     $categoryId = $request->id;
+
+    //     $awards = DB::table('medals')
+    //         ->join('medal_category', 'medals.medal_category', '=', 'medal_category.id')
+    //         ->where('medals.medal_category', $categoryId)
+    //         ->select('medals.*', 'medal_category.category_name', 'medal_category.image as category_image')
+    //         ->get();
+
+    //     return view('fire.awards', compact('awards'));
+    // }
+
     public function actionAwards(Request $request)
     {
         $categoryId = $request->id;
+        $search = $request->search;
 
-        // $awards = DB::table('medals')
-        //     ->where('medal_category', $categoryId)
-        //     ->get();
-        $awards = DB::table('medals')
+        $query = DB::table('medals')
             ->join('medal_category', 'medals.medal_category', '=', 'medal_category.id')
             ->where('medals.medal_category', $categoryId)
-            ->select('medals.*', 'medal_category.category_name')
-            ->get();
+            ->select('medals.*', 'medal_category.category_name', 'medal_category.image as category_image');
 
-        return view('fire.awards', compact('awards'));
+        // Apply search filter
+        if (!empty($search)) {
+            // $query->where('medals.name', 'LIKE', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('medals.name', 'LIKE', "%$search%")
+                ->orWhere('medals.designation', 'LIKE', "%$search%");
+            });
+        }
+
+        $awards = $query->get();
+
+        return view('fire.awards', compact('awards', 'search'));
     }
-    // public function actionAwards()
-    // {
-    //     $medalCategotryList = $this->commonModel->getMedalCategory();
-        
-    //     $meddalArray = [];
-    //     foreach ($medalCategotryList as $row) {
-    //         $medalCategotryId = !empty($row->id) ? $row->id : '';
-
-    //         // Fetch the list of medal winners for the current category
-    //         $medalWinners = $this->commonModel->getMedalWinnerList($medalCategotryId);
-
-    //         // Store the results grouped by category
-    //         $meddalArray[$medalCategotryId] = [
-    //             'category_name' => $row->category_name ?? 'Unknown',
-    //             'medals' => $medalWinners
-    //         ];
-    //     }
-
-    //    // echo "<pre>"; print_r($meddalArray);
-    //     $data['grouped_medal_winners'] = $meddalArray;
-    //     return view('fire.awards', $data);
-    // }
-
-
-
-
-    // public function actionMedalWinner()
-    // {
-    //     $medalCategotryList = $this->commonModel->getMedalCategory();
-    //     //echo "<pre>"; print_r($medalCategotryList);
-    //     $meddalArray = [];
-    //     foreach($medalCategotryList as $key => $row)
-    //     {
-    //         $medalCategotryId = !empty($row->id)?$row->id:'';
-    //         $meddalArray = $this->commonModel->getMedalWinnerList($medalCategotryId)
-    //     }
-    //     // $tbl = "medal_category";
-    //     // $medalWinners = $this->commonModel->getDataWithJoin(
-    //     //     $tbl,
-    //     //     [
-    //     //         ['medals', 'medal_category.id', '=', 'medals.medal_category'],
-    //     //         ['fire_stations', 'medals.fire_station', '=', 'fire_stations.id'],
-    //     //         ['districts', 'medals.districts', '=', 'districts.id']
-    //     //     ],
-    //     //     ['medals.*', 'medal_category.category_name', 'fire_stations.name as fire_station_name', 'districts.name as district_name']
-    //     // );
-
-    //     // $groupedData = [];
-    //     // foreach ($medalWinners as $winner) 
-    //     // {
-    //     //     $categoryName = $winner->category_name;
-    //     //     if (!isset($groupedData[$categoryName])) 
-    //     //     {
-    //     //         $groupedData[$categoryName] = [];
-    //     //     }
-    //     //     else if(isset($winner->category_name))
-    //     //     {
-    //     //         $groupedData[$categoryName][] = $winner;
-    //     //     }
-    //     // }
-    //     // $data['grouped_medal_winners'] = $groupedData;
-    //     // return view('fire.medal_winner', $data);
-    // }
-
-
+    
     /////////////////////////////////////////////////
 
     public function actionMissionVision()

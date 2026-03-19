@@ -54,8 +54,9 @@
     .card-container{
         padding:40px;
         display:grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 320px));
         gap:25px;
+        justify-content: center; /* ⭐ important */
     }
 
     /* ===== CARD ===== */
@@ -67,13 +68,19 @@
         padding:25px 15px;
         position:relative;
     }
+    .card{
+        width:100%;
+        max-width:320px;
+        margin:0 auto;
+    }
 
     .card img.profile{
         width:130px;
         height:130px;
         border-radius:50%;
         object-fit:cover;
-        margin-left: 33%;
+        display:block;
+        margin:0 auto; /* ⭐ centers perfectly */
     }
 
     /* .medal-icon{
@@ -184,56 +191,33 @@
                                 <!-- SEARCH SECTION -->
                                 <div class="search-section">
                                     <div class="search-title">Advanced Search</div>
-                                    <div class="search-row">
+                                    <!-- <div class="search-row">
                                         <input type="text" placeholder="Name of Awardees">
                                         <button>Advanced Search</button>
-                                    </div>
+                                    </div> -->
+                                    <form method="GET">
+                                        <input type="hidden" name="id" value="{{ request('id') }}">
+
+                                        <div class="search-row">
+                                            <input 
+                                                type="text" 
+                                                name="search" 
+                                                placeholder="Name of Awardees"
+                                                value="{{ request('search') }}"
+                                            >
+                                            <button type="submit">Search</button>
+                                        </div>
+                                    </form>
                                 </div>
+                                
 
                                 <!-- CARD GRID -->
-                                <!-- <div class="card-container">
-
-                                    <div class="card">
-                                        <img src="{{ asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
-                                        <span class="medal-icon">2026</span>
-                                        <div class="name">CAPTAIN VIKRAM BATRA</div>
-                                        <div class="designation">(FSSO)</div>
-                                        <div class="occasion">Republic Day 2025</div>
-                                        <div class="award">Param Vir Chakra</div>
-                                    </div>
-                                    <div class="card">
-                                        <img src="{{ asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
-                                        <span class="medal-icon">2026</span>
-                                        <div class="name">CAPTAIN VIKRAM BATRA</div>
-                                        <div class="designation">(FSSO)</div>
-                                        <div class="occasion">Republic Day 2025</div>
-                                        <div class="award">Param Vir Chakra</div>
-                                    </div>
-                                    <div class="card">
-                                        <img src="{{ asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
-                                        <span class="medal-icon">2026</span>
-                                        <div class="name">CAPTAIN VIKRAM BATRA</div>
-                                        <div class="designation">(FSSO)</div>
-                                        <div class="occasion">Republic Day 2025</div>
-                                        <div class="award">Param Vir Chakra</div>
-                                    </div>
-                                    <div class="card">
-                                        <img src="{{ asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
-                                        <span class="medal-icon">2026</span>
-                                        <div class="name">CAPTAIN VIKRAM BATRA</div>
-                                        <div class="designation">(FSSO)</div>
-                                        <div class="occasion">Republic Day 2025</div>
-                                        <div class="award">Param Vir Chakra</div>
-                                    </div>
-
-
-                                </div> -->
 
                                 <div class="card-container">
 
                                     @foreach($awards as $award)
                                         <div class="card">
-                                            <img src="{{ asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
+                                            <img src="{{ $award->category_image ? asset('public/' . $award->category_image) : asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
 
                                             <span class="medal-icon bg-primary">{{ $award->year }}</span>
 
@@ -253,13 +237,15 @@
                                         </div>
                                     @endforeach
 
+                                    @if($awards->isEmpty())
+                                        <p>No awardees found.</p>
+                                    @endif
+
                                 </div>
 
 
                             </div>
-                            
-                            
-                            
+                        
                         </div>
                     </div>
                     

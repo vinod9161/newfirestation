@@ -80,51 +80,6 @@
                 <div class="row content-card content-text">
                     <div class="col-md-12 pb-40">
                         <div class="row">
-                            
-                            <!-- <div class="col-lg-12 text-center mb-3">
-                                <div class="medal-container">
-                                    <a href="{{ route('actionAwards') }}">
-                                        <div class="medal-card">
-                                            <img src="{{ asset('public/new_assets/img/content/President-Medal-Distinguished-Service.png') }}" alt="Medal 1">
-                                            <div class="count">21</div>
-                                            <div class="medal-name">President Fire Service Medal for Distinguished Service</div>
-                                        </div>
-                                    </a>
-
-                                    <div class="divider"></div>
-                                    
-                                    <a href="{{ route('actionAwards') }}">
-                                        <div class="medal-card">
-                                            <img src="{{ asset('public/new_assets/img/content/President-Meritorious-Service.png') }}" alt="Medal 2">
-                                            <div class="count">214</div>
-                                            <div class="medal-name">President Fire Service Medal for Meritorious Service</div>
-                                        </div>
-                                    </a>
-
-                                    <div class="divider"></div>
-
-                                    <a href="{{ route('actionAwards') }}">
-                                        <div class="medal-card">
-                                            <img src="{{ asset('public/new_assets/img/content/Governor-Excellent-Service-Medal.png') }}" alt="Medal 3">
-                                            <div class="count">133</div>
-                                            <div class="medal-name">Governor Excellent Service Medal</div>
-                                        </div>
-                                    </a>
-
-                                    <div class="divider"></div>
-
-                                    <a href="{{ route('actionAwards') }}">
-                                        <div class="medal-card">
-                                            <img src="{{ asset('public/new_assets/img/content/Chief-Minister-Meritorious-Service-Medal.png') }}" alt="Medal 4">
-                                            <div class="count">98</div>
-                                            <div class="medal-name">Chief Minister Meritorious Service Medal</div>
-                                        </div>
-                                    </a>
-
-                                </div>
-                            </div> -->
-                            
-                            
                             <div class="col-lg-12 text-center mb-3">
                                 <div class="medal-container">
 

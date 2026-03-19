@@ -514,32 +514,32 @@
     <script src="{{ asset('public/new_assets/js/changer.js') }}"></script>
     <script defer src="{{ asset('public/new_assets/js/styleswitch.js') }}"></script>
     <script src="https://cdn.ux4g.gov.in/tools/accessibility-widget.js?v={{ now()->timestamp }}" defer></script>
-<script>
-function reinitAccessibilityWidget() {
+    <script>
+        function reinitAccessibilityWidget() {
 
-    if (typeof loadSettings === "function") {
-        loadSettings();
-    }
+            if (typeof loadSettings === "function") {
+                loadSettings();
+            }
 
-    if (typeof detectRouteChange === "function") {
-        detectRouteChange();
-    }
-}
+            if (typeof detectRouteChange === "function") {
+                detectRouteChange();
+            }
+        }
 
-/* Run when page loads */
-window.addEventListener("load", reinitAccessibilityWidget);
+        /* Run when page loads */
+        window.addEventListener("load", reinitAccessibilityWidget);
 
-/* Run when browser navigation happens */
-window.addEventListener("popstate", reinitAccessibilityWidget);
+        /* Run when browser navigation happens */
+        window.addEventListener("popstate", reinitAccessibilityWidget);
 
-/* Run when clicking internal links */
-document.addEventListener("click", function(e){
-    const link = e.target.closest("a");
-    if(link && link.href && link.href.startsWith(window.location.origin)){
-        setTimeout(reinitAccessibilityWidget, 500);
-    }
-});
-</script>
+        /* Run when clicking internal links */
+        document.addEventListener("click", function(e){
+            const link = e.target.closest("a");
+            if(link && link.href && link.href.startsWith(window.location.origin)){
+                setTimeout(reinitAccessibilityWidget, 500);
+            }
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const VISIT_KEY = "site_visit_home";
