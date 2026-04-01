@@ -48,10 +48,19 @@ class MedalWinnersController extends Controller
             'name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'occassion' => 'required|string|max:1024',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Handle file upload
+        $photoName = null;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('uploads/medals'), $photoName);
         }
 
         $data = [
@@ -61,16 +70,17 @@ class MedalWinnersController extends Controller
             'year' => $request->year,
             'designation' => $request->designation,
             'name' => $request->name,
-            'occassion' => $request->occassion
+            'occassion' => $request->occassion,
+            'photo' => $photoName // 👈 added
         ];
 
         $insertData = $this->commonModel->insertData('medals', $data);
         if($insertData){
             return redirect()->route('admin.achivements.medal_winners')
-                 ->with('success', 'Madel Winners added successfully.');
+                ->with('success', 'Medal Winner added successfully.');
         }else{
             return redirect()->route('admin.achivements.medal_winners')
-                 ->with('error', 'Madel Winners not added successfully.');
+                ->with('error', 'Medal Winner not added.');
         }
     }
 
@@ -108,10 +118,32 @@ class MedalWinnersController extends Controller
             'name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'occassion' => 'required|string|max:1024',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // 👈 added
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        // Get old record
+        $oldData = $this->commonModel->getDataByOneCondition('medals', ['id' => $id]);
+        // $oldData = DB::table('medals')->where('id', $id)->first();
+
+        $photoName = $oldData[0]->photo; // keep old by default
+
+        // If new photo uploaded
+        if ($request->hasFile('photo')) {
+
+            // Delete old photo
+            if ($oldData[0]->photo && file_exists(public_path('uploads/medals/'.$oldData[0]->photo))) {
+                unlink(public_path('uploads/medals/'.$oldData[0]->photo));
+            }
+
+            // Upload new photo
+            $photo = $request->file('photo');
+            $photoName = time() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('uploads/medals'), $photoName);
+        }
+
         $data = [
             'medal_category' => $request->category_id,
             'fire_station' => $request->fire_station,
@@ -119,16 +151,18 @@ class MedalWinnersController extends Controller
             'year' => $request->year,
             'name' => $request->name,
             'designation' => $request->designation,
-            'occassion' => $request->occassion
+            'occassion' => $request->occassion,
+            'photo' => $photoName // 👈 important
         ];
 
         $updateData = $this->commonModel->updateDataByOneCondition('medals', ['id'=>$id], $data);
+
         if($updateData){
             return redirect()->route('admin.achivements.medal_winners')
-                 ->with('success', 'Madel Winners updated successfully.');
+                ->with('success', 'Medal Winner updated successfully.');
         }else{
             return redirect()->route('admin.achivements.medal_winners')
-                 ->with('error', 'Madel Winners not updated successfully.');
+                ->with('error', 'Medal Winner not updated.');
         }
     }
 

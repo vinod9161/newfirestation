@@ -24,3 +24,5 @@ CREATE TABLE leadership_section (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL
 );
+
+ALTER TABLE medals ADD COLUMN photo VARCHAR(255) NULL;

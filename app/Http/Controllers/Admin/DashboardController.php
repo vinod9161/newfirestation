@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -16,6 +17,497 @@ class DashboardController extends Controller
         $this->commonModel = new CommonModel;
     }
  
+    public function dashboardTwo()
+    {
+        $user = Auth::user();
+
+        // 🔥 Role-based filter
+        $where = [];
+
+        if ($user->type == 3) {
+            // FSO (station level)
+            $where = [
+                'district_id' => $user->district_id,
+                'station_id'  => $user->station_id
+            ];
+        } elseif ($user->type == 0 || $user->type == 1) {
+            // Admin (no filter)
+            $where = [];
+        } else {
+            // CFO (district level)
+            $where = [
+                'district_id' => $user->district_id
+            ];
+        }
+
+        // 🔁 Helper function usage
+        $getData = function($table) use ($where) {
+            return !empty($where)
+                ? $this->commonModel->getDataByOneCondition($table, $where)
+                : $this->commonModel->getData($table);
+        };
+
+        // 📊 Basic Lists
+        $fireStactionList = $getData('fire_stations');
+        $districtList     = $this->commonModel->getData('districts'); // usually global
+
+        // 📊 Counts
+        $fire_station_count = count($getData('fire_stations')) ?? 0;
+        $man_power_count    = count($getData('users')) ?? 0;
+        $vehicles_count     = count($getData('fs_vehicles')) ?? 0;
+        $equipment_count    = count($getData('equipment')) ?? 0;
+
+        $fire_Calls_Count   = count($getData('fs_fire_report')) ?? 0;
+        $rescue_Calls_Count = count($getData('fs_rescue_report')) ?? 0;
+        $relief_Calls_Count = count($getData('fs_relief_work_report')) ?? 0;
+
+        $totalReliefRescueCount = $rescue_Calls_Count + $relief_Calls_Count;
+
+        // 🔥 Life Saved
+        $lifeSaved = 0;
+        foreach ($getData('fs_fire_report') as $row) {
+            $lifeSaved += $row->life_saved_human ?? 0;
+        }
+        $save_life_count = $lifeSaved;
+
+        // 🏠 Property Saved
+        $propertySaved = 0;
+        foreach ($getData('fs_fire_report') as $row) {
+            $propertySaved += $row->property_saved ?? 0;
+        }
+        $save_property_count = $propertySaved;
+
+        // 📄 NOC & Others
+        $noc_count                 = count($getData('applications')) ?? 0;
+        $awareness_program_count   = count($getData('fs_awareness_program_request')) ?? 0;
+        $op_duty_count            = count($getData('operational_applications')) ?? 0;
+
+        // 📊 NOC Status Counts (Make sure function accepts $where)
+        $filterNocDat = $this->commonModel->getAllCountByNocStatus($where);
+
+        $noc_total_received   = $filterNocDat['total_received'] ?? 0;
+        $noc_total_approved   = $filterNocDat['approved'] ?? 0;
+        $noc_total_reverted   = $filterNocDat['reverted'] ?? 0;
+        $noc_total_pending    = $filterNocDat['pending'] ?? 0;
+        $noc_total_in_process = $filterNocDat['in_process'] ?? 0;
+
+        // 🥧 Pie Chart
+        $nocStatusCounts = $this->commonModel->getNOCStatusCounts($where);
+
+        $nocLabels = ['Pending', 'Reverted', 'In-Process', 'Received', 'Approved'];
+        $nocCounts = array_fill(0, count($nocLabels), 0);
+
+        foreach ($nocStatusCounts as $status) {
+            switch ($status->status) {
+                case 'PENDING':
+                    $nocCounts[0] = (int)$status->count;
+                    break;
+                case 'REVERTED':
+                    $nocCounts[1] = (int)$status->count;
+                    break;
+                case 'IN-PROCESS':
+                    $nocCounts[2] = (int)$status->count;
+                    break;
+                case 'RECEIVED':
+                    $nocCounts[3] = (int)$status->count;
+                    break;
+                case 'APPROVED':
+                    $nocCounts[4] = (int)$status->count;
+                    break;
+            }
+        }
+
+        // 🚒 Vehicles by District (update function to accept $where if needed)
+        $vehicleByDistrict = $this->commonModel->getVehicleCountByDistrict($where);
+
+        $districts = [];
+        $vehicleCounts = [];
+
+        foreach ($vehicleByDistrict as $row) {
+            $districts[] = $row->district;
+            $vehicleCounts[] = (int)$row->total;
+        }
+
+        // 📈 Monthly Charts
+        $fire   = $this->commonModel->getCountReport('fs_fire_report', 'created_at', $where);
+        $rescue = $this->commonModel->getCountReport('fs_rescue_report', 'created_at', $where);
+
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        $fireChartData   = is_array($fire) ? array_values($fire) : array_fill(0, 12, 0);
+        $rescueChartData = is_array($rescue) ? array_values($rescue) : array_fill(0, 12, 0);
+
+        // 🌈 Custom Chart
+        $getNocData = $this->getNocApplicationData($where);
+        
+        $allNocCountData = $this->commonModel->allNocCountData();
+
+        return view('admin.dashboardtwo', compact(
+            'fireStactionList',
+            'districtList',
+            'fire_station_count',
+            'man_power_count',
+            'vehicles_count',
+            'equipment_count',
+            'fire_Calls_Count',
+            'totalReliefRescueCount',
+            'save_life_count',
+            'save_property_count',
+            'noc_count',
+            'awareness_program_count',
+            'op_duty_count',
+            'noc_total_received',
+            'noc_total_approved',
+            'noc_total_reverted',
+            'noc_total_pending',
+            'noc_total_in_process',
+            'nocLabels',
+            'nocCounts',
+            'districts',
+            'vehicleCounts',
+            'monthNames',
+            'fireChartData',
+            'rescueChartData',
+            'getNocData',
+            'allNocCountData'
+        ));
+    }
+
+    public function getNocDashboardData(Request $request)
+    {
+        $where = [];
+
+        if ($request->district_id) {
+            $where['district_id'] = $request->district_id;
+        }
+
+        if ($request->station_id) {
+            $where['station_id'] = $request->station_id;
+        }
+
+        $start = $request->start_date;
+        $end   = $request->end_date;
+
+        $baseQuery = DB::table('applications');
+
+        if (!empty($where)) {
+            $baseQuery->where($where);
+        }
+
+        if ($start && $end) {
+            $baseQuery->whereBetween('applications.created_at', [$start, $end]);
+        }
+
+        // 🔥 helper function
+        $getCounts = function($query) {
+            return [
+                'total_received' => (clone $query)->count(),
+                'approved'       => (clone $query)->where('applications.status', 'APPROVED')->count(),
+                'reverted'       => (clone $query)->where('applications.status', 'REVERTED')->count(),
+                'in_process'     => (clone $query)->where('applications.status', 'PENDING')->count(),
+                'pending'        => (clone $query)->where('applications.status', 'PENDING')->count(),
+            ];
+        };
+
+        // 🔥 All
+        $all = $getCounts(clone $baseQuery);
+
+        // 🔥 By type
+        $preEst = $getCounts(
+            (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre establishment%'")
+        );
+
+        $preOp = $getCounts(
+            (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre operational%'")
+        );
+
+        $renew = $getCounts(
+            (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%renewal%'")
+        );
+
+        // 🔥 Table helper
+        $getTable = function($query, $type, $status) {
+
+            $q = (clone $query)
+                ->where('applications.status', $status)
+                ->join('districts', 'districts.id', '=', 'applications.district_id');
+
+            // 🔥 apply type filter only if exists
+            if (!empty($type)) {
+                $q->whereRaw("LOWER(applications.application_type) LIKE ?", ["%$type%"]);
+            }
+
+            return $q->selectRaw("
+                    districts.name as district,
+
+                    COUNT(CASE 
+                        WHEN DATEDIFF(CURDATE(), applications.created_at) <= 5 
+                    THEN 1 END) as days_0_5,
+
+                    COUNT(CASE 
+                        WHEN DATEDIFF(CURDATE(), applications.created_at) BETWEEN 6 AND 10 
+                    THEN 1 END) as days_6_10,
+
+                    COUNT(CASE 
+                        WHEN DATEDIFF(CURDATE(), applications.created_at) BETWEEN 11 AND 15 
+                    THEN 1 END) as days_11_15,
+
+                    ROUND(AVG(DATEDIFF(CURDATE(), applications.created_at)),2) as avg_days,
+
+                    COUNT(*) as total
+                ")
+                ->groupBy('districts.name')
+                ->orderBy('districts.name')
+                ->get();
+        };
+
+        // 🔥 Table data
+        $tables = [
+            'all' => [
+                'approved' => $getTable($baseQuery, '', 'APPROVED'),
+                'reverted' => $getTable($baseQuery, '', 'REVERTED'),
+            ],
+            'pre_est' => [
+                'approved' => $getTable($baseQuery, 'pre establishment', 'APPROVED'),
+                'reverted' => $getTable($baseQuery, 'pre establishment', 'REVERTED'),
+            ],
+            'pre_op' => [
+                'approved' => $getTable($baseQuery, 'pre operational', 'APPROVED'),
+                'reverted' => $getTable($baseQuery, 'pre operational', 'REVERTED'),
+            ],
+            'renewal' => [
+                'approved' => $getTable($baseQuery, 'renewal', 'APPROVED'),
+                'reverted' => $getTable($baseQuery, 'renewal', 'REVERTED'),
+            ]
+        ];
+
+        $getDistrictChart = function($query, $type = '') {
+
+            $q = (clone $query)
+                ->join('districts', 'districts.id', '=', 'applications.district_id');
+
+            if (!empty($type)) {
+                $q->whereRaw("LOWER(applications.application_type) LIKE ?", ["%$type%"]);
+            }
+
+            return $q->select('districts.name as district', DB::raw('COUNT(*) as total'))
+                ->groupBy('districts.name')
+                ->get();
+        };
+
+        return response()->json([
+            'all' => $all,
+            'pre_est' => $preEst,
+            'pre_op' => $preOp,
+            'renewal' => $renew,
+            'tables' => $tables,
+            'district_chart' => [
+                'all'      => $getDistrictChart($baseQuery),
+                'pre_est'  => $getDistrictChart($baseQuery, 'pre establishment'),
+                'pre_op'   => $getDistrictChart($baseQuery, 'pre operational'),
+                'renewal'  => $getDistrictChart($baseQuery, 'renewal'),
+            ]
+        ]);
+    }
+
+    public function getNocTableData(Request $request)
+    {
+        $where = [];
+
+        if ($request->district_id) {
+            $where['district_id'] = $request->district_id;
+        }
+
+        if ($request->station_id) {
+            $where['station_id'] = $request->station_id;
+        }
+
+        $query = DB::table('applications');
+
+        if (!empty($where)) {
+            $query->where($where);
+        }
+
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+        }
+
+        // 🔥 Common function
+        $getTable = function($type, $status) use ($query) {
+
+            return (clone $query)
+                ->where('application_type', $type)
+                ->where('status', $status)
+                ->join('districts', 'districts.id', '=', 'applications.district_id')
+                ->selectRaw("
+                    districts.name as district,
+                    COUNT(CASE WHEN DATEDIFF(applications.updated_at, applications.created_at) <= 5 THEN 1 END) as days_0_5,
+                    COUNT(CASE WHEN DATEDIFF(applications.updated_at, applications.created_at) BETWEEN 6 AND 10 THEN 1 END) as days_6_10,
+                    COUNT(CASE WHEN DATEDIFF(applications.updated_at, applications.created_at) BETWEEN 11 AND 15 THEN 1 END) as days_11_15,
+                    ROUND(AVG(DATEDIFF(applications.updated_at, applications.created_at)),2) as avg_days,
+                    COUNT(*) as total
+                ")
+                ->groupBy('districts.name')
+                ->get();
+        };
+
+        return response()->json([
+            'pre_est' => [
+                'approved' => $getTable('pre establishment noc', 'APPROVED'),
+                'reverted' => $getTable('pre establishment noc', 'REVERTED'),
+            ],
+            'pre_op' => [
+                'approved' => $getTable('pre operational noc', 'APPROVED'),
+                'reverted' => $getTable('pre operational noc', 'REVERTED'),
+            ],
+            'renewal' => [
+                'approved' => $getTable('renewal noc', 'APPROVED'),
+                'reverted' => $getTable('renewal noc', 'REVERTED'),
+            ]
+        ]);
+    }
+
+    public function getVehicleData(Request $request)
+    {
+        $district_id = $request->district_id;
+        $station_id  = $request->station_id;
+
+        $query = DB::table('vehicle_types as vt')
+            ->leftJoin('fs_vehicles as v', function ($join) use ($district_id, $station_id) {
+                $join->on('v.vehicle_type', '=', 'vt.type');
+
+                if ($district_id) {
+                    $join->where('v.district_id', $district_id);
+                }
+
+                if ($station_id) {
+                    $join->where('v.station_id', $station_id);
+                }
+            })
+            ->select('vt.type', DB::raw('COUNT(v.id) as total'))
+            ->groupBy('vt.type')
+            ->get();
+
+        // KPI
+        $kpi = $query->mapWithKeys(function ($item) {
+            return [$item->type => (int) $item->total];
+        });
+
+        // PIE
+        $pie = [
+            'labels' => $query->pluck('type'),
+            'data'   => $query->pluck('total')
+        ];
+
+        $bar = DB::table('fs_vehicles')
+            ->select(
+                'district_id',
+                DB::raw("SUM(CASE WHEN vehicle_remark = 'working' THEN 1 ELSE 0 END) as working"),
+                DB::raw("SUM(CASE WHEN vehicle_remark = 'under maintenance' THEN 1 ELSE 0 END) as maintenance"),
+                DB::raw("SUM(CASE WHEN vehicle_remark = 'out of road' THEN 1 ELSE 0 END) as out_of_road")
+            )
+            ->groupBy('district_id')
+            ->get();
+
+        $table = DB::table('fs_vehicles as v')
+            ->join('vehicle_types as vt', 'v.vehicle_type', '=', 'vt.type')
+            ->select(
+                'v.district_id',
+                'vt.type as vehicle_type',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('v.district_id', 'vt.type')
+            ->get();
+
+        return response()->json([
+            'kpi' => $kpi,
+            'pie' => $pie,
+            'bar' => $bar,
+            'table' => $table
+        ]);
+    }
+
+    public function getFireReportData(Request $request)
+    {
+        $query = DB::table('fs_fire_report')
+            ->join('fire_stations', 'fs_fire_report.station_id', '=', 'fire_stations.id')
+            ->join('categories', 'fs_fire_report.category', '=', 'categories.id')
+            ->join('districts', 'fs_fire_report.district_id', '=', 'districts.id')
+            ->select(
+                'fs_fire_report.*',
+                'fire_stations.name as fire_station_name',
+                'categories.name as categories_name',
+                'districts.name as districts_name'
+            );
+
+        if (Auth::user()->type == '3') {
+            $query->where('fs_fire_report.assigned_to', Auth::user()->id);
+        } elseif (Auth::user()->type != '0' && Auth::user()->type != '1') {
+            $query->where('fs_fire_report.district_id', Auth::user()->district_id);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->where('fs_fire_report.created_at', '>=', $request->from_date . ' 00:00:00');
+        }
+
+        if ($request->filled('to_date')) {
+            $query->where('fs_fire_report.created_at', '<=', $request->to_date . ' 23:59:59');
+        }
+
+        $reports = $query->get();
+
+        // Example aggregation (customize as needed)
+        $districtData = $reports->groupBy('districts_name')->map->count();
+
+        $categoryLabelsMap = [
+            1 => 'Small Fire',
+            2 => 'Medium Fire',
+            3 => 'Major/special Fire',
+            4 => 'Serious Fire',
+        ];
+
+        $categoryGrouped = $reports->groupBy('category')->map->count();
+
+        $categoryLabels = [];
+        $categoryValues = [];
+
+        foreach ($categoryGrouped as $key => $count) {
+            $categoryLabels[] = $categoryLabelsMap[$key] ?? 'Unknown';
+            $categoryValues[] = $count;
+        }
+
+        $typeLabelsMap = [
+            1 => 'Commercial',
+            2 => 'Residential',
+            3 => 'High Rise',
+            4 => 'Forest',
+            5 => 'Farm',
+            6 => 'Industry',
+            7 => 'Vehicle',
+            8 => 'Other',
+        ];
+
+        $typeGrouped = $reports->groupBy('fire_area_type')->map->count();
+
+        $typeLabels = [];
+        $typeValues = [];
+
+        foreach ($typeGrouped as $key => $count) {
+            $typeLabels[] = $typeLabelsMap[$key] ?? 'Unknown';
+            $typeValues[] = $count;
+        }
+
+        return response()->json([
+            'labels' => $districtData->keys(),
+            'data' => $districtData->values(),
+            'categoryLabels' => $categoryLabels,
+            'categoryData' => $categoryValues,
+            'typeLabels' => $typeLabels,
+            'typeData' => $typeValues,
+            'raw' => $reports
+        ]);
+    }
 
 
     public function dashboard()
@@ -415,14 +907,5 @@ class DashboardController extends Controller
         $districts = $this->commonModel->getData('districts');
         print_r($districts);die;
     }
-
-
-
-    public function dashboardTwo()
-    {
-        // noc all status count chutiya rachit sala
-        $allNocCountData = $this->commonModel->allNocCountData();
-        // end noc all status count chutiya rachit sala
-        return view('admin.dashboardtwo', compact('allNocCountData'));
-    }
+  
 }

@@ -119,6 +119,10 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('home-dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
 
     Route::get('home-dashboard-two', [DashboardController::class, 'dashboardTwo'])->name('admin.dashboardtwo');
+    Route::post('dashboard/noc-data', [DashboardController::class, 'getNocDashboardData'])->name('admin.getNocDashboardData');
+    Route::post('/dashboard/vehicle-data', [DashboardController::class, 'getVehicleData'])->name('dashboard.vehicle.data');
+    Route::get('/dashboard/fire-report-data', [DashboardController::class, 'getFireReportData'])->name('dashboard.fireReportData');
+    // Route::post('dashboard/noc-table-data', [DashboardController::class, 'getNocTableData'])->name('admin.getNocTableData');
     
     Route::get('awarnessChart', [DashboardController::class, 'postawarnessChart'])->name('admin.postawarnessChart');
 

@@ -128,7 +128,7 @@
                                                     <option value="">--- Select Type ---</option>
                                                     @if ($getvehicleTypes)
                                                         @foreach ($getvehicleTypes as $key => $row)
-                                                            <option value="{{ $row->type }}">{{ $row->type }}</option>
+                                                            <option value="{{ $row->id }}">{{ $row->type }}</option>
                                                         @endforeach
                                                     @else
                                                        <option value="" class="text-danger"> No Vehicle Type Available</option> 

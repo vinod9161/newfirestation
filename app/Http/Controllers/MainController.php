@@ -378,8 +378,10 @@ class MainController extends Controller{
                 'fs.name',
                 'd.name as district_name',
                 'fs.fs_contact_no',
-                'u.email as fs_email_address',
-                'u.number as fs_mobile_no'
+                'fs.fs_email_address',
+                'fs.fs_mobile_no'
+                // 'u.email as fs_email_address',
+                // 'u.number as fs_mobile_no'
             )
             ->get();
 

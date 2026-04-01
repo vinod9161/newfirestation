@@ -6,366 +6,81 @@
 @endsection
 @section('content')
 
+<link href="{{ asset('/public/admin/css/dashboard.css') }}" rel="stylesheet">
 <style>
-.thead-primary{
-    background: #1d4ed8;
-    color: #fff;
-}
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-}
-
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-}
-
-a {
-    text-decoration: none;
-}
-
-.card1 {
-    background: linear-gradient(to right, #b9c8f240, #1d4ed830);
-    border-left: 6px solid;
-    border-radius: 16px;
-    padding: 10px 20px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
-    transition: all 0.3s ease-in-out;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.card1:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
-}
-
-.card-header1 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-}
-
-.card1 .icon {
-    font-size: 34px;
-    color: #4e73df;
-}
-
-.card1 .number {
-    color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 0px 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card1 h4 {
-    font-size: 14px;
-    color: #777;
-    margin: 0;
-}
-
-.card1 .value {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.card-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
-	
-}
-
-.kpi-card {
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 5px;
-    width: 150px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	text-align: center;
-}
-
-.kpi-card h4 {
-    color: #4433cc;
-    font-size: 16px;
-	fomt-weight: 600;
-    margin-bottom: 8px;
-	white-space: nowrap;
-}
-
-.kpi-card .value {
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-}
-
-.kpi-card .value span {
-    color: green;
-    font-size: 16px;
-    vertical-align: middle;
-}
-
-.kpi-card .sub {
-    font-size: 12px;
-    color: #666;
-    margin-top: 4px;
-}
-
-.kpi-card .change {
-    font-size: 12px;
-    color: green;
-    margin-top: 2px;
-}
-.card-body{
-	background-color: #fff !important;
-	box-shadow: 0px 0px 0px #9db5ff !important;
-	padding: 5px !important;
-}
-</style>
-
-<style>
-  /* Put radios hidden but as siblings of .tabs and .contents */
-  .tab-container > input[type="radio"] { display:none; }
-
-  /* Tabs wrapper */
-  .tabs {
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-  }
-
-  /* Basic label style */
-  .tabs label {
-    padding:12px 5px;
-    border-radius:14px;
-    background:#fff;
-    font-weight:700;
-    cursor:pointer;
-    border:3px solid transparent;
-    transition: all .25s ease;
-    color:#0b4ea2;
-    user-select:none;
-    display:inline-block;
-    white-space:nowrap;
-    text-align: center;
-    width: 118px;
-  }
-
-  /* colored borders (visual) */
-  .tabs label[for="noc"] { border-color:#7D4; }
-  .tabs label[for="fire"] { border-color:#f90; }
-  .tabs label[for="status"] { border-color:#290; }
-  .tabs label[for="vehicle"] { border-color:#d22; }
-  .tabs label[for="equip"] { border-color:#0a5; }
-  .tabs label[for="fireReport"] { border-color:#04c; }
-  .tabs label[for="rescue"] { border-color:#0a5; }
-  .tabs label[for="relief"] { border-color:#fc0; }
-  .tabs label[for="hydrent"] { border-color:#d22; }
-  .tabs label[for="employee"] { border-color:#a4a; }
-
-  /* style the active label when its radio is checked */
-  /* note: label is inside .tabs, so we first select the .tabs sibling */
-  #noc:checked     ~ .tabs label[for="noc"],
-  #fire:checked    ~ .tabs label[for="fire"],
-  #status:checked    ~ .tabs label[for="status"],
-  #vehicle:checked ~ .tabs label[for="vehicle"],
-  #equip:checked   ~ .tabs label[for="equip"],
-  #fireReport:checked ~ .tabs label[for="fireReport"],
-  #rescue:checked  ~ .tabs label[for="rescue"],
-  #relief:checked  ~ .tabs label[for="relief"],
-  #hydrent:checked ~ .tabs label[for="hydrent"],
-  #employee:checked ~ .tabs label[for="employee"] {
-    background:#4CAF50;
-    color:#fff !important;
-    border-color:#4CAF50;
-    box-shadow:0 4px 10px rgba(0,0,0,0.12);
-    transform:translateY(-2px);
-  }
-
-  .tabs label:hover { transform:scale(1.1); }
-
-  /* content styles */
-  .contents {
-    margin-top:22px;
-    margin-bottom: 20px;
-  }
-  .content {
-    display:none;
-    background:#fff;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    text-align:left;
-  }
-
-  /* show the relevant content when radio is checked */
-  #noc:checked     ~ .contents .noc,
-  #fire:checked    ~ .contents .fire,
-  #status:checked    ~ .contents .status,
-  #vehicle:checked ~ .contents .vehicle,
-  #equip:checked   ~ .contents .equip,
-  #fireReport:checked ~ .contents .fireReport,
-  #rescue:checked  ~ .contents .rescue,
-  #relief:checked  ~ .contents .relief,
-  #hydrent:checked ~ .contents .hydrent,
-  #employee:checked ~ .contents .employee {
-    display:block;
-    animation: fadeIn .28s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity:0; transform:translateY(8px); }
-    to { opacity:1; transform:translateY(0); }
-  }
-  
-  /*-----------Tab2 Start--------------*/
-  /* Put radios hidden but as siblings of .tabs and .contents */
-  .tab-container2 > input[type="radio"] { display:none; }
-
-  /* Tabs wrapper */
-  .tabs2 {
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:center;
-  }
-
-  /* Basic label style */
-  .tabs2 label {
-    padding:12px 20px;
-    border-radius:14px;
-    background:#fff;
-    font-weight:700;
-    cursor:pointer;
-    border:3px solid transparent;
-    transition: all .25s ease;
-    color:#0b4ea2;
-    user-select:none;
-    display:inline-block;
-    white-space:nowrap;
-  }
-
-  .tabs2 label[for="AllNOC"] { border-color:#4CAF50; }
-  .tabs2 label[for="PreEstablishment"] { border-color:#D22; }
-  .tabs2 label[for="PreOperational"] { border-color:#fc0; }
-  .tabs2 label[for="Renewal"] { border-color:#04c; }
-
-  #AllNOC:checked     ~ .tabs2 label[for="AllNOC"]{
-    background:#4CAF50;
-    color:#fff !important;
-    border-color:#4CAF50;
-    box-shadow:0 4px 10px rgba(0,0,0,0.12);
-    transform:translateY(-2px);
-  }
-  
-  #PreEstablishment:checked     ~ .tabs2 label[for="PreEstablishment"]{
-    background:#D22;
-    color:#fff !important;
-    border-color:#D22;
-    box-shadow:0 4px 10px rgba(0,0,0,0.12);
-    transform:translateY(-2px);
-  }
-  
-  #PreOperational:checked    ~ .tabs2 label[for="PreOperational"]{
-    background:#fc0;
-    color:#fff !important;
-    border-color:#fc0;
-    box-shadow:0 4px 10px rgba(0,0,0,0.12);
-    transform:translateY(-2px);
-  }
-  
-  #Renewal:checked    ~ .tabs2 label[for="Renewal"] {
-    background:#04c;
-    color:#fff !important;
-    border-color:#04c;
-    box-shadow:0 4px 10px rgba(0,0,0,0.12);
-    transform:translateY(-2px);
-  }
-
-  .tabs2 label:hover { transform:scale(1.1); }
-
-  /* content styles */
-  .contents2 {
-    margin-top:22px;
-  }
-  .content2 {
-    display:none;
-    background:#fff;
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    text-align:left;
-  }
-
-  /* show the relevant content when radio is checked */
-  #AllNOC:checked     ~ .contents2 .AllNOC,
-  #PreEstablishment:checked     ~ .contents2 .PreEstablishment,
-  #PreOperational:checked    ~ .contents2 .PreOperational,
-  #Renewal:checked    ~ .contents2 .Renewal {
-    display:block;
-    animation: fadeIn .28s ease;
-  }
-  
-</style>
-
-<style>
-    :root{
-      --bg:#f6f7fb; --card:#f4f4f4; --muted:#8a8f9a; --accent:#2f80ed; --green:#2fbf7f; --orange:#ff9f43; --danger:#ff4d4f;
-      --radius:10px; --pad:18px;
+    /* ===== RESET ===== */
+    html, body {
+        height: 100%;
+        margin: 0;
     }
-    
-    
-    .container2{margin:0 auto}
 
-    .stats{display:flex;gap:12px;flex-wrap:wrap}
-    .stat{background:var(--card);flex:1;min-width:120px;padding:12px;border-radius:8px;box-shadow:0 1px 5px rgba(15,15,15,0.4);display:flex;align-items:center;justify-content:space-between}
-    .stat .meta{font-size:12px;color:var(--muted)}
-    .stat .value{font-weight:700;font-size:18px}
+    /* ===== HEADER (FIXED) ===== */
+    /* .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        z-index: 1000;
+        background: #fff;
+    } */
 
-    .ribbons{display:flex;gap:12px;margin-top:16px}
-    .ribbon{background:var(--card);flex:1;padding:12px;border-radius:8px;display:flex;align-items:center;justify-content:space-between}
-    .ribbon .label{font-size:12px;color:var(--muted)}
-    .ribbon .bubble{background:#f1f6ff;color:var(--accent);padding:6px 12px;border-radius:20px;font-weight:600}
+    /* ===== SIDEBAR (FIXED) ===== */
+    /* .app-sidebar {
+        position: fixed;
+        top: 70px; 
+        left: 0;
+        width: 240px; 
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        background: #fff;
+    } */
 
-    .charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(16,24,40,0.2)}
-    .card h3{text-align:center;margin-bottom:8px;font-size:16px}
-    .chart-row{display:flex;gap:12px}
-
-    /*#pieChart{max-width:300px;margin:0 auto;display:block;}*/
-    /*#barChart{height:180px !important;}*/
-    /*#barChart2{height:160px !important;width:100%;max-width:500px;margin:0 auto;display:block;}*/
-
-    .bottom-row{display:flex;gap:16px;margin-top:18px;align-items:flex-start}
-    .bottom-row .card{flex:1}
-
-    .tables-row{display:flex;gap:16px;margin-top:18px;align-items:flex-start}
-    .tables-row .card{flex:1;min-width:0}
-
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:8px;border:1px solid #eef1f6;text-align:left}
-    /*th{background:#f8fafc}*/
-
-    @media (max-width:900px){
-      .charts{grid-template-columns:1fr}
-      .bottom-row{flex-direction:column}
-      .tables-row{flex-direction:column}
-      .stats{flex-direction:column}
-      .ribbons{flex-direction:column}
+    /* ===== MAIN CONTENT (SCROLL AREA) ===== */
+    .main-content {
+        margin-top: 70px;   /* header space */
+        margin-left: 240px; /* sidebar width */
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 15px;
+        background: #f5f6fa;
     }
-    
-    
-  </style>
+
+    /* ===== CONTAINER FIX ===== */
+    .container-fluid {
+        height: auto;
+    }
+
+    /* ===== SMOOTH SCROLL ===== */
+    .main-content {
+        scroll-behavior: smooth;
+    }
+
+    /* ===== OPTIONAL: SCROLLBAR STYLE ===== */
+    .main-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .main-content::-webkit-scrollbar-thumb {
+        background: #999;
+        border-radius: 10px;
+    }
+
+    /* ===== OPTIONAL: STICKY FILTER BAR ===== */
+    #dashboardFilterForm {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #fff;
+        padding: 10px;
+    }
+
+    /* ===== OPTIONAL: CARD FIX ===== */
+    .card {
+        overflow: visible;
+    }
+</style>
 
 <div class="d-md-flex d-block align-items-center justify-content-between my-4">
     <div>
@@ -382,10 +97,7 @@ a {
      <div class="col-md-12">
          <div class="tab-container">
 
-            <!-- 1) Radios must be direct children here (so ~ selector works) -->
             <input type="radio" name="tab" id="noc" checked>
-            <!--<input type="radio" name="tab" id="fire">-->
-            <!--<input type="radio" name="tab" id="status">-->
             <input type="radio" name="tab" id="vehicle">
             <input type="radio" name="tab" id="equip">
             <input type="radio" name="tab" id="fireReport">
@@ -393,19 +105,16 @@ a {
             <input type="radio" name="tab" id="relief">
             <input type="radio" name="tab" id="hydrent">
             <input type="radio" name="tab" id="employee">
-        
-            <!-- 2) Labels (tabs) -->
+
             <div class="tabs">
-              <label for="noc" style="padding-top: 24px;">NOC</label>
-              <!--<label for="fire">Fire<br />Activity</label>-->
-              <!--<label for="status">Application<br />Status</label>-->
-              <label for="vehicle">Vehicle &amp;<br />Machinery</label>
-              <label for="equip" style="padding-top: 24px;">Equipment</label>
-              <label for="fireReport">Fire<br />Report</label>
-              <label for="rescue">Rescue<br />Report</label>
-              <label for="relief">Relief<br />Report</label>
-              <label for="hydrent" style="padding-top: 24px;">Hydrent</label>
-              <label for="employee" style="padding-top: 24px;">Employees</label>
+                <label for="noc" style="padding-top: 24px;">NOC</label>
+                <label for="vehicle">Vehicle &amp;<br />Machinery</label>
+                <label for="equip" style="padding-top: 24px;">Equipment</label>
+                <label for="fireReport">Fire<br />Report</label>
+                <label for="rescue">Rescue<br />Report</label>
+                <label for="relief">Relief<br />Report</label>
+                <label for="hydrent" style="padding-top: 24px;">Hydrent</label>
+                <label for="employee" style="padding-top: 24px;">Employees</label>
             </div>
             
             <div class="row row-sm">
@@ -425,8 +134,8 @@ a {
                                     <label>District</label>
                                     <select class="form-control" id="dashboard_dis">
                                         <option value="">--- Select District ---</option>
-                                        <?php foreach($districtList ?? [] as $disData): ?>
-                                        <option value="<?= $disData->id ?>"><?= $disData->name ?></option>
+                                        <?php foreach ($districtList ?? [] as $disData): ?>
+                                            <option value="<?= $disData->id ?>"><?= $disData->name ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -434,8 +143,8 @@ a {
                                     <label>Fire Station</label>
                                     <select class="form-control" id="dashboard_fire">
                                         <option value="">--- Select Fire Station ---</option>
-                                        <?php foreach($fireStactionList ?? [] as $fs): ?>
-                                        <option value="<?= $fs->id ?>"><?= $fs->name ?></option>
+                                        <?php foreach ($fireStactionList ?? [] as $fs): ?>
+                                            <option value="<?= $fs->id ?>"><?= $fs->name ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -444,7 +153,7 @@ a {
                                         style="margin-top: 29px;">Filter</button>
                                 </div>
                             </div>
-            
+
                         </div>
                     </div>
                 </div>
@@ -452,891 +161,983 @@ a {
         
             <!-- 3) Contents -->
             <div class="contents">
-              <div class="content noc">
-                
-                <div class="tab-container2">
-                    <input type="radio" name="tab2" id="AllNOC" checked>
-                    <input type="radio" name="tab2" id="PreEstablishment">
-                    <input type="radio" name="tab2" id="PreOperational">
-                    <input type="radio" name="tab2" id="Renewal">
-                
-                    <!-- 2) Labels (tabs) -->
-                    <div class="tabs2">
-                      <label for="AllNOC">All</label>
-                      <label for="PreEstablishment">Pre-Establishment</label>
-                      <label for="PreOperational">Pre-Operational</label>
-                      <label for="Renewal">Renewal</label>
+                <div class="content noc">
+
+                    <div class="tab-container2">
+                        <input type="radio" name="tab2" id="AllNOC" checked>
+                        <input type="radio" name="tab2" id="PreEstablishment">
+                        <input type="radio" name="tab2" id="PreOperational">
+                        <input type="radio" name="tab2" id="Renewal">
+
+                        <!-- 2) Labels (tabs) -->
+                        <div class="tabs2">
+                            <label for="AllNOC">All</label>
+                            <label for="PreEstablishment">Pre-Establishment</label>
+                            <label for="PreOperational">Pre-Operational</label>
+                            <label for="Renewal">Renewal</label>
+                        </div>
+
+                        <!-- 3) Contents -->
+                        <div class="contents2">
+                            <div class="content2 AllNOC">
+                                <div class="card-body dash1" style="padding: 0px !important;">
+                                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">NOC - Dashboard</h1>
+                                    <div class="row">
+                                        <div class="col-md-12 form-group" style="margin-top: 20px">
+                                            <div class="dashboard">
+                                                <a href="#" class="card1" style="border-left-color:#28a745;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">📥</div>
+                                                        <div class="number" style="background-color: #28a745;" id="all_total_received">78</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">RECEIVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#59abf9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🆗</div>
+                                                        <div class="number" style="background-color: #59abf9;" id="all_total_approved">8</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">APPROVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#7969b9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🔙</div>
+                                                        <div class="number" style="background-color: #7969b9;" id="all_total_reverted">4</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">REVERTED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#dea364;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">⏳</div>
+                                                        <div class="number" style="background-color: #dea364;" id="all_total_in_process">35</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">IN-PROCESS</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#d80303;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🕒</div>
+                                                        <div class="number" style="background-color: #d80303;" id="all_total_pending">19</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">PENDING</div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-5">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="font-size:18px">No. of Application (by status)</h3>
+                                                    <canvas id="AllNOCApplicationByStatusPieChart" height="300"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by district)</h3>
+                                                    <canvas id="AllNOCApplicationByStatusBarChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by type)</h3>
+                                                    <canvas id="AllNOCApplicationByTypeBarChart" style="max-height:250px"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="text-align:left">Reason of Rejection</h3>
+                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                        <div style="flex:1">
+                                                            <canvas id="AllNOCRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
+                                                        </div>
+                                                        <div style="width:220px">
+                                                            <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
+                                                            <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
+                                                            <ul style="font-size:13px;color:var(--muted)">
+                                                                <li>Letter from Development Authority Missing — 43%</li>
+                                                                <li>Proposed Map Missing — 19%</li>
+                                                                <li>Incomplete Map — 9%</li>
+                                                                <li>Other — 29%</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="all_approved_title">All (Approved) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="all_approved_table">
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="all_reverted_title">All (Reverted) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="all_reverted_table" >
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-12">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>District Name</th>
+                                                                    <th>Not Assigned</th>
+                                                                    <th>Assigned But Not Verified</th>
+                                                                    <th>Verified</th>
+                                                                    <th>Approved</th>
+                                                                    <th>Rejected</th>
+                                                                    <th>Pending</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($allNocCountData as $row)
+                                                                <tr>
+                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
+                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="content2 PreEstablishment">
+                                <div class="card-body dash1" style="padding: 0px !important;">
+                                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Pre-Establishment - Dashboard</h1>
+                                    <div class="row">
+                                        <div class="col-md-12 form-group" style="margin-top: 20px">
+                                            <div class="dashboard">
+                                                <a href="#" class="card1" style="border-left-color:#28a745;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">📥</div>
+                                                        <div class="number" style="background-color: #28a745;" id="pre_total_received">78</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">RECEIVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#59abf9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🆗</div>
+                                                        <div class="number" style="background-color: #59abf9;" id="pre_total_approved">8</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">APPROVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#7969b9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🔙</div>
+                                                        <div class="number" style="background-color: #7969b9;" id="pre_total_reverted">4</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">REVERTED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#dea364;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">⏳</div>
+                                                        <div class="number" style="background-color: #dea364;" id="pre_total_in_process">35</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">IN-PROCESS</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#d80303;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🕒</div>
+                                                        <div class="number" style="background-color: #d80303;" id="pre_total_pending">19</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">PENDING</div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-5">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="font-size:18px">No. of Application (by status)</h3>
+                                                    <canvas id="PreEstablishmentApplicationByStatusPieChart" height="300"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by district)</h3>
+                                                    <canvas id="PreEstablishmentApplicationByStatusBarChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by type)</h3>
+                                                    <canvas id="PreEstablishmentApplicationByTypeBarChart" style="max-height:250px"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="text-align:left">Reason of Rejection</h3>
+                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                        <div style="flex:1">
+                                                            <canvas id="PreEstablishmentRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
+                                                        </div>
+                                                        <div style="width:220px">
+                                                            <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
+                                                            <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
+                                                            <ul style="font-size:13px;color:var(--muted)">
+                                                                <li>Letter from Development Authority Missing — 43%</li>
+                                                                <li>Proposed Map Missing — 19%</li>
+                                                                <li>Incomplete Map — 9%</li>
+                                                                <li>Other — 29%</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="pre_est_approved_title">Pre-Establishment (Approved) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="pre_est_approved_table">
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="pre_est_reverted_title">Pre-Establishment (Reverted) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="pre_est_reverted_table">
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-12">
+                                            <div class="card custom-card">
+                                                <!--<div class="card-header">-->
+                                                <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
+                                                <!--</div>-->
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>District Name</th>
+                                                                    <th>Not Assigned</th>
+                                                                    <th>Assigned But Not Verified</th>
+                                                                    <th>Verified</th>
+                                                                    <th>Approved</th>
+                                                                    <th>Rejected</th>
+                                                                    <th>Pending</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($allNocCountData as $row)
+                                                                <tr>
+                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
+                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+
+                            <div class="content2 PreOperational">
+                                <div class="card-body dash1" style="padding: 0px !important;">
+                                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Pre-Operational - Dashboard</h1>
+                                    <div class="row">
+                                        <div class="col-md-12 form-group" style="margin-top: 20px">
+                                            <div class="dashboard">
+                                                <a href="#" class="card1" style="border-left-color:#28a745;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">📥</div>
+                                                        <div class="number" style="background-color: #28a745;" id="op_total_received">78</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">RECEIVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#59abf9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🆗</div>
+                                                        <div class="number" style="background-color: #59abf9;" id="op_total_approved">8</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">APPROVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#7969b9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🔙</div>
+                                                        <div class="number" style="background-color: #7969b9;" id="op_total_reverted">4</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">REVERTED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#dea364;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">⏳</div>
+                                                        <div class="number" style="background-color: #dea364;" id="op_total_in_process">35</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">IN-PROCESS</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#d80303;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🕒</div>
+                                                        <div class="number" style="background-color: #d80303;" id="op_total_pending">19</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">PENDING</div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-5">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="font-size:18px">No. of Application (by status)</h3>
+                                                    <canvas id="PreOperationalApplicationByStatusPieChart" height="300"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by district)</h3>
+                                                    <canvas id="PreOperationalApplicationByStatusBarChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by type)</h3>
+                                                    <canvas id="PreOperationalApplicationByTypeBarChart" style="max-height:250px"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="text-align:left">Reason of Rejection</h3>
+                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                        <div style="flex:1">
+                                                            <canvas id="PreOperationalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
+                                                        </div>
+                                                        <div style="width:220px">
+                                                            <h4 style="margin-bottom:8px;color:#c0392b">Pre-Operational</h4>
+                                                            <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
+                                                            <ul style="font-size:13px;color:var(--muted)">
+                                                                <li>Letter from Development Authority Missing — 43%</li>
+                                                                <li>Proposed Map Missing — 19%</li>
+                                                                <li>Incomplete Map — 9%</li>
+                                                                <li>Other — 29%</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="pre_op_approved_title">Pre-Operational (Approved) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="pre_op_approved_table">
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="pre_op_reverted_title">Pre-Operational (Reverted) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            </thead>
+                                                            <tbody id="pre_op_reverted_table">
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td>< td>7</ td >< td > 7.12 </ td >< td > 32 </ td >
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-12">
+                                            <div class="card custom-card">
+                                                <!--<div class="card-header">-->
+                                                <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
+                                                <!--</div>-->
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>District Name</th>
+                                                                    <th>Not Assigned</th>
+                                                                    <th>Assigned But Not Verified</th>
+                                                                    <th>Verified</th>
+                                                                    <th>Approved</th>
+                                                                    <th>Rejected</th>
+                                                                    <th>Pending</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($allNocCountData as $row)
+                                                                <tr>
+                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
+                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="content2 Renewal">
+                                <div class="card-body dash1" style="padding: 0px !important;">
+                                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Renewal - Dashboard</h1>
+                                    <div class="row">
+                                        <div class="col-md-12 form-group" style="margin-top: 20px">
+                                            <div class="dashboard">
+                                                <a href="#" class="card1" style="border-left-color:#28a745;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">📥</div>
+                                                        <div class="number" style="background-color: #28a745;" id="ren_total_received">78</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">RECEIVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#59abf9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🆗</div>
+                                                        <div class="number" style="background-color: #59abf9;" id="ren_total_approved">8</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">APPROVED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#7969b9;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🔙</div>
+                                                        <div class="number" style="background-color: #7969b9;" id="ren_total_reverted">4</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">REVERTED</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#dea364;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">⏳</div>
+                                                        <div class="number" style="background-color: #dea364;" id="ren_total_in_process">35</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">IN-PROCESS</div>
+                                                </a>
+                                                <a href="#" class="card1" style="border-left-color:#d80303;">
+                                                    <div class="card-header1">
+                                                        <div class="icon">🕒</div>
+                                                        <div class="number" style="background-color: #d80303;" id="ren_total_pending">19</div>
+                                                    </div>
+                                                    <h4>Number of Application</h4>
+                                                    <div class="value">PENDING</div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-5">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="font-size:18px">No. of Application (by status)</h3>
+                                                    <canvas id="RenewalApplicationByStatusPieChart" height="300"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by district)</h3>
+                                                    <canvas id="RenewalApplicationByStatusBarChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3>No. of Application (by type)</h3>
+                                                    <canvas id="RenewalApplicationByTypeBarChart" style="max-height:250px"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <h3 style="text-align:left">Reason of Rejection</h3>
+                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                        <div style="flex:1">
+                                                            <canvas id="RenewalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
+                                                        </div>
+                                                        <div style="width:220px">
+                                                            <h4 style="margin-bottom:8px;color:#c0392b">Renewal</h4>
+                                                            <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
+                                                            <ul style="font-size:13px;color:var(--muted)">
+                                                                <li>Letter from Development Authority Missing — 43%</li>
+                                                                <li>Proposed Map Missing — 19%</li>
+                                                                <li>Incomplete Map — 9%</li>
+                                                                <li>Other — 29%</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="renewal_approved_title">Renewal (Approved) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>Sr</th>
+                                                                    <th>District</th>
+                                                                    <th>0-5 Days</th>
+                                                                    <th>6-10</th>
+                                                                    <th>11-15</th>
+                                                                    <th>Avg Days</th>
+                                                                    <th>Total Application</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="renewal_approved_table">
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>Almora</td>
+                                                                    <td>1</td>
+                                                                    <td>0</td>
+                                                                    <td>1</td>
+                                                                    <td>4.50</td>
+                                                                    <td>2</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2</td>
+                                                                    <td>Bageshwar</td>
+                                                                    <td>2</td>
+                                                                    <td>1</td>
+                                                                    <td>0</td>
+                                                                    <td>6.33</td>
+                                                                    <td>3</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>3</td>
+                                                                    <td>Chamoli</td>
+                                                                    <td>0</td>
+                                                                    <td>0</td>
+                                                                    <td>1</td>
+                                                                    <td>5.00</td>
+                                                                    <td>1</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>4</td>
+                                                                    <td>Dehradun</td>
+                                                                    <td>10</td>
+                                                                    <td>15</td>
+                                                                    <td>7</td>
+                                                                    <td>7.12</td>
+                                                                    <td>32</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>5</td>
+                                                                    <td>Haridwar</td>
+                                                                    <td>8</td>
+                                                                    <td>9</td>
+                                                                    <td>6</td>
+                                                                    <td>8.45</td>
+                                                                    <td>23</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card custom-card">
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <h3 style="text-align:left" id="renewal_reverted_title">Renewal (Reverted) — Jun to July 2025</h3>
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>Sr</th>
+                                                                    <th>District</th>
+                                                                    <th>0-5 Days</th>
+                                                                    <th>6-10</th>
+                                                                    <th>11-15</th>
+                                                                    <th>Avg Days</th>
+                                                                    <th>Total Application</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="renewal_reverted_table">
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>Almora</td>
+                                                                    <td>1</td>
+                                                                    <td>0</td>
+                                                                    <td>1</td>
+                                                                    <td>4.50</td>
+                                                                    <td>2</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2</td>
+                                                                    <td>Bageshwar</td>
+                                                                    <td>2</td>
+                                                                    <td>1</td>
+                                                                    <td>0</td>
+                                                                    <td>6.33</td>
+                                                                    <td>3</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>3</td>
+                                                                    <td>Chamoli</td>
+                                                                    <td>0</td>
+                                                                    <td>0</td>
+                                                                    <td>1</td>
+                                                                    <td>5.00</td>
+                                                                    <td>1</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>4</td>
+                                                                    <td>Dehradun</td>
+                                                                    <td>10</td>
+                                                                    <td>15</td>
+                                                                    <td>7</td>
+                                                                    <td>7.12</td>
+                                                                    <td>32</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>5</td>
+                                                                    <td>Haridwar</td>
+                                                                    <td>8</td>
+                                                                    <td>9</td>
+                                                                    <td>6</td>
+                                                                    <td>8.45</td>
+                                                                    <td>23</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row row-sm">
+                                        <div class="col-md-12">
+                                            <div class="card custom-card">
+                                                <!--<div class="card-header">-->
+                                                <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
+                                                <!--</div>-->
+                                                <div class="card-body dash1">
+                                                    <div class="tabel-responsive">
+                                                        <table>
+                                                            <thead class="thead-primary">
+                                                                <tr>
+                                                                    <th>District Name</th>
+                                                                    <th>Not Assigned</th>
+                                                                    <th>Assigned But Not Verified</th>
+                                                                    <th>Verified</th>
+                                                                    <th>Approved</th>
+                                                                    <th>Rejected</th>
+                                                                    <th>Pending</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($allNocCountData as $row)
+                                                                <tr>
+                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
+                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
+                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                
-                    <!-- 3) Contents -->
-                    <div class="contents2">
-                      <div class="content2 AllNOC">
-                          <div class="card-body dash1" style="padding: 0px !important;">
-                            <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">NOC - Dashboard</h1>
-                            <div class="row">
-                                <div class="col-md-12 form-group" style="margin-top: 20px">
-                            		<div class="dashboard">
-                                        <a href="#" class="card1" style="border-left-color:#28a745;">
-                                            <div class="card-header1">
-                                                <div class="icon">📥</div>
-                                                <div class="number" style="background-color: #28a745;" id="total_received">78</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">RECEIVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#59abf9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🆗</div>
-                                                <div class="number" style="background-color: #59abf9;" id="approved">8</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">APPROVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#7969b9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🔙</div>
-                                                <div class="number" style="background-color: #7969b9;" id="reverted">4</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">REVERTED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#dea364;">
-                                            <div class="card-header1">
-                                                <div class="icon">⏳</div>
-                                                <div class="number" style="background-color: #dea364;" id="in_process">35</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">IN-PROCESS</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#d80303;">
-                                            <div class="card-header1">
-                                                <div class="icon">🕒</div>
-                                                <div class="number" style="background-color: #d80303;" id="pending">19</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">PENDING</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-5">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="font-size:18px">No. of Application (by status)</h3>
-                                            <canvas id="AllNOCApplicationByStatusPieChart" height="300"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-7">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by district)</h3>
-                                            <canvas id="AllNOCApplicationByStatusBarChart"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by type)</h3>
-                                            <canvas id="AllNOCApplicationByTypeBarChart" style="max-height:250px"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="text-align:left">Reason of Rejection</h3>
-                                            <div style="display:flex;gap:12px;align-items:center">
-                                              <div style="flex:1">
-                                                  <canvas id="AllNOCRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
-                                              </div>
-                                              <div style="width:220px">
-                                                <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
-                                                <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                <ul style="font-size:13px;color:var(--muted)">
-                                                  <li>Letter from Development Authority Missing — 43%</li>
-                                                  <li>Proposed Map Missing — 19%</li>
-                                                  <li>Incomplete Map — 9%</li>
-                                                  <li>Other — 29%</li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Establishment (Approved) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Establishment (Reverted) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-12">
-                                    <div class="card custom-card">
-                                        <!--<div class="card-header">-->
-                                        <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
-                                        <!--</div>-->
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                        <tr>
-                                                            <th>District Name</th>
-                                                            <th>Not Assigned</th>
-                                                            <th>Assigned But Not Verified</th>
-                                                            <th>Verified</th>
-                                                            <th>Approved</th>
-                                                            <th>Rejected</th>
-                                                            <th>Pending</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($allNocCountData as $row)
-                                                            <tr>
-                                                                <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                <th>{{ $row['Total'] ?? '0' }}</th>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                        </div>
-                          
-                      </div>
-                      <div class="content2 PreEstablishment">
-                          <div class="card-body dash1" style="padding: 0px !important;">
-                            <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Pre-Establishment - Dashboard</h1>
-                            <div class="row">
-                                <div class="col-md-12 form-group" style="margin-top: 20px">
-                            		<div class="dashboard">
-                                        <a href="#" class="card1" style="border-left-color:#28a745;">
-                                            <div class="card-header1">
-                                                <div class="icon">📥</div>
-                                                <div class="number" style="background-color: #28a745;" id="total_received">78</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">RECEIVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#59abf9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🆗</div>
-                                                <div class="number" style="background-color: #59abf9;" id="approved">8</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">APPROVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#7969b9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🔙</div>
-                                                <div class="number" style="background-color: #7969b9;" id="reverted">4</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">REVERTED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#dea364;">
-                                            <div class="card-header1">
-                                                <div class="icon">⏳</div>
-                                                <div class="number" style="background-color: #dea364;" id="in_process">35</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">IN-PROCESS</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#d80303;">
-                                            <div class="card-header1">
-                                                <div class="icon">🕒</div>
-                                                <div class="number" style="background-color: #d80303;" id="pending">19</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">PENDING</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-5">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="font-size:18px">No. of Application (by status)</h3>
-                                            <canvas id="PreEstablishmentApplicationByStatusPieChart" height="300"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-7">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by district)</h3>
-                                            <canvas id="PreEstablishmentApplicationByStatusBarChart"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by type)</h3>
-                                            <canvas id="PreEstablishmentApplicationByTypeBarChart" style="max-height:250px"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="text-align:left">Reason of Rejection</h3>
-                                            <div style="display:flex;gap:12px;align-items:center">
-                                              <div style="flex:1">
-                                                  <canvas id="PreEstablishmentRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
-                                              </div>
-                                              <div style="width:220px">
-                                                <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
-                                                <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                <ul style="font-size:13px;color:var(--muted)">
-                                                  <li>Letter from Development Authority Missing — 43%</li>
-                                                  <li>Proposed Map Missing — 19%</li>
-                                                  <li>Incomplete Map — 9%</li>
-                                                  <li>Other — 29%</li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Establishment (Approved) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Establishment (Reverted) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-12">
-                                    <div class="card custom-card">
-                                        <!--<div class="card-header">-->
-                                        <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
-                                        <!--</div>-->
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                        <tr>
-                                                            <th>District Name</th>
-                                                            <th>Not Assigned</th>
-                                                            <th>Assigned But Not Verified</th>
-                                                            <th>Verified</th>
-                                                            <th>Approved</th>
-                                                            <th>Rejected</th>
-                                                            <th>Pending</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($allNocCountData as $row)
-                                                            <tr>
-                                                                <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                <th>{{ $row['Total'] ?? '0' }}</th>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                        </div>
-                          
-                      </div>
-                      
-                      
-                      
-                
-                      <div class="content2 PreOperational">
-                        <div class="card-body dash1" style="padding: 0px !important;">
-                            <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Pre-Operational - Dashboard</h1>
-                            <div class="row">
-                                <div class="col-md-12 form-group" style="margin-top: 20px">
-                            		<div class="dashboard">
-                                        <a href="#" class="card1" style="border-left-color:#28a745;">
-                                            <div class="card-header1">
-                                                <div class="icon">📥</div>
-                                                <div class="number" style="background-color: #28a745;" id="total_received">78</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">RECEIVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#59abf9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🆗</div>
-                                                <div class="number" style="background-color: #59abf9;" id="approved">8</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">APPROVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#7969b9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🔙</div>
-                                                <div class="number" style="background-color: #7969b9;" id="reverted">4</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">REVERTED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#dea364;">
-                                            <div class="card-header1">
-                                                <div class="icon">⏳</div>
-                                                <div class="number" style="background-color: #dea364;" id="in_process">35</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">IN-PROCESS</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#d80303;">
-                                            <div class="card-header1">
-                                                <div class="icon">🕒</div>
-                                                <div class="number" style="background-color: #d80303;" id="pending">19</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">PENDING</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-5">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="font-size:18px">No. of Application (by status)</h3>
-                                            <canvas id="PreOperationalApplicationByStatusPieChart" height="300"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-7">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by district)</h3>
-                                            <canvas id="PreOperationalApplicationByStatusBarChart"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by type)</h3>
-                                            <canvas id="PreOperationalApplicationByTypeBarChart" style="max-height:250px"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="text-align:left">Reason of Rejection</h3>
-                                            <div style="display:flex;gap:12px;align-items:center">
-                                              <div style="flex:1">
-                                                  <canvas id="PreOperationalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
-                                              </div>
-                                              <div style="width:220px">
-                                                <h4 style="margin-bottom:8px;color:#c0392b">Pre-Operational</h4>
-                                                <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                <ul style="font-size:13px;color:var(--muted)">
-                                                  <li>Letter from Development Authority Missing — 43%</li>
-                                                  <li>Proposed Map Missing — 19%</li>
-                                                  <li>Incomplete Map — 9%</li>
-                                                  <li>Other — 29%</li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Operational (Approved) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Pre-Operational (Reverted) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-12">
-                                    <div class="card custom-card">
-                                        <!--<div class="card-header">-->
-                                        <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
-                                        <!--</div>-->
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                        <tr>
-                                                            <th>District Name</th>
-                                                            <th>Not Assigned</th>
-                                                            <th>Assigned But Not Verified</th>
-                                                            <th>Verified</th>
-                                                            <th>Approved</th>
-                                                            <th>Rejected</th>
-                                                            <th>Pending</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($allNocCountData as $row)
-                                                            <tr>
-                                                                <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                <th>{{ $row['Total'] ?? '0' }}</th>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                        </div>
-                      </div>
-                	  
-                	  <div class="content2 Renewal">
-                        <div class="card-body dash1" style="padding: 0px !important;">
-                            <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Renewal - Dashboard</h1>
-                            <div class="row">
-                                <div class="col-md-12 form-group" style="margin-top: 20px">
-                            		<div class="dashboard">
-                                        <a href="#" class="card1" style="border-left-color:#28a745;">
-                                            <div class="card-header1">
-                                                <div class="icon">📥</div>
-                                                <div class="number" style="background-color: #28a745;" id="total_received">78</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">RECEIVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#59abf9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🆗</div>
-                                                <div class="number" style="background-color: #59abf9;" id="approved">8</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">APPROVED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#7969b9;">
-                                            <div class="card-header1">
-                                                <div class="icon">🔙</div>
-                                                <div class="number" style="background-color: #7969b9;" id="reverted">4</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">REVERTED</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#dea364;">
-                                            <div class="card-header1">
-                                                <div class="icon">⏳</div>
-                                                <div class="number" style="background-color: #dea364;" id="in_process">35</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">IN-PROCESS</div>
-                                        </a>
-                                        <a href="#" class="card1" style="border-left-color:#d80303;">
-                                            <div class="card-header1">
-                                                <div class="icon">🕒</div>
-                                                <div class="number" style="background-color: #d80303;" id="pending">19</div>
-                                            </div>
-                                            <h4>Number of Application</h4>
-                                            <div class="value">PENDING</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-5">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="font-size:18px">No. of Application (by status)</h3>
-                                            <canvas id="RenewalApplicationByStatusPieChart" height="300"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-7">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by district)</h3>
-                                            <canvas id="RenewalApplicationByStatusBarChart"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3>No. of Application (by type)</h3>
-                                            <canvas id="RenewalApplicationByTypeBarChart" style="max-height:250px"></canvas>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <h3 style="text-align:left">Reason of Rejection</h3>
-                                            <div style="display:flex;gap:12px;align-items:center">
-                                              <div style="flex:1">
-                                                  <canvas id="RenewalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
-                                              </div>
-                                              <div style="width:220px">
-                                                <h4 style="margin-bottom:8px;color:#c0392b">Renewal</h4>
-                                                <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                <ul style="font-size:13px;color:var(--muted)">
-                                                  <li>Letter from Development Authority Missing — 43%</li>
-                                                  <li>Proposed Map Missing — 19%</li>
-                                                  <li>Incomplete Map — 9%</li>
-                                                  <li>Other — 29%</li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Renewal (Approved) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 <div class="col-md-6">
-                                    <div class="card custom-card">
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <h3 style="text-align:left">Renewal (Reverted) — Jun to July 2025</h3>
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                      <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                      <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                      <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                      <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                      <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                                 
-                              </div>
-                              
-                              <div class="row row-sm">
-                                 <div class="col-md-12">
-                                    <div class="card custom-card">
-                                        <!--<div class="card-header">-->
-                                        <!--    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm" style="float: right">Dashboard</a>-->
-                                        <!--</div>-->
-                                        <div class="card-body dash1">
-                                            <div class="tabel-responsive">
-                                                <table>
-                                                    <thead class="thead-primary">
-                                                        <tr>
-                                                            <th>District Name</th>
-                                                            <th>Not Assigned</th>
-                                                            <th>Assigned But Not Verified</th>
-                                                            <th>Verified</th>
-                                                            <th>Approved</th>
-                                                            <th>Rejected</th>
-                                                            <th>Pending</th>
-                                                            <th>Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($allNocCountData as $row)
-                                                            <tr>
-                                                                <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                <th>{{ $row['Total'] ?? '0' }}</th>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>    
-                                    </div>
-                                 </div>
-                              </div>
-                              
-                        </div>
-                      </div>
-                
-                    </div>
+
                 </div>
-                 
-              </div>
-        
-              <div class="content vehicle">
-                <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Vehical</h1>
+
+                <div class="content vehicle">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Vehical</h1>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
                             <div class="card-container">
                                 <div class="kpi-card">
                                     <h4>Multipurpose<br />Fire Tender</h4>
-                                    <div class="value">3</div>
+                                    <div  class="value" id="kpi_Multipurpose_Fire_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Hydraulic<br />Platform</h4>
-                                    <div class="value">1</div>
+                                    <div class="value" id="kpi_Hydraulic_Platform">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Water<br />Browser</h4>
-                                    <div class="value">7</div>
+                                    <div class="value" id="kpi_Water_Browser">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>DCP<br />Tender</h4>
-                                    <div class="value">1</div>
+                                    <div class="value" id="kpi_DCP_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Foam<br />Tender</h4>
-                                    <div class="value">8</div>
+                                    <div class="value" id="kpi_Foam_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Water<br />Tender</h4>
-                                    <div class="value">84</div>
+                                    <div class="value" id="kpi_Water_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Crash Fire<br />Tender</h4>
-                                    <div class="value">6</div>
+                                    <div class="value" id="kpi_Crash_Fire_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Mini High<br />Pressure</h4>
-                                    <div class="value">45</div>
+                                    <div class="value" id="kpi_Mini_High_Pressure">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Water<br />Mist</h4>
-                                    <div class="value">36</div>
+                                    <div class="value" id="kpi_Water_Mist">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4><br />Ambulance</h4>
-                                    <div class="value">8</div>
+                                    <div class="value" id="kpi_Ambulance">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4>Rescue<br />Tender</h4>
-                                    <div class="value">3</div>
+                                    <div class="value" id="kpi_Rescue_Tender">0</div>
                                 </div>
     
                                 <div class="kpi-card">
                                     <h4><br />PPCV</h4>
-                                    <div class="value">0</div>
+                                    <div class="value" id="kpi_PPCV">0</div>
                                 </div>
                                 
                                 <div class="kpi-card">
                                     <h4><br />Bulero</h4>
-                                    <div class="value">0</div>
+                                    <div class="value" id="kpi_Bulero">0</div>
                                 </div>
                                 
                                 <div class="kpi-card">
                                     <h4>Tools<br />Pump</h4>
-                                    <div class="value">0</div>
+                                    <div class="value" id="kpi_Tools_Pump">0</div>
                                 </div>
                                 
                                 <div class="kpi-card">
                                     <h4>Backpack<br />Set</h4>
-                                    <div class="value">0</div>
+                                    <div class="value" id="kpi_Backpack_Set">0</div>
                                 </div>
                                 
                             </div>
@@ -1389,7 +1190,7 @@ a {
                                                     <th>Ambulance</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="vehicle_table_body">
                                               <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
@@ -1412,9 +1213,9 @@ a {
                          </div>
                     </div>
                     
-              </div>
-        
-              <div class="content equip">
+                </div>
+
+                <div class="content equip">
                   <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Equipment</h1>
                   <div class="row row-sm">
                      <div class="col-md-6">
@@ -1712,10 +1513,10 @@ a {
                      
                   </div>
                   
-              </div>
+                </div>
         
-              <div class="content fireReport">
-                <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Fire Report</h1>
+                <div class="content fireReport">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Fire Report</h1>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
                             <div class="card-container">
@@ -1773,13 +1574,13 @@ a {
                     </div>
                     
                     <div class="row" style="margin-top: 20px;">
-                        <div class="col-md-5">
+                        <!-- <div class="col-md-5">
                             <div class="card custom-card">
                                 <div class="card-body dash1">
                                     <canvas id="FireReportMonthReportPieChart"></canvas>
                                 </div>    
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-5">
                             <div class="card custom-card">
                                 <div class="card-body dash1">
@@ -1838,10 +1639,10 @@ a {
                             </div>
                          </div>
                     </div>
-              </div>
+                </div>
               
-              <div class="content rescue">
-                <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Rescue Report</h1>
+                <div class="content rescue">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Rescue Report</h1>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
                             <div class="card-container">
@@ -1946,10 +1747,10 @@ a {
                             </div>
                          </div>
                     </div>
-              </div>
+                </div>
               
-              <div class="content relief">
-                <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Relief Report</h1>
+                <div class="content relief">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Relief Report</h1>
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
                             <div class="card-container">
@@ -2054,10 +1855,10 @@ a {
                             </div>
                          </div>
                     </div>
-              </div>
+                </div>
               
-              <div class="content hydrent">
-                <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Hydrent</h1>
+                <div class="content hydrent">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Hydrent</h1>
                     
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-md-7">
@@ -2077,10 +1878,10 @@ a {
                             </div>
                         </div>
                     </div>
-              </div>
+                </div>
         
-              <div class="content employee">
-                  <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Employee's</h1>
+                <div class="content employee">
+                    <h1 style="margin-bottom:12px;font-size:20px;margin-top: 10px">Employee's</h1>
                   
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
@@ -2212,673 +2013,1632 @@ a {
                         </div>
                     </div>
                     
-              </div>
+                </div>
+            
+              
             </div>
           </div>
      </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-new Chart(document.getElementById('AllNOCRejectPie'),{
-  type:'doughnut',
-  data:{labels:['Letter Missing','Proposed Map','Incomplete Map','Other'],datasets:[{data:[43,19,9,29],backgroundColor:['#2f80ed','#ff7f50','#b9b9b9','#ffd166']} ]},
-  options:{plugins:{legend:{position:'right'}},aspectRatio:1.2}
-});
-new Chart(document.getElementById('PreEstablishmentRejectPie'),{
-  type:'doughnut',
-  data:{labels:['Letter Missing','Proposed Map','Incomplete Map','Other'],datasets:[{data:[43,19,9,29],backgroundColor:['#2f80ed','#ff7f50','#b9b9b9','#ffd166']} ]},
-  options:{plugins:{legend:{position:'right'}},aspectRatio:1.2}
-});
-
-new Chart(document.getElementById('PreOperationalRejectPie'),{
-  type:'doughnut',
-  data:{labels:['Letter Missing','Proposed Map','Incomplete Map','Other'],datasets:[{data:[43,19,9,29],backgroundColor:['#2f80ed','#ff7f50','#b9b9b9','#ffd166']} ]},
-  options:{plugins:{legend:{position:'right'}},aspectRatio:1.2}
-});
-
-new Chart(document.getElementById('RenewalRejectPie'),{
-  type:'doughnut',
-  data:{labels:['Letter Missing','Proposed Map','Incomplete Map','Other'],datasets:[{data:[43,19,9,29],backgroundColor:['#2f80ed','#ff7f50','#b9b9b9','#ffd166']} ]},
-  options:{plugins:{legend:{position:'right'}},aspectRatio:1.2}
-});
-
-    
-new Chart(document.getElementById('VehiclePieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Foam Tender','Water Tender','Crash Fire Tender','Mini High Fire','Water Mist','Rescue Tender','PCBC','Bulero','Tools Pump','Multipurpose Fire Tender','Hydrolic Platform','DRFT Tender','Backfire Set','Ambulance'],
-    datasets:[{data:[15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-    backgroundColor:["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('AllNOCApplicationByStatusPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Approved','Reverted','Under Process','Pending'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('PreEstablishmentApplicationByStatusPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Approved','Reverted','Under Process','Pending'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('PreOperationalApplicationByStatusPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Approved','Reverted','Under Process','Pending'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('RenewalApplicationByStatusPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Approved','Reverted','Under Process','Pending'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('FireReportCategoryIncidentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Small Fire','Major Fire','Serious Fire ','Special Fire'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-new Chart(document.getElementById('RescueReportCategoryIncidentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Small Fire','Major Fire','Serious Fire ','Special Fire'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('ReliefReportCategoryIncidentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Small Fire','Major Fire','Serious Fire ','Special Fire'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('FireHydrentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Working','Not Working','Proposed'],
-    datasets:[{data:[46,18,27],backgroundColor:['#2f80ed','#ff7f50','#98a0a8']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-
-new Chart(document.getElementById('FireReportMonthReportPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Small Fire','Major Fire','Serious Fire ','Special Fire'],
-    datasets:[{data:[46,18,27,9],backgroundColor:['#2f80ed','#ff7f50','#98a0a8','#f5b041']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-new Chart(document.getElementById('FireReportNoOfFireCallPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Commercial','Residential','High Rise','Forest','Farm','Industry','Vehicle','Landscape','Other'],
-    datasets:[{data:[46,18,27,9,51,29,33,19,40],backgroundColor:['#f67fa7','#5f7670','#98a0a8','#f5b041','#2f80ed','#ff7f50','#00a0a8','#f5ff41','#f5b0ff']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-new Chart(document.getElementById('EmployeeVacancyPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-    datasets:[{data:[46,18,27,9,51,29,33,19],backgroundColor:['#f67fa7','#5f7670','#98a0a8','#f5b041','#2f80ed','#ff7f50','#00a0a8','#f5ff41']}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-
-new Chart(document.getElementById('DisasterEquipmentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Foam Tender','Water Tender','Crash Fire Tender','Mini High Fire','Water Mist','Rescue Tender','PCBC','Bulero','Tools Pump','Multipurpose Fire Tender','Hydrolic Platform','DRFT Tender','Backfire Set','Ambulance'],
-    datasets:[{data:[15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-    backgroundColor:["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-
-new Chart(document.getElementById('PersonalProtectiveEquipmentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Foam Tender','Water Tender','Crash Fire Tender','Mini High Fire','Water Mist','Rescue Tender','PCBC','Bulero','Tools Pump','Multipurpose Fire Tender','Hydrolic Platform','DRFT Tender','Backfire Set','Ambulance'],
-    datasets:[{data:[15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-    backgroundColor:["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-
-new Chart(document.getElementById('MountaineeringSerachRescueEquipmentPieChart'), {
-  type: 'pie',
-  data: {
-    labels:['Foam Tender','Water Tender','Crash Fire Tender','Mini High Fire','Water Mist','Rescue Tender','PCBC','Bulero','Tools Pump','Multipurpose Fire Tender','Hydrolic Platform','DRFT Tender','Backfire Set','Ambulance'],
-    datasets:[{data:[15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-    backgroundColor:["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]}]
-  },
-  options:{plugins:{legend:{position:'bottom'}},aspectRatio:1.4}
-});
-
-
-
-
-
-
-new Chart(document.getElementById('AllNOCApplicationByStatusBarChart'), {
-  type:'bar',
-  data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-  },
-  options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-});
-
-new Chart(document.getElementById('PreEstablishmentApplicationByStatusBarChart'), {
-  type:'bar',
-  data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-  },
-  options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-});
-
-new Chart(document.getElementById('PreOperationalApplicationByStatusBarChart'), {
-  type:'bar',
-  data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-  },
-  options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-});
-
-new Chart(document.getElementById('RenewalApplicationByStatusBarChart'), {
-  type:'bar',
-  data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-  },
-  options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-});
-
-
-// new Chart(document.getElementById('FireReportNoOfIncidentChart'), {
-//   type:'bar',
-//   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-//     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-//   },
-//   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-// });
-
-// new Chart(document.getElementById('RescueReportNoOfIncidentChart'), {
-//   type:'bar',
-//   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-//     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-//   },
-//   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-// });
-// new Chart(document.getElementById('ReliefReportNoOfIncidentChart'), {
-//   type:'bar',
-//   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-//     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-//   },
-//   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-// });
-
-
-
-new Chart(document.getElementById('AllNOCApplicationByTypeBarChart'), {
-  type:'bar',
-  data:{labels:['Residential','Educational','Institutional','Business','Mercantile','Industrial','Hazardous','Storage','Arm Lines','Petrol Pump','Cinema Hall','Fire Cracker','Other'],
-    datasets:[{label:'No. of Application',data:[8,18,22,12,80,65,55,45,22,10,12,34,10]}]
-  },
-  options:{indexAxis:'x',scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}},aspectRatio:1.6}
-});
-
-new Chart(document.getElementById('PreEstablishmentApplicationByTypeBarChart'), {
-  type:'bar',
-  data:{labels:['Residential','Educational','Institutional','Business','Mercantile','Industrial','Hazardous','Storage','Arm Lines','Petrol Pump','Cinema Hall','Fire Cracker','Other'],
-    datasets:[{label:'No. of Application',data:[8,18,22,12,80,65,55,45,22,10,12,34,10]}]
-  },
-  options:{indexAxis:'x',scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}},aspectRatio:1.6}
-});
-
-new Chart(document.getElementById('PreOperationalApplicationByTypeBarChart'), {
-  type:'bar',
-  data:{labels:['Residential','Educational','Institutional','Business','Mercantile','Industrial','Hazardous','Storage','Arm Lines','Petrol Pump','Cinema Hall','Fire Cracker','Other'],
-    datasets:[{label:'No. of Application',data:[8,18,22,12,80,65,55,45,22,10,12,34,10]}]
-  },
-  options:{indexAxis:'x',scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}},aspectRatio:1.6}
-});
-
-new Chart(document.getElementById('RenewalApplicationByTypeBarChart'), {
-  type:'bar',
-  data:{labels:['Residential','Educational','Institutional','Business','Mercantile','Industrial','Hazardous','Storage','Arm Lines','Petrol Pump','Cinema Hall','Fire Cracker','Other'],
-    datasets:[{label:'No. of Application',data:[8,18,22,12,80,65,55,45,22,10,12,34,10]}]
-  },
-  options:{indexAxis:'x',scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}},aspectRatio:1.6}
-});
-
-
-</script>
+<!-- <script src="{{ asset('/public/admin/js/dashboard-two.js') }}"></script> -->
 
 <script>
-        // Get the canvas element
-        const ctx = document.getElementById('VehicleChart').getContext('2d');
-
-        // Data for the bar chart
-        const data = {
-            labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
-            datasets: [
-                {
-                    label: 'Working',
-                    data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
-                    backgroundColor: 'rgba(6, 154, 235, 0.7)',
-                    borderColor: 'rgba(6, 154, 235, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Not-Working',
-                    data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
-                    backgroundColor: 'rgba(255, 159, 67, 0.7)',
-                    borderColor: 'rgba(255, 159, 67, 1)',
-                    borderWidth: 1,
+        new Chart(document.getElementById('AllNOCRejectPie'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
+            datasets: [{
+                data: [43, 19, 9, 29],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right'
                 }
-            ]
-        };
+            },
+            aspectRatio: 1.2
+        }
+    });
+    new Chart(document.getElementById('PreEstablishmentRejectPie'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
+            datasets: [{
+                data: [43, 19, 9, 29],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            },
+            aspectRatio: 1.2
+        }
+    });
 
-        // Chart configuration
-        const config = {
-            type: 'bar', // Bar chart type
-            data: data,
+    new Chart(document.getElementById('PreOperationalRejectPie'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
+            datasets: [{
+                data: [43, 19, 9, 29],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            },
+            aspectRatio: 1.2
+        }
+    });
+
+    new Chart(document.getElementById('RenewalRejectPie'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
+            datasets: [{
+                data: [43, 19, 9, 29],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            },
+            aspectRatio: 1.2
+        }
+    });
+
+
+    // new Chart(document.getElementById('VehiclePieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+    //         datasets: [{
+    //             data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+    //             backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    let pieChart = null;
+    let charts = {};
+    let barChart = null;
+
+    // new Chart(document.getElementById('AllNOCApplicationByStatusPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    function updatePieChart(data, chartId) {
+
+        let ctx = document.getElementById(chartId);
+
+        if (!ctx) return;
+
+        // if (pieChart) {
+        //     pieChart.destroy();
+        // }
+        if (charts[chartId]) {
+            charts[chartId].destroy();
+        }
+
+        charts[chartId] = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Approved', 'Reverted', 'In Process', 'Pending'],
+                datasets: [{
+                    data: [
+                        data.approved,
+                        data.reverted,
+                        data.in_process,
+                        data.pending
+                    ],
+                    backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+                }]
+            },
             options: {
-                responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'No. of Vehicle'
-                    }
+                    legend: { position: 'bottom' }
                 },
+                aspectRatio: 1.4
+            }
+        });
+    }
+
+    function updateBarChart(data, chartId) {
+
+        let ctx = document.getElementById(chartId);
+
+        if (!ctx) return;
+
+        if (barChart) {
+            barChart.destroy();
+        }
+
+        let labels = data.map(item => item.district);
+        let values = data.map(item => item.total);
+
+        barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'No. of Application',
+                    data: values
+                }]
+            },
+            options: {
                 scales: {
-                    x: {
-                        stacked: false // Set to true if you want stacked bars
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
                 }
             }
-        };
+        });
+    }
 
-        // Render the chart
-        new Chart(ctx, config);
-    </script>
-    
-<script>
-        // Get the canvas element
-        const ctx1 = document.getElementById('FireHydrentChart').getContext('2d');
+    // new Chart(document.getElementById('AllNOCApplicationByStatusBarChart'), {
+    //     type: 'bar',
+    //     data: {
+    //         labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+    //         datasets: [{
+    //             label: 'No. of Application',
+    //             data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 display: false
+    //             }
+    //         }
+    //     }
+    // });
 
-        // Data for the bar chart
-        const data1 = {
-            labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
-            datasets: [
-                {
-                    label: 'Working',
-                    data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
-                    backgroundColor: 'rgba(6, 154, 235, 0.7)',
-                    borderColor: 'rgba(6, 154, 235, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Not-Working',
-                    data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
-                    backgroundColor: 'rgba(255, 159, 67, 0.7)',
-                    borderColor: 'rgba(255, 159, 67, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Approved',
-                    data: [60, 30, 36, 50, 77, 11, 25, 45, 37, 8, 20, 15, 31],
-                    backgroundColor: 'rgba(152, 160, 168, 0.7)',
-                    borderColor: 'rgba(152, 160, 168, 1)',
-                    borderWidth: 1,
+    // new Chart(document.getElementById('PreEstablishmentApplicationByStatusPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    // new Chart(document.getElementById('PreOperationalApplicationByStatusPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    // new Chart(document.getElementById('RenewalApplicationByStatusPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    // new Chart(document.getElementById('FireReportCategoryIncidentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+    new Chart(document.getElementById('RescueReportCategoryIncidentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+            datasets: [{
+                data: [46, 18, 27, 9],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
-            ]
-        };
+            },
+            aspectRatio: 1.4
+        }
+    });
 
-        // Chart configuration
-        const config1 = {
-            type: 'bar', // Bar chart type
-            data: data1,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'No. of Vehicle'
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: false // Set to true if you want stacked bars
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
+    new Chart(document.getElementById('ReliefReportCategoryIncidentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+            datasets: [{
+                data: [46, 18, 27, 9],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
-            }
-        };
+            },
+            aspectRatio: 1.4
+        }
+    });
 
-        // Render the chart
-        new Chart(ctx1, config1);
-    </script>
-    
-<script>
-        // Get the canvas element
-        const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
+    new Chart(document.getElementById('FireHydrentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Working', 'Not Working', 'Proposed'],
+            datasets: [{
+                data: [46, 18, 27],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            aspectRatio: 1.4
+        }
+    });
 
-        // Data for the bar chart
-        const data2 = {
+
+    new Chart(document.getElementById('FireReportMonthReportPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+            datasets: [{
+                data: [46, 18, 27, 9],
+                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            aspectRatio: 1.4
+        }
+    });
+    // new Chart(document.getElementById('FireReportNoOfFireCallPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Commercial', 'Residential', 'High Rise', 'Forest', 'Farm', 'Industry', 'Vehicle', 'Landscape', 'Other'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9, 51, 29, 33, 19, 40],
+    //             backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41', '#f5b0ff']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
+
+    new Chart(document.getElementById('EmployeeVacancyPieChart'), {
+        type: 'pie',
+        data: {
             labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-            datasets: [
-                {
-                    label: 'Working',
-                    data: [50, 60, 100, 270, 108, 167, 188, 98],
-                    backgroundColor: 'rgba(6, 154, 235, 0.7)',
-                    borderColor: 'rgba(6, 154, 235, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Not-Working',
-                    data: [20, 10, 19, 90, 40, 10, 46, 21],
-                    backgroundColor: 'rgba(255, 159, 67, 0.7)',
-                    borderColor: 'rgba(255, 159, 67, 1)',
-                    borderWidth: 1,
+            datasets: [{
+                data: [46, 18, 27, 9, 51, 29, 33, 19],
+                backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
-            ]
-        };
+            },
+            aspectRatio: 1.4
+        }
+    });
 
-        // Chart configuration
-        const config2 = {
-            type: 'bar', // Bar chart type
-            data: data2,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: false // Set to true if you want stacked bars
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
+
+    new Chart(document.getElementById('DisasterEquipmentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+            datasets: [{
+                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            aspectRatio: 1.4
+        }
+    });
+
+
+    new Chart(document.getElementById('PersonalProtectiveEquipmentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+            datasets: [{
+                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            aspectRatio: 1.4
+        }
+    });
+
+
+    new Chart(document.getElementById('MountaineeringSerachRescueEquipmentPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+            datasets: [{
+                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            aspectRatio: 1.4
+        }
+    });
+
+
+
+    new Chart(document.getElementById('PreEstablishmentApplicationByStatusBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
-        };
+        }
+    });
 
-        // Render the chart
-        new Chart(ctx2, config2);
-    </script>
+    new Chart(document.getElementById('PreOperationalApplicationByStatusBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('RenewalApplicationByStatusBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+
+    // new Chart(document.getElementById('FireReportNoOfIncidentChart'), {
+    //   type:'bar',
+    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
+    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
+    //   },
+    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
+    // });
+
+    // new Chart(document.getElementById('RescueReportNoOfIncidentChart'), {
+    //   type:'bar',
+    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
+    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
+    //   },
+    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
+    // });
+    // new Chart(document.getElementById('ReliefReportNoOfIncidentChart'), {
+    //   type:'bar',
+    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
+    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
+    //   },
+    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
+    // });
+
+
+
+    new Chart(document.getElementById('AllNOCApplicationByTypeBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            aspectRatio: 1.6
+        }
+    });
+
+    new Chart(document.getElementById('PreEstablishmentApplicationByTypeBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            aspectRatio: 1.6
+        }
+    });
+
+    new Chart(document.getElementById('PreOperationalApplicationByTypeBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            aspectRatio: 1.6
+        }
+    });
+
+    new Chart(document.getElementById('RenewalApplicationByTypeBarChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
+            datasets: [{
+                label: 'No. of Application',
+                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            aspectRatio: 1.6
+        }
+    });
+
+
+    // Get the canvas element
+    // const ctx = document.getElementById('VehicleChart').getContext('2d');
+
+    // // Data for the bar chart
+    // const data = {
+    //     labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
+    //     datasets: [{
+    //             label: 'Working',
+    //             data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
+    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
+    //             borderColor: 'rgba(6, 154, 235, 1)',
+    //             borderWidth: 1,
+    //         },
+    //         {
+    //             label: 'Not-Working',
+    //             data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
+    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
+    //             borderColor: 'rgba(255, 159, 67, 1)',
+    //             borderWidth: 1,
+    //         }
+    //     ]
+    // };
+
+    // // Chart configuration
+    // const config = {
+    //     type: 'bar', // Bar chart type
+    //     data: data,
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top',
+    //             },
+    //             title: {
+    //                 display: true,
+    //                 text: 'No. of Vehicle'
+    //             }
+    //         },
+    //         scales: {
+    //             x: {
+    //                 stacked: false // Set to true if you want stacked bars
+    //             },
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         }
+    //     }
+    // };
+
+    // // Render the chart
+    // new Chart(ctx, config);
     
+    // Get the canvas element
+    const ctx1 = document.getElementById('FireHydrentChart').getContext('2d');
+
+    // Data for the bar chart
+    const data1 = {
+        labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
+        datasets: [{
+                label: 'Working',
+                data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
+                backgroundColor: 'rgba(6, 154, 235, 0.7)',
+                borderColor: 'rgba(6, 154, 235, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Not-Working',
+                data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
+                backgroundColor: 'rgba(255, 159, 67, 0.7)',
+                borderColor: 'rgba(255, 159, 67, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Approved',
+                data: [60, 30, 36, 50, 77, 11, 25, 45, 37, 8, 20, 15, 31],
+                backgroundColor: 'rgba(152, 160, 168, 0.7)',
+                borderColor: 'rgba(152, 160, 168, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    // Chart configuration
+    const config1 = {
+        type: 'bar', // Bar chart type
+        data: data1,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'No. of Vehicle'
+                }
+            },
+            scales: {
+                x: {
+                    stacked: false // Set to true if you want stacked bars
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    // Render the chart
+    new Chart(ctx1, config1);
+    // Get the canvas element
+    const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
+
+    // Data for the bar chart
+    const data2 = {
+        labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
+        datasets: [{
+                label: 'Working',
+                data: [50, 60, 100, 270, 108, 167, 188, 98],
+                backgroundColor: 'rgba(6, 154, 235, 0.7)',
+                borderColor: 'rgba(6, 154, 235, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Not-Working',
+                data: [20, 10, 19, 90, 40, 10, 46, 21],
+                backgroundColor: 'rgba(255, 159, 67, 0.7)',
+                borderColor: 'rgba(255, 159, 67, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    // Chart configuration
+    const config2 = {
+        type: 'bar', // Bar chart type
+        data: data2,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                x: {
+                    stacked: false // Set to true if you want stacked bars
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    // Render the chart
+    new Chart(ctx2, config2);
+
+    
+
+    const labels = ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'];
+
+    // BAR DATA
+    const productA = [30, 40, 50, 60, 50, 45, 30, 40, 20];
+    const productB = [20, 30, 40, 20, 35, 30, 40, 50, 60];
+
+    // LINE DATA (same values as bar stack)
+    const lineA = [...productA];
+    const lineB = [...productB];
+
+    const ctx3 = document.getElementById('comboChart').getContext('2d');
+
+    new Chart(ctx3, {
+        data: {
+            labels: labels,
+            datasets: [
+                /* STACKED BARS */
+                {
+                    type: 'bar',
+                    label: 'Male',
+                    data: productA,
+                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                    stack: 'stack1'
+                },
+                {
+                    type: 'bar',
+                    label: 'Female',
+                    data: productB,
+                    backgroundColor: 'rgba(255, 159, 64, 0.85)',
+                    stack: 'stack1'
+                },
+
+                /* LINES FOR EACH STACK */
+                {
+                    type: 'line',
+                    label: 'Male',
+                    data: lineA,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'blue'
+                },
+                {
+                    type: 'line',
+                    label: 'Female',
+                    data: lineB,
+                    borderColor: 'orange',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'orange'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+
+    
+
+    // const labelsFireReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
+
+    // // BAR DATA
+    // const productAFireReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+
+    // // LINE DATA (same values as bar stack)
+    // const lineAFireReport = [...productAFireReport];
+
+    // const ctx4 = document.getElementById('FireReportNoOfIncidentChart').getContext('2d');
+
+    // new Chart(ctx4, {
+    //     data: {
+    //         labels: labelsFireReport,
+    //         datasets: [
+    //             /* STACKED BARS */
+    //             {
+    //                 type: 'bar',
+    //                 label: '',
+    //                 data: productAFireReport,
+    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
+    //                 stack: 'stack1'
+    //             },
+
+    //             /* LINES FOR EACH STACK */
+    //             {
+    //                 type: 'line',
+    //                 label: '',
+    //                 data: lineAFireReport,
+    //                 borderColor: 'blue',
+    //                 borderWidth: 2,
+    //                 tension: 0.3,
+    //                 fill: false,
+    //                 pointRadius: 4,
+    //                 pointBackgroundColor: 'blue'
+    //             }
+    //         ]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         scales: {
+    //             x: {
+    //                 stacked: true
+    //             },
+    //             y: {
+    //                 stacked: true,
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top'
+    //             }
+    //         }
+    //     }
+    // });
+
+    
+
+    const labelsRescueReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
+
+    // BAR DATA
+    const productARescueReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+
+    // LINE DATA (same values as bar stack)
+    const lineARescueReport = [...productARescueReport];
+
+    const ctx5 = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
+
+    new Chart(ctx5, {
+        data: {
+            labels: labelsRescueReport,
+            datasets: [
+                /* STACKED BARS */
+                {
+                    type: 'bar',
+                    label: '',
+                    data: productARescueReport,
+                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                    stack: 'stack1'
+                },
+
+                /* LINES FOR EACH STACK */
+                {
+                    type: 'line',
+                    label: '',
+                    data: lineARescueReport,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'blue'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+
+    
+    
+    const labelsReliefReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
+
+    // BAR DATA
+    const productAReliefReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+
+    // LINE DATA (same values as bar stack)
+    const lineAReliefReport = [...productAReliefReport];
+
+    const ctx6 = document.getElementById('ReliefReportNoOfIncidentChart').getContext('2d');
+
+    new Chart(ctx6, {
+        data: {
+            labels: labelsReliefReport,
+            datasets: [
+                /* STACKED BARS */
+                {
+                    type: 'bar',
+                    label: '',
+                    data: productAReliefReport,
+                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                    stack: 'stack1'
+                },
+
+                /* LINES FOR EACH STACK */
+                {
+                    type: 'line',
+                    label: '',
+                    data: lineAReliefReport,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'blue'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-const labels = ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'];
+$(document).on('change', '#dashboard_dis', function () {
 
-// BAR DATA
-const productA = [30, 40, 50, 60, 50, 45, 30, 40, 20];
-const productB = [20, 30, 40, 20, 35, 30, 40, 50, 60];
+    let district_id = $(this).val();
 
-// LINE DATA (same values as bar stack)
-const lineA = [...productA];
-const lineB = [...productB];
+    // reset fire station dropdown
+    $('#dashboard_fire').html('<option value="">Loading...</option>');
 
-const ctx3 = document.getElementById('comboChart').getContext('2d');
-
-new Chart(ctx3, {
-  data: {
-    labels: labels,
-    datasets: [
-      /* STACKED BARS */
-      {
-        type: 'bar',
-        label: 'Male',
-        data: productA,
-        backgroundColor: 'rgba(54, 162, 235, 0.85)',
-        stack: 'stack1'
-      },
-      {
-        type: 'bar',
-        label: 'Female',
-        data: productB,
-        backgroundColor: 'rgba(255, 159, 64, 0.85)',
-        stack: 'stack1'
-      },
-
-      /* LINES FOR EACH STACK */
-      {
-        type: 'line',
-        label: 'Male',
-        data: lineA,
-        borderColor: 'blue',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'blue'
-      },
-      {
-        type: 'line',
-        label: 'Female',
-        data: lineB,
-        borderColor: 'orange',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'orange'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, beginAtZero: true }
-    },
-    plugins: {
-      legend: { position: 'top' }
+    if (district_id == '') {
+        $('#dashboard_fire').html('<option value="">--- Select Fire Station ---</option>');
+        return;
     }
-  }
+
+    $.ajax({
+        url: "{{ url('get-fire-stations') }}/" + district_id,
+        type: "GET",
+        success: function (res) {
+
+            let options = '<option value="">--- Select Fire Station ---</option>';
+
+            res.forEach(function (fs) {
+                options += `<option value="${fs.id}">${fs.name}</option>`;
+            });
+
+            $('#dashboard_fire').html(options);
+        }
+    });
+
 });
 </script>
-    
 <script>
-const labelsFireReport = ['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'];
+    let dashboardData = null;
+    $(document).on('click', '#dashboardfilterBtn', function () {
 
-// BAR DATA
-const productAFireReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+        let start_date  = $('#start_date').val();
+        let end_date    = $('#end_date').val();
+        let district_id = $('#dashboard_dis').val();
+        let station_id  = $('#dashboard_fire').val();
 
-// LINE DATA (same values as bar stack)
-const lineAFireReport = [...productAFireReport];
+        $.ajax({
+            url: "{{ route('admin.getNocDashboardData') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                start_date,
+                end_date,
+                district_id,
+                station_id
+            },
+            success: function(res) {
 
-const ctx4 = document.getElementById('FireReportNoOfIncidentChart').getContext('2d');
+                dashboardData = res; // ✅ store globally
 
-new Chart(ctx4, {
-  data: {
-    labels: labelsFireReport,
-    datasets: [
-      /* STACKED BARS */
-      {
-        type: 'bar',
-        label: '',
-        data: productAFireReport,
-        backgroundColor: 'rgba(54, 162, 235, 0.85)',
-        stack: 'stack1'
-      },
+                // 🔥 All NOC
+                $('#all_total_received').text(res.all.total_received);
+                $('#all_total_approved').text(res.all.approved);
+                $('#all_total_reverted').text(res.all.reverted);
+                $('#all_total_in_process').text(res.all.in_process);
+                $('#all_total_pending').text(res.all.pending);
 
-      /* LINES FOR EACH STACK */
-      {
-        type: 'line',
-        label: '',
-        data: lineAFireReport,
-        borderColor: 'blue',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'blue'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, beginAtZero: true }
-    },
-    plugins: {
-      legend: { position: 'top' }
-    }
-  }
-});
-</script>
+                // 🔥 Pre-Establishment
+                $('#pre_total_received').text(res.pre_est.total_received);
+                $('#pre_total_approved').text(res.pre_est.approved);
+                $('#pre_total_reverted').text(res.pre_est.reverted);
+                $('#pre_total_in_process').text(res.pre_est.in_process);
+                $('#pre_total_pending').text(res.pre_est.pending);
+
+                // 🔥 Pre-Operational
+                $('#op_total_received').text(res.pre_op.total_received);
+                $('#op_total_approved').text(res.pre_op.approved);
+                $('#op_total_reverted').text(res.pre_op.reverted);
+                $('#op_total_in_process').text(res.pre_op.in_process);
+                $('#op_total_pending').text(res.pre_op.pending);
+
+                // 🔥 Renewal
+                $('#ren_total_received').text(res.renewal.total_received);
+                $('#ren_total_approved').text(res.renewal.approved);
+                $('#ren_total_reverted').text(res.renewal.reverted);
+                $('#ren_total_in_process').text(res.renewal.in_process);
+                $('#ren_total_pending').text(res.renewal.pending);
+
+                // 🔥 Tables
+                renderTable(res.tables.all.approved, '#all_approved_table');
+                renderTable(res.tables.all.reverted, '#all_reverted_table');
+
+                renderTable(res.tables.pre_est.approved, '#pre_est_approved_table');
+                renderTable(res.tables.pre_est.reverted, '#pre_est_reverted_table');
+
+                renderTable(res.tables.pre_op.approved, '#pre_op_approved_table');
+                renderTable(res.tables.pre_op.reverted, '#pre_op_reverted_table');
+
+                renderTable(res.tables.renewal.approved, '#renewal_approved_table');
+                renderTable(res.tables.renewal.reverted, '#renewal_reverted_table');
+
+                updatePieChart(res.all, 'AllNOCApplicationByStatusPieChart');
+                updateBarChart(res.district_chart.all, 'AllNOCApplicationByStatusBarChart');
+            },
+            complete: function() {
+                let start = formatDate(start_date);
+                let end   = formatDate(end_date);
+
+                // ALL
+                $('#all_approved_title').text(`All (Approved) — ${start} to ${end}`);
+                $('#all_reverted_title').text(`All (Reverted) — ${start} to ${end}`);
+
+
+                // Pre-Establishment
+                $('#pre_est_approved_title').text(`Pre-Establishment (Approved) — ${start} to ${end}`);
+                $('#pre_est_reverted_title').text(`Pre-Establishment (Reverted) — ${start} to ${end}`);
+
+                // Pre-Operational
+                $('#pre_op_approved_title').text(`Pre-Operational (Approved) — ${start} to ${end}`);
+                $('#pre_op_reverted_title').text(`Pre-Operational (Reverted) — ${start} to ${end}`);
+
+                // Renewal
+                $('#renewal_approved_title').text(`Renewal (Approved) — ${start} to ${end}`);
+                $('#renewal_reverted_title').text(`Renewal (Reverted) — ${start} to ${end}`);
+
+            }
+
+        });
+
+    });
+
+    $(document).on('click', '.tabs2 label', function () {
+
+        if (!dashboardData) return;
+
+        let selected = $(this).attr('for');
+
+        if (selected === 'AllNOC') {
+            updatePieChart(dashboardData.all, 'AllNOCApplicationByStatusPieChart');
+            updateBarChart(dashboardData.district_chart.all, 'AllNOCApplicationByStatusBarChart');
+        } 
+        else if (selected === 'PreEstablishment') {
+            updatePieChart(dashboardData.pre_est, 'PreEstablishmentApplicationByStatusPieChart');
+            updateBarChart(dashboardData.district_chart.pre_est, 'PreEstablishmentApplicationByStatusBarChart');
+        } 
+        else if (selected === 'PreOperational') {
+            updatePieChart(dashboardData.pre_op, 'PreOperationalApplicationByStatusPieChart');
+            updateBarChart(dashboardData.district_chart.pre_op, 'PreOperationalApplicationByStatusBarChart');
+        } 
+        else if (selected === 'Renewal') {
+            updatePieChart(dashboardData.renewal, 'RenewalApplicationByStatusPieChart');
+            updateBarChart(dashboardData.district_chart.renewal, 'RenewalApplicationByStatusBarChart');
+        }
+
+    });
+
+    $(document).ready(function() {
+        $('#dashboardfilterBtn').click();
+    });
+
     
-<script>
-const labelsRescueReport = ['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'];
 
-// BAR DATA
-const productARescueReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+    function renderTable(data, tableId) {
 
-// LINE DATA (same values as bar stack)
-const lineARescueReport = [...productARescueReport];
+        let html = '';
 
-const ctx5 = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
+        if (!data || data.length === 0) {
+            html = `<tr><td colspan="7" style="text-align:center">No Data</td></tr>`;
+        } else {
+            data.forEach((row, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${row.district}</td>
+                        <td>${row.days_0_5}</td>
+                        <td>${row.days_6_10}</td>
+                        <td>${row.days_11_15}</td>
+                        <td>${row.avg_days}</td>
+                        <td>${row.total}</td>
+                    </tr>
+                `;
+            });
+        }
 
-new Chart(ctx5, {
-  data: {
-    labels: labelsRescueReport,
-    datasets: [
-      /* STACKED BARS */
-      {
-        type: 'bar',
-        label: '',
-        data: productARescueReport,
-        backgroundColor: 'rgba(54, 162, 235, 0.85)',
-        stack: 'stack1'
-      },
-
-      /* LINES FOR EACH STACK */
-      {
-        type: 'line',
-        label: '',
-        data: lineARescueReport,
-        borderColor: 'blue',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'blue'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, beginAtZero: true }
-    },
-    plugins: {
-      legend: { position: 'top' }
+        $(tableId).html(html);
     }
-  }
-});
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+
+        const date = new Date(dateStr);
+
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
+
+    $(document).on('click', 'label[for="vehicle"]', function () {
+
+        $.ajax({
+            url: "{{ route('dashboard.vehicle.data') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                district_id: $('#dashboard_dis').val(),
+                station_id: $('#dashboard_fire').val()
+            },
+            success: function(res) {
+
+                updateVehiclePie(res.pie);
+                updateVehicleBar(res.bar);
+                updateVehicleKPI(res.kpi);
+                renderVehicleTable(res.table);
+
+            }
+        });
+
+    });
+
+    let vehiclePieChart;
+
+    function updateVehiclePie(data) {
+
+        let ctx = document.getElementById('VehiclePieChart');
+
+        if (vehiclePieChart) vehiclePieChart.destroy();
+
+        vehiclePieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.data
+                }]
+            }
+        });
+    }
+
+    let vehicleBarChart;
+
+    function updateVehicleBar(data) {
+
+        let ctx = document.getElementById('VehicleChart');
+
+        if (vehicleBarChart) vehicleBarChart.destroy();
+
+        vehicleBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => 'District ' + d.district_id),
+                datasets: [
+                    {
+                        label: 'Working',
+                        data: data.map(d => d.working)
+                    },
+                    {
+                        label: 'Maintenance',
+                        data: data.map(d => d.maintenance)
+                    },
+                    {
+                        label: 'Out of Road',
+                        data: data.map(d => d.out_of_road)
+                    }
+                ]
+            }
+        });
+    }
+
+    const vehicleTypeMap = {
+        "मल्टीपरपज फायर टेंडर": "Multipurpose_Fire_Tender",
+        "हाइड्रोलिक प्लेटफार्म": "Hydraulic_Platform",
+        "वाटर ब्राउजर": "Water_Browser",
+        "डीसीपी टेंडर": "DCP_Tender",
+        "फोम टेंडर": "Foam_Tender",
+        "वाटर टेण्डर": "Water_Tender",
+        "क्रैश फायर टेंडर": "Crash_Fire_Tender",
+        "मिनी हाईप्रेशर": "Mini_High_Pressure",
+        "वाटर मिस्ट": "Water_Mist",
+        "एंबुलेंस": "Ambulance",
+        "रेस्क्यू टेंडर": "Rescue_Tender",
+        "पीपीसीवी": "PPCV",
+        "बुलेरो": "Bulero",
+        "टूल्स पंप": "Tools_Pump",
+        "बैकपैक सेट": "Backpack_Set"
+    };
+    function updateVehicleKPI(data) {
+        console.log('KPI Data:', data);
+
+        // reset all to 0 first
+        $('.kpi-card .value').text(0);
+
+        for (let key in data) {
+
+            let mapped = vehicleTypeMap[key];
+            console.log(key, mapped);
+
+            if (!mapped) continue;
+
+            let id = 'kpi_' + mapped;
+
+            $('#' + id).text(data[key]);
+        }
+    }
+
+    const vehicleMap = {
+        "फोम टेंडर": "Foam Tender",
+        "वाटर टेण्डर": "Water Tender",
+        "क्रैश फायर टेंडर": "Crash Fire Tender",
+        "मिनी हाईप्रेशर": "Mini High Fire",
+        "वाटर मिस्ट": "Water Mist",
+        "रेस्क्यू टेंडर": "Rescue Tender",
+        "पीसीबीसी": "PCBC",
+        "बुलेरो": "Bulero",
+        "टूल्स पंप": "Tools Pump",
+        "मल्टीपरपज फायर टेंडर": "Multipurpose Fire Tender",
+        "हाइड्रोलिक प्लेटफार्म": "Hydrolic Platform",
+        "डीआरएफटी टेंडर": "DRFT Tender",
+        "बैकपैक सेट": "Backfire Set",
+        "एंबुलेंस": "Ambulance"
+    };
+
+    const columns = [
+        "Foam Tender",
+        "Water Tender",
+        "Crash Fire Tender",
+        "Mini High Fire",
+        "Water Mist",
+        "Rescue Tender",
+        "PCBC",
+        "Bulero",
+        "Tools Pump",
+        "Multipurpose Fire Tender",
+        "Hydrolic Platform",
+        "DRFT Tender",
+        "Backfire Set",
+        "Ambulance"
+    ];
+
+    function renderVehicleTable(data) {
+
+        if (!data || !Array.isArray(data)) return;
+
+        let grouped = {};
+
+        // 👉 Convert row → pivot
+        data.forEach(row => {
+
+            let district = row.district_id;
+            let typeHindi = row.vehicle_type;
+            let typeEnglish = vehicleMap[typeHindi];
+
+            if (!typeEnglish) {
+                console.warn('No mapping for:', typeHindi);
+                return;
+            }
+
+            if (!grouped[district]) {
+                grouped[district] = {};
+            }
+
+            grouped[district][typeEnglish] = row.total;
+        });
+
+        let html = '';
+        let sr = 1;
+
+        // 👉 Build rows
+        for (let district in grouped) {
+
+            html += `<tr>`;
+            html += `<td>${sr++}</td>`;
+
+            columns.forEach(col => {
+                html += `<td>${grouped[district][col] || 0}</td>`;
+            });
+
+            html += `</tr>`;
+        }
+
+        $('#vehicle_table_body').html(html);
+    }
+
+    let fireChart = null;
+
+    $(document).on('click', 'label[for="fireReport"]', function () {
+
+        fetch("{{ route('dashboard.fireReportData') }}")
+            .then(res => res.json())
+            .then(response => {
+                updateFireChart(response.labels, response.data);
+                updateFireCategoryPie(response.categoryLabels, response.categoryData);
+                updateFireTypePie(response.typeLabels, response.typeData);
+                updateFireTable(response.raw);
+            })
+            .catch(err => console.error(err));
+    });
+
+    let fireTypePieChart = null;
+
+    function updateFireTypePie(labels, data) {
+
+        const ctx = document.getElementById('FireReportNoOfFireCallPieChart');
+
+        if (fireTypePieChart) {
+            fireTypePieChart.destroy();
+        }
+
+        fireTypePieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#f67fa7',
+                        '#5f7670',
+                        '#98a0a8',
+                        '#f5b041',
+                        '#2f80ed',
+                        '#ff7f50',
+                        '#00a0a8',
+                        '#f5ff41',
+                        '#f5b0ff'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                aspectRatio: 1.4
+            }
+        });
+    }
+
+    function updateFireChart(labels, data) {
+
+        const ctx = document.getElementById('FireReportNoOfIncidentChart').getContext('2d');
+
+        // destroy old chart
+        if (fireChart) {
+            fireChart.destroy();
+        }
+
+        fireChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                    },
+                    {
+                        type: 'line',
+                        data: data,
+                        borderColor: 'blue',
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    let fireCategoryPieChart = null;
+
+    function updateFireCategoryPie(labels, data) {
+
+        const ctx = document.getElementById('FireReportCategoryIncidentPieChart');
+
+        // destroy old chart
+        if (fireCategoryPieChart) {
+            fireCategoryPieChart.destroy();
+        }
+
+        fireCategoryPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#2f80ed',
+                        '#ff7f50',
+                        '#98a0a8',
+                        '#f5b041',
+                        '#00a0a8',
+                        '#f67fa7',
+                        '#5f7670'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                aspectRatio: 1.4
+            }
+        });
+    }
+
+    function updateFireTable(data) {
+
+        let tbody = document.querySelector('.fireReport table tbody');
+        tbody.innerHTML = '';
+
+        let i = 1;
+
+        data.forEach(item => {
+
+            let row = `
+                <tr>
+                    <td>${i++}</td>
+                    <td>${item.districts_name}</td>
+                    <td>${new Date(item.created_at).getMonth() + 1}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>1</td>
+                </tr>
+            `;
+
+            tbody.innerHTML += row;
+        });
+    }
 </script>
 
-<script>
-const labelsReliefReport = ['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'];
 
-// BAR DATA
-const productAReliefReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
-
-// LINE DATA (same values as bar stack)
-const lineAReliefReport = [...productAReliefReport];
-
-const ctx6 = document.getElementById('ReliefReportNoOfIncidentChart').getContext('2d');
-
-new Chart(ctx6, {
-  data: {
-    labels: labelsReliefReport,
-    datasets: [
-      /* STACKED BARS */
-      {
-        type: 'bar',
-        label: '',
-        data: productAReliefReport,
-        backgroundColor: 'rgba(54, 162, 235, 0.85)',
-        stack: 'stack1'
-      },
-
-      /* LINES FOR EACH STACK */
-      {
-        type: 'line',
-        label: '',
-        data: lineAReliefReport,
-        borderColor: 'blue',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'blue'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, beginAtZero: true }
-    },
-    plugins: {
-      legend: { position: 'top' }
-    }
-  }
-});
-</script>
-    
 
     <!-- End Row -->
     @endsection

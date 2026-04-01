@@ -1,0 +1,528 @@
+.thead-primary {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.card1 {
+    background: linear-gradient(to right, #b9c8f240, #1d4ed830);
+    border-left: 6px solid;
+    border-radius: 16px;
+    padding: 10px 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease-in-out;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-header1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.card1 .icon {
+    font-size: 34px;
+    color: #4e73df;
+}
+
+.card1 .number {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card1 h4 {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+}
+
+.card1 .value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+
+}
+
+.kpi-card {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 5px;
+    width: 150px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.kpi-card h4 {
+    color: #4433cc;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    white-space: nowrap;
+}
+
+.kpi-card .value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+.kpi-card .value span {
+    color: green;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.kpi-card .sub {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.kpi-card .change {
+    font-size: 12px;
+    color: green;
+    margin-top: 2px;
+}
+
+.card-body {
+    background-color: #fff !important;
+    box-shadow: 0px 0px 0px #9db5ff !important;
+    padding: 5px !important;
+}
+
+/* Put radios hidden but as siblings of .tabs and .contents */
+.tab-container>input[type="radio"] {
+    display: none;
+}
+
+/* Tabs wrapper */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Basic label style */
+.tabs label {
+    padding: 12px 5px;
+    border-radius: 14px;
+    background: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all .25s ease;
+    color: #0b4ea2;
+    user-select: none;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+    width: 118px;
+}
+
+/* colored borders (visual) */
+.tabs label[for="noc"] {
+    border-color: #7D4;
+}
+
+.tabs label[for="fire"] {
+    border-color: #f90;
+}
+
+.tabs label[for="status"] {
+    border-color: #290;
+}
+
+.tabs label[for="vehicle"] {
+    border-color: #d22;
+}
+
+.tabs label[for="equip"] {
+    border-color: #0a5;
+}
+
+.tabs label[for="fireReport"] {
+    border-color: #04c;
+}
+
+.tabs label[for="rescue"] {
+    border-color: #0a5;
+}
+
+.tabs label[for="relief"] {
+    border-color: #fc0;
+}
+
+.tabs label[for="hydrent"] {
+    border-color: #d22;
+}
+
+.tabs label[for="employee"] {
+    border-color: #a4a;
+}
+
+/* style the active label when its radio is checked */
+/* note: label is inside .tabs, so we first select the .tabs sibling */
+#noc:checked~.tabs label[for="noc"],
+#fire:checked~.tabs label[for="fire"],
+#status:checked~.tabs label[for="status"],
+#vehicle:checked~.tabs label[for="vehicle"],
+#equip:checked~.tabs label[for="equip"],
+#fireReport:checked~.tabs label[for="fireReport"],
+#rescue:checked~.tabs label[for="rescue"],
+#relief:checked~.tabs label[for="relief"],
+#hydrent:checked~.tabs label[for="hydrent"],
+#employee:checked~.tabs label[for="employee"] {
+    background: #4CAF50;
+    color: #fff !important;
+    border-color: #4CAF50;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.tabs label:hover {
+    transform: scale(1.1);
+}
+
+/* content styles */
+.contents {
+    margin-top: 22px;
+    margin-bottom: 20px;
+}
+
+.content {
+    display: none;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+/* show the relevant content when radio is checked */
+#noc:checked~.contents .noc,
+#fire:checked~.contents .fire,
+#status:checked~.contents .status,
+#vehicle:checked~.contents .vehicle,
+#equip:checked~.contents .equip,
+#fireReport:checked~.contents .fireReport,
+#rescue:checked~.contents .rescue,
+#relief:checked~.contents .relief,
+#hydrent:checked~.contents .hydrent,
+#employee:checked~.contents .employee {
+    display: block;
+    animation: fadeIn .28s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*-----------Tab2 Start--------------*/
+/* Put radios hidden but as siblings of .tabs and .contents */
+.tab-container2>input[type="radio"] {
+    display: none;
+}
+
+/* Tabs wrapper */
+.tabs2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Basic label style */
+.tabs2 label {
+    padding: 12px 20px;
+    border-radius: 14px;
+    background: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all .25s ease;
+    color: #0b4ea2;
+    user-select: none;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.tabs2 label[for="AllNOC"] {
+    border-color: #4CAF50;
+}
+
+.tabs2 label[for="PreEstablishment"] {
+    border-color: #D22;
+}
+
+.tabs2 label[for="PreOperational"] {
+    border-color: #fc0;
+}
+
+.tabs2 label[for="Renewal"] {
+    border-color: #04c;
+}
+
+#AllNOC:checked~.tabs2 label[for="AllNOC"] {
+    background: #4CAF50;
+    color: #fff !important;
+    border-color: #4CAF50;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+#PreEstablishment:checked~.tabs2 label[for="PreEstablishment"] {
+    background: #D22;
+    color: #fff !important;
+    border-color: #D22;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+#PreOperational:checked~.tabs2 label[for="PreOperational"] {
+    background: #fc0;
+    color: #fff !important;
+    border-color: #fc0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+#Renewal:checked~.tabs2 label[for="Renewal"] {
+    background: #04c;
+    color: #fff !important;
+    border-color: #04c;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.tabs2 label:hover {
+    transform: scale(1.1);
+}
+
+/* content styles */
+.contents2 {
+    margin-top: 22px;
+}
+
+.content2 {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+/* show the relevant content when radio is checked */
+#AllNOC:checked~.contents2 .AllNOC,
+#PreEstablishment:checked~.contents2 .PreEstablishment,
+#PreOperational:checked~.contents2 .PreOperational,
+#Renewal:checked~.contents2 .Renewal {
+    display: block;
+    animation: fadeIn .28s ease;
+}
+
+:root {
+    --bg: #f6f7fb;
+    --card: #f4f4f4;
+    --muted: #8a8f9a;
+    --accent: #2f80ed;
+    --green: #2fbf7f;
+    --orange: #ff9f43;
+    --danger: #ff4d4f;
+    --radius: 10px;
+    --pad: 18px;
+}
+
+
+.container2 {
+    margin: 0 auto
+}
+
+.stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap
+}
+
+.stat {
+    background: var(--card);
+    flex: 1;
+    min-width: 120px;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(15, 15, 15, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.stat .meta {
+    font-size: 12px;
+    color: var(--muted)
+}
+
+.stat .value {
+    font-weight: 700;
+    font-size: 18px
+}
+
+.ribbons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px
+}
+
+.ribbon {
+    background: var(--card);
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.ribbon .label {
+    font-size: 12px;
+    color: var(--muted)
+}
+
+.ribbon .bubble {
+    background: #f1f6ff;
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px
+}
+
+.card {
+    background: var(--card);
+    padding: 16px;
+    border-radius: var(--radius);
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.2)
+}
+
+.card h3 {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 16px
+}
+
+.chart-row {
+    display: flex;
+    gap: 12px
+}
+
+/*#pieChart{max-width:300px;margin:0 auto;display:block;}*/
+/*#barChart{height:180px !important;}*/
+/*#barChart2{height:160px !important;width:100%;max-width:500px;margin:0 auto;display:block;}*/
+
+.bottom-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 18px;
+    align-items: flex-start
+}
+
+.bottom-row .card {
+    flex: 1
+}
+
+.tables-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 18px;
+    align-items: flex-start
+}
+
+.tables-row .card {
+    flex: 1;
+    min-width: 0
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px
+}
+
+th,
+td {
+    padding: 8px;
+    border: 1px solid #eef1f6;
+    text-align: left
+}
+
+/*th{background:#f8fafc}*/
+
+@media (max-width:900px) {
+    .charts {
+        grid-template-columns: 1fr
+    }
+
+    .bottom-row {
+        flex-direction: column
+    }
+
+    .tables-row {
+        flex-direction: column
+    }
+
+    .stats {
+        flex-direction: column
+    }
+
+    .ribbons {
+        flex-direction: column
+    }
+}

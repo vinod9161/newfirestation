@@ -70,6 +70,14 @@
                                                     <span class="text-danger" id="card_imageError"></span>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Heading <sup class="text-danger">*</sup></label>
+                                                    <div id="heading-editor-container" style="height: 100px !important;"></div>
+                                                    <input type="hidden" name="heading" id="heading_content">
+                                                    <span class="text-danger" id="heading_contentError"></span>
+                                                </div>
+                                            </div>
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -123,16 +131,38 @@
             cardContentField.value = quill.root.innerHTML;
         });
 
+        var quill2 = new Quill('#heading-editor-container', {
+            theme: 'snow',
+            placeholder: 'Write your heading here...',
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['clean']
+                ]
+            }
+        });
+        var headingField = document.getElementById('heading_content');
+
+        quill2.on('text-change', function () {
+            headingField.value = quill2.root.innerHTML;
+        });
+
         // Form validation
         $('#addcard').on('click', function (e) {
             let cardImage = $('#card_image').val();
-            let cardContent = cardContentField.value;
+            let cardContent = descriptionField.value;
+            let headingContent = headingField.value;
 
             if (!cardImage) {
                 $('#card_imageError').html('Card Image is required').show().delay(3000).fadeOut();
                 e.preventDefault();
             }
 
+            if (!headingContent) {
+                $('#heading_contentError').html('Heading is required').show().delay(3000).fadeOut();
+                e.preventDefault();
+            }
 
             if (!cardContent) {
                 $('#card_contentError').html('Card Content is required').show().delay(3000).fadeOut();

@@ -138,6 +138,13 @@
                                                     <span class="text-danger" id="occassionError"></span>
                                                 </div>
                                             </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Upload Photo <sup class="text-danger">*</sup></label>
+                                                    <input type="file" name="photo" id="photo" class="form-control">
+                                                    <span class="text-danger" id="photoError"></span>
+                                                </div>
+                                            </div>
 
                                             <div class="col-md-12">
                                                 <button type="submit" id="addcard" class="btn btn-primary btn-sm" style="width:20%">Submit</button>

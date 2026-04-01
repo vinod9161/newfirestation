@@ -140,6 +140,17 @@
                                                 </div>
                                             </div>
 
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Upload Photo</label>
+                                                    <input type="file" name="photo" class="form-control">
+
+                                                    @if($medal_winners->photo)
+                                                        <img src="{{ asset('public/uploads/medals/'.$medal_winners->photo) }}" width="60" class="mt-2">
+                                                    @endif
+                                                </div>
+                                            </div>
+
                                             <!-- Submit Button -->
                                             <div class="col-md-12">
                                                 <button type="submit" id="addcard" class="btn btn-primary btn-sm" style="width:20%">Update</button>

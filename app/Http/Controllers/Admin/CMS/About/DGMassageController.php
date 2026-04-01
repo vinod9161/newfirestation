@@ -29,6 +29,7 @@ class DGMassageController extends Controller
         // echo "trea"; die;
         $validator = Validator::make($request->all(), [
             'description' => 'required',
+            'heading' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -43,7 +44,7 @@ class DGMassageController extends Controller
 
         $data = [
             'page_name' => "dg_message",
-            'hadding' => '',
+            'hadding' => $request->heading,
             'content' => $request->description,
             'image' => $card_image_name,
             'create_by' =>'',

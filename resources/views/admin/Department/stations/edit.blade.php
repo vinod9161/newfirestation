@@ -605,7 +605,7 @@
                                              <p class="alert alert-default text-primary" style="background-color:#F3EFFF">Contact Information</p>
                                              <div class="col-md-4">
                                                    <div class="form-group">
-                                                      <label class="form-control-label" for="input-username">FIre Station Contact Number</label>
+                                                      <label class="form-control-label" for="input-username">Fire Station Contact Number</label>
                                                       <input type="text" name="fs_contact_no" id="fs_contact_no" class="form-control" placeholder="Enter Fire Station Contact Number" value="{{ $station->fs_contact_no }}">
                                                       @if($errors->has('fs_contact_no'))
                                                       <div class="validation-error">{{ $errors->first('fs_contact_no') }}</div>
@@ -615,7 +615,7 @@
 
                                              <div class="col-md-4">
                                                    <div class="form-group">
-                                                      <label class="form-control-label" for="input-username">FIre Station Mobile Number</label>
+                                                      <label class="form-control-label" for="input-username">Fire Station Mobile Number</label>
                                                       <input type="text" name="fs_mobile_no" id="fs_mobile_no" class="form-control" placeholder="Enter Fire Station Mobile Number" value="{{ $station->fs_mobile_no }}">
                                                       @if($errors->has('fs_mobile_no'))
                                                       <div class="validation-error">{{ $errors->first('fs_mobile_no') }}</div>
@@ -625,7 +625,7 @@
 
                                              <div class="col-md-4">
                                                    <div class="form-group">
-                                                      <label class="form-control-label" for="input-username">FIre Station Email Address</label>
+                                                      <label class="form-control-label" for="input-username">Fire Station Email Address</label>
                                                       <input type="text" name="fs_email_address" id="fs_email_address" class="form-control" placeholder="Enter Fire Station Email Address" value="{{ $station->fs_email_address }}">
                                                       @if($errors->has('fs_email_address'))
                                                       <div class="validation-error">{{ $errors->first('fs_email_address') }}</div>

@@ -217,7 +217,16 @@
 
                                     @foreach($awards as $award)
                                         <div class="card">
-                                            <img src="{{ $award->category_image ? asset('public/' . $award->category_image) : asset('public/new_assets/img/content/medal-4.png') }}" class="profile">
+                                            @php
+                                                $image = $award->photo 
+                                                    ? asset('public/uploads/medals/'.$award->photo)
+                                                    : ($award->category_image 
+                                                        ? asset('public/'.$award->category_image)
+                                                        : asset('public/new_assets/img/content/medal-4.png'));
+                                            @endphp
+
+                                            <img src="{{ $image }}" class="profile">
+                                            <!-- <img src="{{ $award->category_image ? asset('public/' . $award->category_image) : asset('public/new_assets/img/content/medal-4.png') }}" class="profile"> -->
 
                                             <span class="medal-icon bg-primary">{{ $award->year }}</span>
 
