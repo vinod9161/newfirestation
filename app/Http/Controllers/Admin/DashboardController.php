@@ -242,21 +242,28 @@ class DashboardController extends Controller
                     districts.name as district,
 
                     COUNT(CASE 
-                        WHEN DATEDIFF(CURDATE(), applications.created_at) <= 5 
+                        WHEN DATEDIFF(applications.updated_at, applications.created_at) <= 5 
                     THEN 1 END) as days_0_5,
 
                     COUNT(CASE 
-                        WHEN DATEDIFF(CURDATE(), applications.created_at) BETWEEN 6 AND 10 
+                        WHEN DATEDIFF(applications.updated_at, applications.created_at) BETWEEN 6 AND 10 
                     THEN 1 END) as days_6_10,
 
                     COUNT(CASE 
-                        WHEN DATEDIFF(CURDATE(), applications.created_at) BETWEEN 11 AND 15 
+                        WHEN DATEDIFF(applications.updated_at, applications.created_at) BETWEEN 11 AND 15 
                     THEN 1 END) as days_11_15,
 
-                    ROUND(AVG(DATEDIFF(CURDATE(), applications.created_at)),2) as avg_days,
+                    COUNT(CASE 
+                        WHEN DATEDIFF(applications.updated_at, applications.created_at) > 15 
+                    THEN 1 END) as days_15_plus,
+
+                    ROUND(AVG(
+                        DATEDIFF(applications.updated_at, applications.created_at)
+                    ),2) as avg_days,
 
                     COUNT(*) as total
                 ")
+                ->whereNotNull('applications.updated_at')
                 ->groupBy('districts.name')
                 ->orderBy('districts.name')
                 ->get();
@@ -296,6 +303,82 @@ class DashboardController extends Controller
                 ->get();
         };
 
+        $getTypeChart = function($query) {
+            return (clone $query)
+                ->select('noc_type as type', DB::raw('COUNT(*) as total'))
+                ->groupBy('noc_type')
+                ->get();
+        };
+
+        // $getRejectChart = function($query) {
+        //     return (clone $query)
+        //         ->where('status', 'REJECTED')
+        //         ->select('rejection_reason as reason', DB::raw('COUNT(*) as total'))
+        //         ->groupBy('rejection_reason')
+        //         ->get();
+        // };
+
+        $getRejectRaw = function($query) {
+            return (clone $query)
+                ->where('status', 'REVERTED')
+                ->pluck('revert');
+        };
+
+        $reject_chart = [
+            'all' => $this->processRejectReasons(
+                $getRejectRaw($baseQuery)
+            ),
+
+            'pre_est' => $this->processRejectReasons(
+                $getRejectRaw(
+                    (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre establishment%'")
+                )
+            ),
+
+            'pre_op' => $this->processRejectReasons(
+                $getRejectRaw(
+                    (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre operational%'")
+                )
+            ),
+
+            'renewal' => $this->processRejectReasons(
+                $getRejectRaw(
+                    (clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%renewal%'")
+                )
+            ),
+        ];
+
+        $getStatusTable = function($query, $type = '') {
+
+            $q = (clone $query)
+                ->join('districts', 'districts.id', '=', 'applications.district_id');
+
+            if (!empty($type)) {
+                $q->whereRaw("LOWER(applications.application_type) LIKE ?", ["%$type%"]);
+            }
+
+            return $q->selectRaw("
+                districts.name as district,
+
+                COUNT(CASE WHEN applications.status IS NULL THEN 1 END) as not_assigned,
+
+                COUNT(CASE WHEN applications.status = 'ASSIGNED' THEN 1 END) as assigned_not_verified,
+
+                COUNT(CASE WHEN applications.status = 'VERIFIED' THEN 1 END) as verified,
+
+                COUNT(CASE WHEN applications.status = 'APPROVED' THEN 1 END) as approved,
+
+                COUNT(CASE WHEN applications.status = 'REVERTED' THEN 1 END) as rejected,
+
+                COUNT(CASE WHEN applications.status = 'PENDING' THEN 1 END) as pending,
+
+                COUNT(*) as total
+            ")
+            ->groupBy('districts.name')
+            ->orderBy('districts.name')
+            ->get();
+        };
+
         return response()->json([
             'all' => $all,
             'pre_est' => $preEst,
@@ -307,8 +390,62 @@ class DashboardController extends Controller
                 'pre_est'  => $getDistrictChart($baseQuery, 'pre establishment'),
                 'pre_op'   => $getDistrictChart($baseQuery, 'pre operational'),
                 'renewal'  => $getDistrictChart($baseQuery, 'renewal'),
-            ]
+            ],
+            'type_chart' => [
+                'all' => $getTypeChart($baseQuery),
+                'pre_est' => $getTypeChart((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre establishment%'")),
+                'pre_op' => $getTypeChart((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre operational%'")),
+                'renewal' => $getTypeChart((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%renewal%'")),
+            ],
+
+            'reject_chart' => $reject_chart,
+            'status_table' => [
+                'all' => $getStatusTable($baseQuery),
+                'pre_est' => $getStatusTable((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre establishment%'")),
+                'pre_op' => $getStatusTable((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%pre operational%'")),
+                'renewal' => $getStatusTable((clone $baseQuery)->whereRaw("LOWER(application_type) LIKE '%renewal%'")),
+            ],
         ]);
+    }
+
+    function processRejectReasons($records) {
+
+        $counts = [];
+
+        foreach ($records as $item) {
+
+            $jsonArray = json_decode($item, true);
+
+            if (!$jsonArray) continue;
+
+            foreach ($jsonArray as $entry) {
+
+                if (!isset($entry['reason'])) continue;
+
+                $reasons = json_decode($entry['reason'], true);
+
+                if (!$reasons) continue;
+
+                foreach ($reasons as $reason) {
+
+                    if (!empty($reason)) {
+                        $counts[$reason] = ($counts[$reason] ?? 0) + 1;
+                    }
+                }
+            }
+        }
+
+        // convert to chart format
+        $result = [];
+
+        foreach ($counts as $reason => $total) {
+            $result[] = [
+                'reason' => $reason,
+                'total'  => $total
+            ];
+        }
+
+        return $result;
     }
 
     public function getNocTableData(Request $request)
@@ -374,20 +511,19 @@ class DashboardController extends Controller
         $station_id  = $request->station_id;
 
         $query = DB::table('vehicle_types as vt')
-            ->leftJoin('fs_vehicles as v', function ($join) use ($district_id, $station_id) {
-                $join->on('v.vehicle_type', '=', 'vt.type');
+            ->leftJoin('fs_vehicles as v', 'v.vehicle_type', '=', 'vt.id') // ✅ FIX
 
-                if ($district_id) {
-                    $join->where('v.district_id', $district_id);
-                }
-
-                if ($station_id) {
-                    $join->where('v.station_id', $station_id);
-                }
+            ->when($district_id, function ($q) use ($district_id) {
+                $q->where('v.district_id', $district_id);
             })
+            ->when($station_id, function ($q) use ($station_id) {
+                $q->where('v.station_id', $station_id);
+            })
+
             ->select('vt.type', DB::raw('COUNT(v.id) as total'))
             ->groupBy('vt.type')
             ->get();
+
 
         // KPI
         $kpi = $query->mapWithKeys(function ($item) {
@@ -396,28 +532,32 @@ class DashboardController extends Controller
 
         // PIE
         $pie = [
-            'labels' => $query->pluck('type'),
-            'data'   => $query->pluck('total')
+            'labels' => $query->pluck('type')->toArray(), // ✅ FIX
+            'data'   => $query->pluck('total')->toArray() // ✅ FIX
         ];
 
-        $bar = DB::table('fs_vehicles')
+        $bar = DB::table('fs_vehicles as v')
+            ->join('districts as d', 'd.id', '=', 'v.district_id') // ✅ join
             ->select(
-                'district_id',
+                'v.district_id',
+                'd.name as district_name', // ✅ get name
                 DB::raw("SUM(CASE WHEN vehicle_remark = 'working' THEN 1 ELSE 0 END) as working"),
                 DB::raw("SUM(CASE WHEN vehicle_remark = 'under maintenance' THEN 1 ELSE 0 END) as maintenance"),
                 DB::raw("SUM(CASE WHEN vehicle_remark = 'out of road' THEN 1 ELSE 0 END) as out_of_road")
             )
-            ->groupBy('district_id')
+            ->groupBy('v.district_id', 'd.name') // ✅ include name
             ->get();
 
         $table = DB::table('fs_vehicles as v')
-            ->join('vehicle_types as vt', 'v.vehicle_type', '=', 'vt.type')
+            ->join('vehicle_types as vt', 'v.vehicle_type', '=', 'vt.id') // ✅ FIX
+            ->join('districts as d', 'd.id', '=', 'v.district_id') // ✅ ADD
             ->select(
                 'v.district_id',
+                'd.name as district_name', // ✅ ADD
                 'vt.type as vehicle_type',
                 DB::raw('COUNT(*) as total')
             )
-            ->groupBy('v.district_id', 'vt.type')
+            ->groupBy('v.district_id', 'd.name', 'vt.type')
             ->get();
 
         return response()->json([
@@ -506,6 +646,268 @@ class DashboardController extends Controller
             'typeLabels' => $typeLabels,
             'typeData' => $typeValues,
             'raw' => $reports
+        ]);
+    }
+
+    public function getRescueDashboardData(Request $request)
+    {
+        $district_id = $request->district_id;
+        $station_id  = $request->station_id;
+        $start_date  = $request->start_date;
+        $end_date    = $request->end_date;
+
+        $query = DB::table('fs_rescue_report as r')
+            ->leftJoin('districts as d', 'd.id', '=', 'r.district_id');
+
+        // 🔐 Role filter
+        if (Auth::user()->type == 3) {
+            $query->where('r.assigned_to', Auth::user()->id);
+        } elseif (Auth::user()->type != 0 && Auth::user()->type != 1) {
+            $query->where('r.district_id', Auth::user()->district_id);
+        }
+
+        // 🔎 Filters
+        if ($district_id) {
+            $query->where('r.district_id', $district_id);
+        }
+
+        if ($station_id) {
+            $query->where('r.station_id', $station_id);
+        }
+
+        if ($start_date) {
+            $query->where('r.created_at', '>=', $start_date . ' 00:00:00');
+        }
+
+        if ($end_date) {
+            $query->where('r.created_at', '<=', $end_date . ' 23:59:59');
+        }
+
+        // ================= KPI =================
+        $kpi = [
+            'total_call' => (clone $query)->count(),
+
+            'report_completed' => (clone $query)->where('r.status', 3)->count(),
+            'report_incompleted' => (clone $query)->where('r.status', 0)->count(),
+            'pending_approval' => (clone $query)->where('r.status', 1)->count(),
+            'under_investigation' => (clone $query)->where('r.status', 2)->count(),
+            'report_issued' => (clone $query)->where('r.status', 4)->count(),
+        ];
+
+        // ================= BAR (District wise) =================
+        $bar = (clone $query)
+            ->select(
+                'r.district_id',
+                'd.name as district_name',
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->groupBy('r.district_id', 'd.name')
+            ->orderBy('d.name')
+            ->get();
+
+        // ================= PIE (Rescue Reason) =================
+        $pieData = (clone $query)
+            ->select(
+                'r.rescue_reason',
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->whereNotNull('r.rescue_reason')
+            ->groupBy('r.rescue_reason')
+            ->get();
+
+        $pie = [
+            'labels' => $pieData->pluck('rescue_reason')->toArray(),
+            'data'   => $pieData->pluck('total')->toArray(),
+        ];
+
+        // ================= TABLE (Month wise) =================
+        $table = (clone $query)
+            ->select(
+                'r.district_id',
+                'd.name as district_name',
+                DB::raw('MONTH(r.created_at) as month_no'),
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->groupBy('r.district_id', 'd.name', DB::raw('MONTH(r.created_at)'))
+            ->orderBy('d.name')
+            ->get();
+
+        return response()->json([
+            'kpi'   => $kpi,
+            'bar'   => $bar,
+            'pie'   => $pie,
+            'table' => $table,
+        ]);
+    }
+
+    public function getReliefDashboardData(Request $request)
+    {
+        $district_id = $request->district_id;
+        $station_id  = $request->station_id;
+        $start_date  = $request->start_date;
+        $end_date    = $request->end_date;
+
+        $query = DB::table('fs_relief_work_report as r')
+            ->leftJoin('districts as d', 'd.id', '=', 'r.district_id');
+
+        // 🔐 Role filter
+        if (Auth::user()->type == 3) {
+            $query->where('r.assigned_to', Auth::user()->id);
+        } elseif (Auth::user()->type != 0 && Auth::user()->type != 1) {
+            $query->where('r.district_id', Auth::user()->district_id);
+        }
+
+        // 🔎 Filters
+        if ($district_id) {
+            $query->where('r.district_id', $district_id);
+        }
+
+        if ($station_id) {
+            $query->where('r.station_id', $station_id);
+        }
+
+        if ($start_date) {
+            $query->where('r.created_at', '>=', $start_date . ' 00:00:00');
+        }
+
+        if ($end_date) {
+            $query->where('r.created_at', '<=', $end_date . ' 23:59:59');
+        }
+
+        // ================= KPI =================
+        $kpi = [
+            'total_call' => (clone $query)->count(),
+
+            'report_completed' => (clone $query)->where('r.status', 3)->count(),
+
+            'report_incompleted' => (clone $query)->where('r.status', 0)->count(),
+
+            'report_pending' => (clone $query)->where('r.status', 1)->count(),
+
+            'report_investigation' => (clone $query)->where('r.status', 2)->count(),
+
+            'report_issued' => (clone $query)->where('r.status', 4)->count(),
+        ];
+
+        // ================= BAR =================
+        $bar = (clone $query)
+            ->select(
+                'r.district_id',
+                'd.name as district_name',
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->groupBy('r.district_id', 'd.name')
+            ->orderBy('d.name')
+            ->get();
+
+        // ================= PIE (USING TYPE) =================
+        $pieData = (clone $query)
+            ->select(
+                'r.relief_work_type',
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->whereNotNull('r.relief_work_type')
+            ->groupBy('r.relief_work_type')
+            ->get();
+
+        // 🔥 Mapping (ID → Label)
+
+        $typeMap = [
+            1 => 'Disaster Dewatering (आपदा में पानी निकलना)',
+            2 => 'Removing Fallen Tree (गिरे पेड़ हटाना)',
+            3 => 'Clear Passage (रास्ता सुचारू)',
+            4 => 'Relief Distribution (राहत सामग्री)',
+            5 => 'Public Kitchen (भोजन)',
+            6 => 'Medicine Distribution (दवाई)',
+            7 => 'Counseling (काउंसलिंग)',
+            8 => 'Evacuation (निकासी)',
+            9 => 'Other (अन्य)'
+        ];
+
+        $labels = [];
+        $data   = [];
+
+        foreach ($pieData as $item) {
+            if ($item->total > 0) {
+                $labels[] = $typeMap[$item->relief_work_type] ?? 'Unknown';
+                $data[]   = (int) $item->total;
+            }
+        }
+
+        $pie = [
+            'labels' => $labels,
+            'data'   => $data
+        ];
+
+        // ================= TABLE =================
+        $table = (clone $query)
+            ->select(
+                'r.district_id',
+                'd.name as district_name',
+                DB::raw('MONTH(r.created_at) as month_no'),
+                DB::raw('COUNT(r.id) as total')
+            )
+            ->groupBy('r.district_id', 'd.name', DB::raw('MONTH(r.created_at)'))
+            ->orderBy('d.name')
+            ->get();
+
+        return response()->json([
+            'kpi'   => $kpi,
+            'bar'   => $bar,
+            'pie'   => $pie,
+            'table' => $table,
+        ]);
+    }
+
+    public function getHydrantDashboardData(Request $request)
+    {
+        $district_id = $request->district_id;
+        $station_id  = $request->station_id;
+
+        $query = DB::table('fs_hydrant as h')
+            ->leftJoin('districts as d', 'd.id', '=', 'h.district_id')
+            ->leftJoin('hydrant_condition as hc', 'hc.id', '=', 'h.hydrant_condition');
+
+        // 🔎 Filters
+        if ($district_id) {
+            $query->where('h.district_id', $district_id);
+        }
+
+        if ($station_id) {
+            $query->where('h.station_id', $station_id);
+        }
+
+        // ================= BAR =================
+        $bar = (clone $query)
+            ->select(
+                'h.district_id',
+                'd.name as district_name',
+
+                DB::raw("SUM(CASE WHEN h.hydrant_condition = 1 THEN 1 ELSE 0 END) as working"),
+                DB::raw("SUM(CASE WHEN h.hydrant_condition = 2 THEN 1 ELSE 0 END) as not_working"),
+                DB::raw("SUM(CASE WHEN h.hydrant_condition = 3 THEN 1 ELSE 0 END) as proposed")
+            )
+            ->groupBy('h.district_id', 'd.name')
+            ->orderBy('d.name')
+            ->get();
+
+        // ================= PIE =================
+        $pieData = (clone $query)
+            ->select(
+                'hc.hydrant_condition',
+                DB::raw('COUNT(h.id) as total')
+            )
+            ->groupBy('hc.hydrant_condition')
+            ->get();
+
+        $pie = [
+            'labels' => $pieData->pluck('hydrant_condition')->toArray(),
+            'data'   => $pieData->pluck('total')->toArray(),
+        ];
+
+        return response()->json([
+            'bar' => $bar,
+            'pie' => $pie
         ]);
     }
 

@@ -94,8 +94,8 @@
 
 
 <div class="row row-sm">
-     <div class="col-md-12">
-         <div class="tab-container">
+    <div class="col-md-12">
+        <div class="tab-container">
 
             <input type="radio" name="tab" id="noc" checked>
             <input type="radio" name="tab" id="vehicle">
@@ -116,20 +116,33 @@
                 <label for="hydrent" style="padding-top: 24px;">Hydrent</label>
                 <label for="employee" style="padding-top: 24px;">Employees</label>
             </div>
+            <style>
+                #dateFilters > div {
+                    padding-right: 10px;
+                }
+            </style>
             
             <div class="row row-sm">
                 <div class="col-md-12">
                     <div class="card custom-card" style="margin-bottom: 0px; margin-top: 15px;">
                         <div class="dash1">
-                            <div class="row" id="dashboardFilterForm">
-                                <div class="col-md-2">
-                                    <label>Start Date</label>
-                                    <input type="date" class="form-control" id="start_date" value="<?= date("Y") ?>-01-01">
+                            <div class="row align-items-end" id="dashboardFilterForm">
+
+                                <!-- DATE FILTER -->
+                                <div id="dateFilters" class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Start Date</label>
+                                            <input type="date" class="form-control" id="start_date" value="<?= date("Y") ?>-01-01">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>End Date</label>
+                                            <input type="date" class="form-control" id="end_date" value="<?= date("Y-m-d") ?>">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <label>End Date</label>
-                                    <input type="date" class="form-control" id="end_date" value="<?= date("Y-m-d") ?>">
-                                </div>
+
+                                <!-- DISTRICT -->
                                 <div class="col-md-3">
                                     <label>District</label>
                                     <select class="form-control" id="dashboard_dis">
@@ -139,6 +152,8 @@
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
+
+                                <!-- FIRE STATION -->
                                 <div class="col-md-3">
                                     <label>Fire Station</label>
                                     <select class="form-control" id="dashboard_fire">
@@ -148,10 +163,14 @@
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
+
+                                <!-- BUTTON -->
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-primary" id="dashboardfilterBtn"
-                                        style="margin-top: 29px;">Filter</button>
+                                    <button type="button" class="btn btn-primary w-100" id="dashboardfilterBtn">
+                                        Filter
+                                    </button>
                                 </div>
+
                             </div>
 
                         </div>
@@ -291,14 +310,14 @@
                                                         <h3 style="text-align:left" id="all_approved_title">All (Approved) — Jun to July 2025</h3>
                                                         <table>
                                                             <thead class="thead-primary">
-                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>>15 Days</th><th>Avg Days</th><th>Total Application</th></tr>
                                                             </thead>
                                                             <tbody id="all_approved_table">
-                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td></td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td></td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td></td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td></td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td></td><td>8.45</td><td>23</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -312,14 +331,14 @@
                                                         <h3 style="text-align:left" id="all_reverted_title">All (Reverted) — Jun to July 2025</h3>
                                                         <table>
                                                             <thead class="thead-primary">
-                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>Avg Days</th><th>Total Application</th></tr>
+                                                            <tr><th>Sr</th><th>District</th><th>0-5 Days</th><th>6-10</th><th>11-15</th><th>>15 Days</th><th>Avg Days</th><th>Total Application</th></tr>
                                                             </thead>
                                                             <tbody id="all_reverted_table" >
-                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td></tr>
-                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td></tr>
-                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td></tr>
-                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td>7.12</td><td>32</td></tr>
-                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td>8.45</td><td>23</td></tr>
+                                                            <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td></td><td>4.50</td><td>2</td></tr>
+                                                            <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td></td><td>6.33</td><td>3</td></tr>
+                                                            <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td></td><td>5.00</td><td>1</td></tr>
+                                                            <tr><td>4</td><td>Dehradun</td><td>10</td><td>15</td><td>7</td><td></td><td>7.12</td><td>32</td></tr>
+                                                            <tr><td>5</td><td>Haridwar</td><td>8</td><td>9</td><td>6</td><td></td><td>8.45</td><td>23</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -347,7 +366,7 @@
                                                                     <th>Total</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="all_status_table">
                                                                 @foreach($allNocCountData as $row)
                                                                 <tr>
                                                                     <td>{{ $row['District Name'] ?? '0' }}</td>
@@ -542,7 +561,7 @@
                                                                     <th>Total</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="pre_est_status_table">
                                                                 @foreach($allNocCountData as $row)
                                                                 <tr>
                                                                     <td>{{ $row['District Name'] ?? '0' }}</td>
@@ -740,7 +759,7 @@
                                                                     <th>Total</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="pre_op_status_table">
                                                                 @foreach($allNocCountData as $row)
                                                                 <tr>
                                                                     <td>{{ $row['District Name'] ?? '0' }}</td>
@@ -1031,7 +1050,7 @@
                                                                     <th>Total</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="renewal_status_table">
                                                                 @foreach($allNocCountData as $row)
                                                                 <tr>
                                                                     <td>{{ $row['District Name'] ?? '0' }}</td>
@@ -1174,6 +1193,7 @@
                                             <thead class="thead-primary">
                                                 <tr>
                                                     <th>Sr</th>
+                                                    <th>District</th>
                                                     <th>Foam Tender</th>
                                                     <th>Water Tender</th>
                                                     <th>Crash Fire Tender</th>
@@ -1648,6 +1668,35 @@
                             <div class="card-container">
                                 <div class="kpi-card" style="width: 150px">
                                     <h4>Total Call</h4>
+                                    <div class="value" id="rescue_total_call">0</div>
+                                </div>
+
+                                <div class="kpi-card" style="width: 180px">
+                                    <h4>Report Completed</h4>
+                                    <div class="value" id="rescue_report_completed">0</div>
+                                </div>
+
+                                <div class="kpi-card" style="width: 200px">
+                                    <h4>Report In-Completed</h4>
+                                    <div class="value" id="rescue_report_incompleted">0</div>
+                                </div>
+
+                                <div class="kpi-card" style="width: 250px">
+                                    <h4>Report Pending for Approval</h4>
+                                    <div class="value" id="rescue_pending_approval">0</div>
+                                </div>
+
+                                <div class="kpi-card" style="width: 220px">
+                                    <h4>Report Under Investigation</h4>
+                                    <div class="value" id="rescue_under_investigation">0</div>
+                                </div>
+
+                                <div class="kpi-card" style="width: 180px">
+                                    <h4>Report Issued</h4>
+                                    <div class="value" id="rescue_report_issued">0</div>
+                                </div>
+                                <!-- <div class="kpi-card" style="width: 150px">
+                                    <h4>Total Call</h4>
                                     <div class="value">16479</div>
                                 </div>
     
@@ -1674,7 +1723,7 @@
                                 <div class="kpi-card" style="width: 180px">
                                     <h4>Report Issued</h4>
                                     <div class="value">84</div>
-                                </div>
+                                </div> -->
     
                             </div>
                         </div>
@@ -1725,7 +1774,7 @@
                                                     <th>Total</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="rescue_table_body">
                                               <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
@@ -1756,32 +1805,32 @@
                             <div class="card-container">
                                 <div class="kpi-card" style="width: 150px">
                                     <h4>Total Call</h4>
-                                    <div class="value">16479</div>
+                                    <div class="value" id="relief_total_call">0</div>
                                 </div>
     
                                 <div class="kpi-card" style="width: 180px">
                                     <h4>Report Completed</h4>
-                                    <div class="value">7668</div>
+                                    <div class="value" id="relief_report_completed">0</div>
                                 </div>
     
                                 <div class="kpi-card" style="width: 200px">
                                     <h4>Report In-Completed</h4>
-                                    <div class="value">7</div>
+                                    <div class="value" id="relief_report_incompleted">0</div>
                                 </div>
     
                                 <div class="kpi-card" style="width: 250px">
                                     <h4>Report Pending for Approval</h4>
-                                    <div class="value">1</div>
+                                    <div class="value" id="relief_report_pending">0</div>
                                 </div>
     
                                 <div class="kpi-card" style="width: 220px">
                                     <h4>Report Under Investigation</h4>
-                                    <div class="value">8</div>
+                                    <div class="value" id="relief_report_investigation">0</div>
                                 </div>
     
                                 <div class="kpi-card" style="width: 180px">
                                     <h4>Report Issued</h4>
-                                    <div class="value">84</div>
+                                    <div class="value" id="relief_report_issued">0</div>
                                 </div>
     
                             </div>
@@ -1833,7 +1882,7 @@
                                                     <th>Total</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="relief_table_body">
                                               <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
                                               <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td><td>2</td></tr>
@@ -2025,24 +2074,51 @@
 <!-- <script src="{{ asset('/public/admin/js/dashboard-two.js') }}"></script> -->
 
 <script>
-        new Chart(document.getElementById('AllNOCRejectPie'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
-            datasets: [{
-                data: [43, 19, 9, 29],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'right'
-                }
-            },
-            aspectRatio: 1.2
+    // new Chart(document.getElementById('AllNOCRejectPie'), {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
+    //         datasets: [{
+    //             data: [43, 19, 9, 29],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'right'
+    //             }
+    //         },
+    //         aspectRatio: 1.2
+    //     }
+    // });
+
+    function updateRejectPieChart(data, canvasId) {
+
+        let labels = data.map(item => item.reason);
+        let values = data.map(item => item.total);
+
+        if (window[canvasId] && typeof window[canvasId].destroy === 'function') {
+            window[canvasId].destroy();
         }
-    });
+
+        window[canvasId] = new Chart(document.getElementById(canvasId), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'right' }
+                },
+                aspectRatio: 1.2
+            }
+        });
+    }
     new Chart(document.getElementById('PreEstablishmentRejectPie'), {
         type: 'doughnut',
         data: {
@@ -2310,62 +2386,62 @@
     //         aspectRatio: 1.4
     //     }
     // });
-    new Chart(document.getElementById('RescueReportCategoryIncidentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-            datasets: [{
-                data: [46, 18, 27, 9],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('RescueReportCategoryIncidentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
-    new Chart(document.getElementById('ReliefReportCategoryIncidentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-            datasets: [{
-                data: [46, 18, 27, 9],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('ReliefReportCategoryIncidentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
-    new Chart(document.getElementById('FireHydrentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Working', 'Not Working', 'Proposed'],
-            datasets: [{
-                data: [46, 18, 27],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('FireHydrentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Working', 'Not Working', 'Proposed'],
+    //         datasets: [{
+    //             data: [46, 18, 27],
+    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
 
     new Chart(document.getElementById('FireReportMonthReportPieChart'), {
@@ -2581,30 +2657,60 @@
 
 
 
-    new Chart(document.getElementById('AllNOCApplicationByTypeBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
-            }]
-        },
-        options: {
-            indexAxis: 'x',
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            aspectRatio: 1.6
+    // new Chart(document.getElementById('AllNOCApplicationByTypeBarChart'), {
+    //     type: 'bar',
+    //     data: {
+    //         labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
+    //         datasets: [{
+    //             label: 'No. of Application',
+    //             data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
+    //         }]
+    //     },
+    //     options: {
+    //         indexAxis: 'x',
+    //         scales: {
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 display: false
+    //             }
+    //         },
+    //         aspectRatio: 1.6
+    //     }
+    // });
+
+    function updateTypeBarChart(data, canvasId) {
+
+        let labels = data.map(item => item.type);
+        let values = data.map(item => item.total);
+
+        if (window[canvasId] && typeof window[canvasId].destroy === 'function') {
+            window[canvasId].destroy();
         }
-    });
+
+        window[canvasId] = new Chart(document.getElementById(canvasId), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'No. of Application',
+                    data: values
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                },
+                aspectRatio: 1.6
+            }
+        });
+    }
 
     new Chart(document.getElementById('PreEstablishmentApplicationByTypeBarChart'), {
         type: 'bar',
@@ -2735,63 +2841,65 @@
     // new Chart(ctx, config);
     
     // Get the canvas element
-    const ctx1 = document.getElementById('FireHydrentChart').getContext('2d');
+    // const ctx1 = document.getElementById('FireHydrentChart').getContext('2d');
 
-    // Data for the bar chart
-    const data1 = {
-        labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
-        datasets: [{
-                label: 'Working',
-                data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
-                backgroundColor: 'rgba(6, 154, 235, 0.7)',
-                borderColor: 'rgba(6, 154, 235, 1)',
-                borderWidth: 1,
-            },
-            {
-                label: 'Not-Working',
-                data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
-                backgroundColor: 'rgba(255, 159, 67, 0.7)',
-                borderColor: 'rgba(255, 159, 67, 1)',
-                borderWidth: 1,
-            },
-            {
-                label: 'Approved',
-                data: [60, 30, 36, 50, 77, 11, 25, 45, 37, 8, 20, 15, 31],
-                backgroundColor: 'rgba(152, 160, 168, 0.7)',
-                borderColor: 'rgba(152, 160, 168, 1)',
-                borderWidth: 1,
-            }
-        ]
-    };
+    // // Data for the bar chart
+    // const data1 = {
+    //     labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
+    //     datasets: [{
+    //             label: 'Working',
+    //             data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
+    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
+    //             borderColor: 'rgba(6, 154, 235, 1)',
+    //             borderWidth: 1,
+    //         },
+    //         {
+    //             label: 'Not-Working',
+    //             data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
+    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
+    //             borderColor: 'rgba(255, 159, 67, 1)',
+    //             borderWidth: 1,
+    //         },
+    //         {
+    //             label: 'Approved',
+    //             data: [60, 30, 36, 50, 77, 11, 25, 45, 37, 8, 20, 15, 31],
+    //             backgroundColor: 'rgba(152, 160, 168, 0.7)',
+    //             borderColor: 'rgba(152, 160, 168, 1)',
+    //             borderWidth: 1,
+    //         }
+    //     ]
+    // };
 
-    // Chart configuration
-    const config1 = {
-        type: 'bar', // Bar chart type
-        data: data1,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'No. of Vehicle'
-                }
-            },
-            scales: {
-                x: {
-                    stacked: false // Set to true if you want stacked bars
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    };
+    // // Chart configuration
+    // const config1 = {
+    //     type: 'bar', // Bar chart type
+    //     data: data1,
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top',
+    //             },
+    //             title: {
+    //                 display: true,
+    //                 text: 'No. of Vehicle'
+    //             }
+    //         },
+    //         scales: {
+    //             x: {
+    //                 stacked: false // Set to true if you want stacked bars
+    //             },
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         }
+    //     }
+    // };
 
-    // Render the chart
-    new Chart(ctx1, config1);
+    // // Render the chart
+    // new Chart(ctx1, config1);
+
+
     // Get the canvas element
     const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
 
@@ -2980,121 +3088,121 @@
 
     
 
-    const labelsRescueReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
+    // const labelsRescueReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
 
-    // BAR DATA
-    const productARescueReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+    // // BAR DATA
+    // const productARescueReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
 
-    // LINE DATA (same values as bar stack)
-    const lineARescueReport = [...productARescueReport];
+    // // LINE DATA (same values as bar stack)
+    // const lineARescueReport = [...productARescueReport];
 
-    const ctx5 = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
+    // const ctx5 = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
 
-    new Chart(ctx5, {
-        data: {
-            labels: labelsRescueReport,
-            datasets: [
-                /* STACKED BARS */
-                {
-                    type: 'bar',
-                    label: '',
-                    data: productARescueReport,
-                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
-                    stack: 'stack1'
-                },
+    // new Chart(ctx5, {
+    //     data: {
+    //         labels: labelsRescueReport,
+    //         datasets: [
+    //             /* STACKED BARS */
+    //             {
+    //                 type: 'bar',
+    //                 label: '',
+    //                 data: productARescueReport,
+    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
+    //                 stack: 'stack1'
+    //             },
 
-                /* LINES FOR EACH STACK */
-                {
-                    type: 'line',
-                    label: '',
-                    data: lineARescueReport,
-                    borderColor: 'blue',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'blue'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top'
-                }
-            }
-        }
-    });
+    //             /* LINES FOR EACH STACK */
+    //             {
+    //                 type: 'line',
+    //                 label: '',
+    //                 data: lineARescueReport,
+    //                 borderColor: 'blue',
+    //                 borderWidth: 2,
+    //                 tension: 0.3,
+    //                 fill: false,
+    //                 pointRadius: 4,
+    //                 pointBackgroundColor: 'blue'
+    //             }
+    //         ]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         scales: {
+    //             x: {
+    //                 stacked: true
+    //             },
+    //             y: {
+    //                 stacked: true,
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top'
+    //             }
+    //         }
+    //     }
+    // });
 
     
     
-    const labelsReliefReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
+    // const labelsReliefReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
 
-    // BAR DATA
-    const productAReliefReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
+    // // BAR DATA
+    // const productAReliefReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
 
-    // LINE DATA (same values as bar stack)
-    const lineAReliefReport = [...productAReliefReport];
+    // // LINE DATA (same values as bar stack)
+    // const lineAReliefReport = [...productAReliefReport];
 
-    const ctx6 = document.getElementById('ReliefReportNoOfIncidentChart').getContext('2d');
+    // const ctx6 = document.getElementById('ReliefReportNoOfIncidentChart').getContext('2d');
 
-    new Chart(ctx6, {
-        data: {
-            labels: labelsReliefReport,
-            datasets: [
-                /* STACKED BARS */
-                {
-                    type: 'bar',
-                    label: '',
-                    data: productAReliefReport,
-                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
-                    stack: 'stack1'
-                },
+    // new Chart(ctx6, {
+    //     data: {
+    //         labels: labelsReliefReport,
+    //         datasets: [
+    //             /* STACKED BARS */
+    //             {
+    //                 type: 'bar',
+    //                 label: '',
+    //                 data: productAReliefReport,
+    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
+    //                 stack: 'stack1'
+    //             },
 
-                /* LINES FOR EACH STACK */
-                {
-                    type: 'line',
-                    label: '',
-                    data: lineAReliefReport,
-                    borderColor: 'blue',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'blue'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top'
-                }
-            }
-        }
-    });
+    //             /* LINES FOR EACH STACK */
+    //             {
+    //                 type: 'line',
+    //                 label: '',
+    //                 data: lineAReliefReport,
+    //                 borderColor: 'blue',
+    //                 borderWidth: 2,
+    //                 tension: 0.3,
+    //                 fill: false,
+    //                 pointRadius: 4,
+    //                 pointBackgroundColor: 'blue'
+    //             }
+    //         ]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         scales: {
+    //             x: {
+    //                 stacked: true
+    //             },
+    //             y: {
+    //                 stacked: true,
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top'
+    //             }
+    //         }
+    //     }
+    // });
 
 </script>
 
@@ -3132,7 +3240,101 @@ $(document).on('change', '#dashboard_dis', function () {
 </script>
 <script>
     let dashboardData = null;
-    $(document).on('click', '#dashboardfilterBtn', function () {
+    // $(document).on('click', '#dashboardfilterBtn', function () {
+
+    //     let start_date  = $('#start_date').val();
+    //     let end_date    = $('#end_date').val();
+    //     let district_id = $('#dashboard_dis').val();
+    //     let station_id  = $('#dashboard_fire').val();
+
+    //     $.ajax({
+    //         url: "{{ route('admin.getNocDashboardData') }}",
+    //         type: "POST",
+    //         data: {
+    //             _token: "{{ csrf_token() }}",
+    //             start_date,
+    //             end_date,
+    //             district_id,
+    //             station_id
+    //         },
+    //         success: function(res) {
+
+    //             dashboardData = res;
+
+    //             $('#all_total_received').text(res.all.total_received);
+    //             $('#all_total_approved').text(res.all.approved);
+    //             $('#all_total_reverted').text(res.all.reverted);
+    //             $('#all_total_in_process').text(res.all.in_process);
+    //             $('#all_total_pending').text(res.all.pending);
+
+    //             $('#pre_total_received').text(res.pre_est.total_received);
+    //             $('#pre_total_approved').text(res.pre_est.approved);
+    //             $('#pre_total_reverted').text(res.pre_est.reverted);
+    //             $('#pre_total_in_process').text(res.pre_est.in_process);
+    //             $('#pre_total_pending').text(res.pre_est.pending);
+
+    //             // 🔥 Pre-Operational
+    //             $('#op_total_received').text(res.pre_op.total_received);
+    //             $('#op_total_approved').text(res.pre_op.approved);
+    //             $('#op_total_reverted').text(res.pre_op.reverted);
+    //             $('#op_total_in_process').text(res.pre_op.in_process);
+    //             $('#op_total_pending').text(res.pre_op.pending);
+
+    //             // 🔥 Renewal
+    //             $('#ren_total_received').text(res.renewal.total_received);
+    //             $('#ren_total_approved').text(res.renewal.approved);
+    //             $('#ren_total_reverted').text(res.renewal.reverted);
+    //             $('#ren_total_in_process').text(res.renewal.in_process);
+    //             $('#ren_total_pending').text(res.renewal.pending);
+
+    //             renderTable(res.tables.all.approved, '#all_approved_table');
+    //             renderTable(res.tables.all.reverted, '#all_reverted_table');
+
+    //             renderTable(res.tables.pre_est.approved, '#pre_est_approved_table');
+    //             renderTable(res.tables.pre_est.reverted, '#pre_est_reverted_table');
+
+    //             renderTable(res.tables.pre_op.approved, '#pre_op_approved_table');
+    //             renderTable(res.tables.pre_op.reverted, '#pre_op_reverted_table');
+
+    //             renderTable(res.tables.renewal.approved, '#renewal_approved_table');
+    //             renderTable(res.tables.renewal.reverted, '#renewal_reverted_table');
+
+    //             updatePieChart(res.all, 'AllNOCApplicationByStatusPieChart');
+    //             updateBarChart(res.district_chart.all, 'AllNOCApplicationByStatusBarChart');
+
+    //             updateTypeBarChart(res.type_chart.all, 'AllNOCApplicationByTypeBarChart');
+    //             updateRejectPieChart(res.reject_chart.all, 'AllNOCRejectPie');
+
+    //             renderStatusTable(res.status_table.all, '#all_status_table');
+    //         },
+    //         complete: function() {
+    //             let start = formatDate(start_date);
+    //             let end   = formatDate(end_date);
+
+    //             // ALL
+    //             $('#all_approved_title').text(`All (Approved) — ${start} to ${end}`);
+    //             $('#all_reverted_title').text(`All (Reverted) — ${start} to ${end}`);
+
+
+    //             // Pre-Establishment
+    //             $('#pre_est_approved_title').text(`Pre-Establishment (Approved) — ${start} to ${end}`);
+    //             $('#pre_est_reverted_title').text(`Pre-Establishment (Reverted) — ${start} to ${end}`);
+
+    //             // Pre-Operational
+    //             $('#pre_op_approved_title').text(`Pre-Operational (Approved) — ${start} to ${end}`);
+    //             $('#pre_op_reverted_title').text(`Pre-Operational (Reverted) — ${start} to ${end}`);
+
+    //             // Renewal
+    //             $('#renewal_approved_title').text(`Renewal (Approved) — ${start} to ${end}`);
+    //             $('#renewal_reverted_title').text(`Renewal (Reverted) — ${start} to ${end}`);
+
+    //         }
+
+    //     });
+
+    // });
+
+    function loadNOCDashboardData() {
 
         let start_date  = $('#start_date').val();
         let end_date    = $('#end_date').val();
@@ -3151,16 +3353,14 @@ $(document).on('change', '#dashboard_dis', function () {
             },
             success: function(res) {
 
-                dashboardData = res; // ✅ store globally
+                dashboardData = res;
 
-                // 🔥 All NOC
                 $('#all_total_received').text(res.all.total_received);
                 $('#all_total_approved').text(res.all.approved);
                 $('#all_total_reverted').text(res.all.reverted);
                 $('#all_total_in_process').text(res.all.in_process);
                 $('#all_total_pending').text(res.all.pending);
 
-                // 🔥 Pre-Establishment
                 $('#pre_total_received').text(res.pre_est.total_received);
                 $('#pre_total_approved').text(res.pre_est.approved);
                 $('#pre_total_reverted').text(res.pre_est.reverted);
@@ -3181,7 +3381,6 @@ $(document).on('change', '#dashboard_dis', function () {
                 $('#ren_total_in_process').text(res.renewal.in_process);
                 $('#ren_total_pending').text(res.renewal.pending);
 
-                // 🔥 Tables
                 renderTable(res.tables.all.approved, '#all_approved_table');
                 renderTable(res.tables.all.reverted, '#all_reverted_table');
 
@@ -3196,6 +3395,11 @@ $(document).on('change', '#dashboard_dis', function () {
 
                 updatePieChart(res.all, 'AllNOCApplicationByStatusPieChart');
                 updateBarChart(res.district_chart.all, 'AllNOCApplicationByStatusBarChart');
+
+                updateTypeBarChart(res.type_chart.all, 'AllNOCApplicationByTypeBarChart');
+                updateRejectPieChart(res.reject_chart.all, 'AllNOCRejectPie');
+
+                renderStatusTable(res.status_table.all, '#all_status_table');
             },
             complete: function() {
                 let start = formatDate(start_date);
@@ -3222,8 +3426,8 @@ $(document).on('change', '#dashboard_dis', function () {
 
         });
 
-    });
-
+    }
+    
     $(document).on('click', '.tabs2 label', function () {
 
         if (!dashboardData) return;
@@ -3233,24 +3437,66 @@ $(document).on('change', '#dashboard_dis', function () {
         if (selected === 'AllNOC') {
             updatePieChart(dashboardData.all, 'AllNOCApplicationByStatusPieChart');
             updateBarChart(dashboardData.district_chart.all, 'AllNOCApplicationByStatusBarChart');
+            updateTypeBarChart(dashboardData.type_chart.all, 'AllNOCApplicationByTypeBarChart');
+            updateRejectPieChart(dashboardData.reject_chart.all, 'AllNOCRejectPie');
+            renderStatusTable(dashboardData.status_table.all, '#all_status_table');
         } 
         else if (selected === 'PreEstablishment') {
             updatePieChart(dashboardData.pre_est, 'PreEstablishmentApplicationByStatusPieChart');
             updateBarChart(dashboardData.district_chart.pre_est, 'PreEstablishmentApplicationByStatusBarChart');
+            updateTypeBarChart(dashboardData.type_chart.pre_est, 'PreEstablishmentApplicationByTypeBarChart');
+            updateRejectPieChart(dashboardData.reject_chart.pre_est, 'PreEstablishmentRejectPie');
+            renderStatusTable(dashboardData.status_table.pre_est, '#pre_est_status_table');
         } 
         else if (selected === 'PreOperational') {
             updatePieChart(dashboardData.pre_op, 'PreOperationalApplicationByStatusPieChart');
             updateBarChart(dashboardData.district_chart.pre_op, 'PreOperationalApplicationByStatusBarChart');
+            updateTypeBarChart(dashboardData.type_chart.pre_op, 'PreOperationalApplicationByTypeBarChart');
+            updateRejectPieChart(dashboardData.reject_chart.pre_op, 'PreOperationalRejectPie');
+            renderStatusTable(dashboardData.status_table.pre_op, '#pre_op_status_table');
         } 
         else if (selected === 'Renewal') {
             updatePieChart(dashboardData.renewal, 'RenewalApplicationByStatusPieChart');
             updateBarChart(dashboardData.district_chart.renewal, 'RenewalApplicationByStatusBarChart');
+            updateTypeBarChart(dashboardData.type_chart.renewal, 'RenewalApplicationByTypeBarChart');
+            updateRejectPieChart(dashboardData.reject_chart.renewal, 'RenewalRejectPie');
+            renderStatusTable(dashboardData.status_table.renewal, '#renewal_status_table');
         }
 
     });
 
     $(document).ready(function() {
         $('#dashboardfilterBtn').click();
+        // loadNOCDashboardData();
+        toggleFilters();
+    });
+
+    $(document).on('click', '#dashboardfilterBtn', function () {
+        
+        let selectedTab = $('input[name="tab"]:checked').attr('id');
+
+        if (selectedTab === 'noc') {
+            loadNOCDashboardData();
+        }
+        else if (selectedTab === 'vehicle') {
+            loadVehicleDashboardData();
+        }
+        else if (selectedTab === 'fireReport') {
+            loadFireReportData();
+        } else if (selectedTab === 'rescue') {
+            loadRescueDashboardData();
+        } 
+        else if (selectedTab === 'relief') {
+            loadReliefDashboardData();
+        } 
+        else if (selectedTab === 'hydrent') {
+            loadHydrantDashboardData();
+        }
+    
+    });
+
+    $(document).on('click', 'label[for="noc"]', function () {
+        loadNOCDashboardData();
     });
 
     
@@ -3270,11 +3516,73 @@ $(document).on('change', '#dashboard_dis', function () {
                         <td>${row.days_0_5}</td>
                         <td>${row.days_6_10}</td>
                         <td>${row.days_11_15}</td>
+                        <td>${row.days_15_plus}</td>
                         <td>${row.avg_days}</td>
                         <td>${row.total}</td>
                     </tr>
                 `;
             });
+        }
+
+        $(tableId).html(html);
+    }
+
+    function renderStatusTable(data, tableId) {
+
+        let html = '';
+
+        let totals = {
+            not_assigned: 0,
+            assigned_not_verified: 0,
+            verified: 0,
+            approved: 0,
+            rejected: 0,
+            pending: 0,
+            total: 0
+        };
+
+        if (!data || data.length === 0) {
+            html = `<tr><td colspan="8" style="text-align:center">No Data</td></tr>`;
+        } else {
+
+            data.forEach((row, index) => {
+
+                // ✅ accumulate totals
+                totals.not_assigned += Number(row.not_assigned || 0);
+                totals.assigned_not_verified += Number(row.assigned_not_verified || 0);
+                totals.verified += Number(row.verified || 0);
+                totals.approved += Number(row.approved || 0);
+                totals.rejected += Number(row.rejected || 0);
+                totals.pending += Number(row.pending || 0);
+                totals.total += Number(row.total || 0);
+
+                html += `
+                    <tr>
+                        <td>${row.district}</td>
+                        <td>${row.not_assigned}</td>
+                        <td>${row.assigned_not_verified}</td>
+                        <td>${row.verified}</td>
+                        <td>${row.approved}</td>
+                        <td>${row.rejected}</td>
+                        <td>${row.pending}</td>
+                        <td>${row.total}</td>
+                    </tr>
+                `;
+            });
+
+            // ✅ add TOTAL row
+            html += `
+                <tr style="font-weight:bold; background:#f2f2f2;">
+                    <td>Total</td>
+                    <td>${totals.not_assigned}</td>
+                    <td>${totals.assigned_not_verified}</td>
+                    <td>${totals.verified}</td>
+                    <td>${totals.approved}</td>
+                    <td>${totals.rejected}</td>
+                    <td>${totals.pending}</td>
+                    <td>${totals.total}</td>
+                </tr>
+            `;
         }
 
         $(tableId).html(html);
@@ -3293,7 +3601,10 @@ $(document).on('change', '#dashboard_dis', function () {
     }
 
     $(document).on('click', 'label[for="vehicle"]', function () {
+        loadVehicleDashboardData();
+    });
 
+    function loadVehicleDashboardData(){
         $.ajax({
             url: "{{ route('dashboard.vehicle.data') }}",
             type: "POST",
@@ -3311,8 +3622,7 @@ $(document).on('change', '#dashboard_dis', function () {
 
             }
         });
-
-    });
+    }
 
     let vehiclePieChart;
 
@@ -3322,12 +3632,32 @@ $(document).on('change', '#dashboard_dis', function () {
 
         if (vehiclePieChart) vehiclePieChart.destroy();
 
+        // ✅ FILTER ZERO VALUES
+        let filteredLabels = [];
+        let filteredData = [];
+
+        data.data.forEach((value, index) => {
+            if (parseInt(value) > 0) {
+                filteredLabels.push(data.labels[index]);
+                filteredData.push(value);
+            }
+        });
+
+        // ❗ Optional: handle no data case
+        if (filteredData.length === 0) {
+            console.warn("No data available for pie chart");
+        }
+
         vehiclePieChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: data.labels,
+                labels: filteredLabels, // ✅ filtered
                 datasets: [{
-                    data: data.data
+                    data: filteredData, // ✅ filtered
+                    backgroundColor: [
+                        '#36A2EB', '#FF6384', '#FFCE56',
+                        '#4BC0C0', '#9966FF', '#FF9F40'
+                    ]
                 }]
             }
         });
@@ -3344,7 +3674,7 @@ $(document).on('change', '#dashboard_dis', function () {
         vehicleBarChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: data.map(d => 'District ' + d.district_id),
+                labels: data.map(d => d.district_name),
                 datasets: [
                     {
                         label: 'Working',
@@ -3381,7 +3711,6 @@ $(document).on('change', '#dashboard_dis', function () {
         "बैकपैक सेट": "Backpack_Set"
     };
     function updateVehicleKPI(data) {
-        console.log('KPI Data:', data);
 
         // reset all to 0 first
         $('.kpi-card .value').text(0);
@@ -3389,7 +3718,6 @@ $(document).on('change', '#dashboard_dis', function () {
         for (let key in data) {
 
             let mapped = vehicleTypeMap[key];
-            console.log(key, mapped);
 
             if (!mapped) continue;
 
@@ -3439,10 +3767,10 @@ $(document).on('change', '#dashboard_dis', function () {
 
         let grouped = {};
 
-        // 👉 Convert row → pivot
         data.forEach(row => {
 
-            let district = row.district_id;
+            let districtId = row.district_id;
+            let districtName = row.district_name; // ✅ NEW
             let typeHindi = row.vehicle_type;
             let typeEnglish = vehicleMap[typeHindi];
 
@@ -3451,24 +3779,28 @@ $(document).on('change', '#dashboard_dis', function () {
                 return;
             }
 
-            if (!grouped[district]) {
-                grouped[district] = {};
+            if (!grouped[districtId]) {
+                grouped[districtId] = {
+                    name: districtName, // ✅ store name
+                    data: {}
+                };
             }
 
-            grouped[district][typeEnglish] = row.total;
+            grouped[districtId].data[typeEnglish] = row.total;
         });
 
         let html = '';
         let sr = 1;
 
-        // 👉 Build rows
         for (let district in grouped) {
 
             html += `<tr>`;
             html += `<td>${sr++}</td>`;
 
+            html += `<td>${grouped[district].name}</td>`;
+
             columns.forEach(col => {
-                html += `<td>${grouped[district][col] || 0}</td>`;
+                html += `<td>${grouped[district].data[col] || 0}</td>`;
             });
 
             html += `</tr>`;
@@ -3480,7 +3812,10 @@ $(document).on('change', '#dashboard_dis', function () {
     let fireChart = null;
 
     $(document).on('click', 'label[for="fireReport"]', function () {
+        loadFireReportData();
+    });
 
+    function loadFireReportData(){
         fetch("{{ route('dashboard.fireReportData') }}")
             .then(res => res.json())
             .then(response => {
@@ -3490,7 +3825,7 @@ $(document).on('change', '#dashboard_dis', function () {
                 updateFireTable(response.raw);
             })
             .catch(err => console.error(err));
-    });
+    }
 
     let fireTypePieChart = null;
 
@@ -3636,6 +3971,439 @@ $(document).on('change', '#dashboard_dis', function () {
             tbody.innerHTML += row;
         });
     }
+
+    function toggleFilters() {
+        let selectedTab = $('input[name="tab"]:checked').attr('id');
+
+        let tabsWithDate = ['noc', 'rescue', 'fireReport', 'relief','hydrent'];
+
+        if (tabsWithDate.includes(selectedTab)) {
+            $('#dateFilters').show();
+        } else {
+            $('#dateFilters').hide();
+        }
+    }
+
+    // Run on tab change
+    $(document).on('change', 'input[name="tab"]', function () {
+        toggleFilters();
+    });
+
+    $(document).on('click', 'label[for="rescue"]', function () {
+        loadRescueDashboardData();
+    });
+
+    function loadRescueDashboardData() {
+        $.ajax({
+            url: "{{ route('admin.getRescueDashboardData') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val(),
+                district_id: $('#dashboard_dis').val(),
+                station_id: $('#dashboard_fire').val()
+            },
+            success: function(res) {
+                updateRescueKPI(res.kpi);
+                updateRescueBar(res.bar);
+                updateRescuePie(res.pie);
+                renderRescueTable(res.table);
+            }
+        });
+    }
+
+    // $(document).on('click', '#dashboardfilterBtn', function () {
+    //     let activeTab = $('input[name="tab"]:checked').attr('id');
+
+    //     if (activeTab === 'rescue') {
+    //         loadRescueDashboardData();
+    //     }
+    // });
+
+    let rescueBarChart;
+
+    function updateRescueBar(data) {
+        let ctx = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
+
+        if (rescueBarChart) {
+            rescueBarChart.destroy();
+        }
+
+        let labels = data.map(item => item.district_name);
+        let values = data.map(item => parseInt(item.total));
+
+        rescueBarChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'No. of Incident',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                        stack: 'stack1'
+                    },
+                    {
+                        type: 'line',
+                        label: 'No. of Incident Trend',
+                        data: values,
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'blue'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    let rescuePieChart;
+
+    function updateRescuePie(data) {
+        let ctx = document.getElementById('RescueReportCategoryIncidentPieChart').getContext('2d');
+
+        if (rescuePieChart) {
+            rescuePieChart.destroy();
+        }
+
+        let filteredLabels = [];
+        let filteredData = [];
+
+        data.data.forEach((value, index) => {
+            if (parseInt(value) > 0) {
+                filteredLabels.push(data.labels[index]);
+                filteredData.push(parseInt(value));
+            }
+        });
+
+        rescuePieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: filteredLabels,
+                datasets: [{
+                    data: filteredData
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    function updateRescueKPI(data) {
+        $('#rescue_total_call').text(data.total_call || 0);
+        $('#rescue_report_completed').text(data.report_completed || 0);
+        $('#rescue_report_incompleted').text(data.report_incompleted || 0);
+        $('#rescue_pending_approval').text(data.pending_approval || 0);
+        $('#rescue_under_investigation').text(data.under_investigation || 0);
+        $('#rescue_report_issued').text(data.report_issued || 0);
+    }
+
+    function renderRescueTable(data) {
+        if (!data || !Array.isArray(data)) return;
+
+        let grouped = {};
+
+        data.forEach(row => {
+            let districtId = row.district_id;
+            let districtName = row.district_name;
+            let monthNo = parseInt(row.month_no);
+            let total = parseInt(row.total);
+
+            if (!grouped[districtId]) {
+                grouped[districtId] = {
+                    district_name: districtName,
+                    months: {
+                        1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0,
+                        7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0
+                    }
+                };
+            }
+
+            grouped[districtId].months[monthNo] = total;
+        });
+
+        let html = '';
+        let sr = 1;
+
+        for (let districtId in grouped) {
+            let row = grouped[districtId];
+            let total = 0;
+
+            html += `<tr>`;
+            html += `<td>${sr++}</td>`;
+            html += `<td>${row.district_name}</td>`;
+
+            for (let m = 1; m <= 12; m++) {
+                let val = row.months[m] || 0;
+                total += val;
+                html += `<td>${val}</td>`;
+            }
+
+            html += `<td>${total}</td>`;
+            html += `</tr>`;
+        }
+
+        $('#rescue_table_body').html(html);
+    }
+
+    $(document).on('click', 'label[for="relief"]', function () {
+        loadReliefDashboardData();
+    });
+
+    function loadReliefDashboardData() {
+        $.ajax({
+            url: "{{ route('admin.getReliefDashboardData') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                start_date: $('#start_date').val(),
+                end_date: $('#end_date').val(),
+                district_id: $('#dashboard_dis').val(),
+                station_id: $('#dashboard_fire').val()
+            },
+            success: function(res) {
+                updateReliefBar(res.bar);
+                updateReliefPie(res.pie);
+                renderReliefTable(res.table);
+                updateReliefKPI(res.kpi);
+            }
+        });
+    }
+
+    let reliefBarChart;
+    
+    function updateReliefBar(data) {
+
+        let ctx = document.getElementById('ReliefReportNoOfIncidentChart');
+
+        if (reliefBarChart) reliefBarChart.destroy();
+
+        let labels = data.map(d => d.district_name);
+        let values = data.map(d => parseInt(d.total));
+
+        reliefBarChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Incidents',
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.85)'
+                    },
+                    {
+                        type: 'line',
+                        label: 'Trend',
+                        data: values,
+                        borderColor: 'blue',
+                        tension: 0.3
+                    }
+                ]
+            }
+        });
+    }
+
+    let reliefPieChart;
+
+    function updateReliefPie(data) {
+
+        let ctx = document.getElementById('ReliefReportCategoryIncidentPieChart');
+
+        if (reliefPieChart) reliefPieChart.destroy();
+
+        let labels = [];
+        let values = [];
+
+        data.data.forEach((v, i) => {
+            if (parseInt(v) > 0) {
+                labels.push(data.labels[i]);
+                values.push(v);
+            }
+        });
+
+        reliefPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values
+                }]
+            }
+        });
+    }
+
+    function renderReliefTable(data) {
+
+        if (!data) return;
+
+        let grouped = {};
+
+        data.forEach(row => {
+
+            let id = row.district_id;
+
+            if (!grouped[id]) {
+                grouped[id] = {
+                    name: row.district_name,
+                    months: {}
+                };
+            }
+
+            grouped[id].months[row.month_no] = row.total;
+        });
+
+        let html = '';
+        let sr = 1;
+
+        for (let id in grouped) {
+
+            let total = 0;
+
+            html += `<tr>`;
+            html += `<td>${sr++}</td>`;
+            html += `<td>${grouped[id].name}</td>`;
+
+            for (let m = 1; m <= 12; m++) {
+                let val = grouped[id].months[m] || 0;
+                total += val;
+                html += `<td>${val}</td>`;
+            }
+
+            html += `<td>${total}</td>`;
+            html += `</tr>`;
+        }
+
+        $('#relief_table_body').html(html);
+    }
+
+    function updateReliefKPI(data) {
+        $('#relief_total_call').text(data.total_call || 0);
+        $('#relief_report_completed').text(data.report_completed || 0);
+        $('#relief_report_incompleted').text(data.report_incompleted || 0);
+        $('#relief_report_pending').text(data.report_pending || 0);
+        $('#relief_report_investigation').text(data.report_investigation || 0);
+        $('#relief_report_issued').text(data.report_issued || 0);
+    }
+
+    $(document).on('click', 'label[for="hydrent"]', function () {
+        loadHydrantDashboardData();
+    });
+
+    function loadHydrantDashboardData() {
+        $.ajax({
+            url: "{{ route('admin.getHydrantDashboardData') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                district_id: $('#dashboard_dis').val(),
+                station_id: $('#dashboard_fire').val()
+            },
+            success: function(res) {
+                updateHydrantBar(res.bar);
+                updateHydrantPie(res.pie);
+            }
+        });
+    }
+
+    let hydrantBarChart;
+
+    function updateHydrantBar(data) {
+
+        let ctx = document.getElementById('FireHydrentChart');
+
+        if (hydrantBarChart) hydrantBarChart.destroy();
+
+        hydrantBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.district_name),
+
+                datasets: [
+                    {
+                        label: 'Working',
+                        data: data.map(d => d.working),
+                        backgroundColor: 'rgba(6, 154, 235, 0.7)'
+                    },
+                    {
+                        label: 'Not Working',
+                        data: data.map(d => d.not_working),
+                        backgroundColor: 'rgba(255, 159, 67, 0.7)'
+                    },
+                    {
+                        label: 'Proposed',
+                        data: data.map(d => d.proposed),
+                        backgroundColor: 'rgba(152, 160, 168, 0.7)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+    
+    let hydrantPieChart;
+
+    function updateHydrantPie(data) {
+
+        let ctx = document.getElementById('FireHydrentPieChart');
+
+        if (hydrantPieChart) hydrantPieChart.destroy();
+
+        // 🔥 filter zero
+        let labels = [];
+        let values = [];
+
+        data.data.forEach((v, i) => {
+            if (parseInt(v) > 0) {
+                labels.push(data.labels[i]);
+                values.push(v);
+            }
+        });
+
+        hydrantPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8']
+                }]
+            }
+        });
+    }
+
+
 </script>
 
 
