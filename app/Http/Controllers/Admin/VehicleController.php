@@ -10,6 +10,7 @@ use App\Models\VehicleStatementModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\District;
+use Illuminate\Validation\Rule;
 
 
 class VehicleController extends Controller
@@ -74,7 +75,9 @@ class VehicleController extends Controller
         $validator = Validator::make($request->all(), [
             'districts' => 'required|string',
             'firestation' => 'required|string',
-            'reg_number' => 'required|string',
+
+            'reg_number' => 'required|string|unique:fs_vehicles,reg_number',
+
             'chassis_number' => 'required|string',
             'engine_number' => 'required|string',
             'vehicle_type' => 'required|string',
@@ -86,6 +89,8 @@ class VehicleController extends Controller
             'total_invest' => 'required|string',
             'total_fire' => 'required|string',
             'vehicle_remark' => 'nullable|string'
+        ], [
+            'reg_number.unique' => 'Vehicle registration number already exists.'
         ]);
 
         if ($validator->fails()) {
@@ -181,13 +186,25 @@ class VehicleController extends Controller
 
     public function updatevehicle(Request $request)
     {
-
         $this->commonModel = new CommonModel;
+
+        // Normalize reg number (IMPORTANT)
+        $request->merge([
+            'reg_number' => strtoupper(trim($request->reg_number))
+        ]);
+
+        $vid = $request->input('vid');
 
         $validator = Validator::make($request->all(), [
             'districts' => 'required|string',
             'firestation' => 'required|string',
-            'reg_number' => 'required|string',
+
+            'reg_number' => [
+                'required',
+                'string',
+                Rule::unique('fs_vehicles', 'reg_number')->ignore($vid, 'id')
+            ],
+
             'chassis_number' => 'required|string',
             'engine_number' => 'required|string',
             'vehicle_type' => 'required|string',
@@ -199,6 +216,8 @@ class VehicleController extends Controller
             'total_invest' => 'required|string',
             'total_fire' => 'required|string',
             'vehicle_remark' => 'nullable|string'
+        ], [
+            'reg_number.unique' => 'Vehicle registration number already exists.'
         ]);
 
         if ($validator->fails()) {
@@ -207,51 +226,30 @@ class VehicleController extends Controller
                 ->withInput();
         }
 
-
-
-        $districts = $request->input('districts');
-        $firestation = $request->input('firestation');
-        $reg_number = $request->input('reg_number');
-        $chassis_number = $request->input('chassis_number');
-        $engine_number = $request->input('engine_number');
-        $vehicle_type = $request->input('vehicle_type');
-        $make_year = $request->input('make_year');
-        $year = $request->input('year');
-        $capacity = $request->input('capacity');
-        $use_date = $request->input('use_date');
-        $km_drive = $request->input('km_drive');
-        $total_invest = $request->input('total_invest');
-        $total_fire = $request->input('total_fire');
-        $vehicle_remark = $request->input('vehicle_remark');
-        $vid = $request->input('vid');
-
-        $tbl = 'fs_vehicles';
-
         $data = [
-            'reg_number'        => $reg_number, 
-            'chassis_number'    => $chassis_number, 
-            'engine_number'     => $engine_number, 
-            'district_id'       => $districts, 
-            'station_id'        => $firestation, 
-            'vehicle_type'      => $vehicle_type, 
-            'make_year'         => $make_year, 
-            'year'              => $year, 
-            'capacity'          => $capacity, 
-            'use_date'          => $use_date, 
-            'km_drive'          => $km_drive, 
-            'total_invest'      => $total_invest, 
-            'total_fire'        => $total_fire, 
-            'vehicle_remark'    => $vehicle_remark
+            'reg_number'        => $request->reg_number,
+            'chassis_number'    => $request->chassis_number,
+            'engine_number'     => $request->engine_number,
+            'district_id'       => $request->districts,
+            'station_id'        => $request->firestation,
+            'vehicle_type'      => $request->vehicle_type,
+            'make_year'         => $request->make_year,
+            'year'              => $request->year,
+            'capacity'          => $request->capacity,
+            'use_date'          => $request->use_date,
+            'km_drive'          => $request->km_drive,
+            'total_invest'      => $request->total_invest,
+            'total_fire'        => $request->total_fire,
+            'vehicle_remark'    => $request->vehicle_remark
         ];
 
         $where = ['id' => $vid];
 
-        $result = $this->commonModel->updateDataByOneCondition($tbl,$where,$data);
-        if($result)
-        {
+        $result = $this->commonModel->updateDataByOneCondition($tbl = 'fs_vehicles', $where, $data);
+
+        if ($result) {
             return redirect()->back()->with('success', 'Vehicle updated successfully');
-        }
-        else{
+        } else {
             return redirect()->back()->with('failed', 'Something Went Wrong Try Later!');
         }
     }

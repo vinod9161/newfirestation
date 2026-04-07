@@ -169,6 +169,7 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::post('admin/employees/saveemployees', [EmployeesController::class, 'store'])->name('admin.saveemployees');
     Route::delete('admin/employees/delete/{id}',[EmployeesController::class, 'destroy'])->name('admin.deleteemployees');
     Route::get('admin/employees/edit/{id}',[EmployeesController::class, 'edit'])->name('admin.editemployees');
+    Route::put('/employee/update/{id}', [EmployeesController::class, 'update'])->name('admin.updateemployee');
 
     Route::get('admin/reliefReport',[ReliefReportController::class, 'index'])->name('admin.reliefReport');
     Route::get('admin/reliefReport/add',[ReliefReportController::class, 'addReliefReport'])->name('admin.addReliefReport');

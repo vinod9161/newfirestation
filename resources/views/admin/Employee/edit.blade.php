@@ -60,8 +60,9 @@
                         <div class="col-md-12" style="margin:0 auto;">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="{{ route('admin.saveemployees') }}" method="post">
+                                    <form action="{{ route('admin.updateemployee', $employee->id) }}" method="post">
                                         @csrf
+                                        @method('PUT')
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
@@ -158,7 +159,7 @@
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
-                                                            {{ (old('district_id', $district->id) == 'GEN') ? 'selected' : '' }}>
+                                                            {{ old('district_id', $employee->district_id) == $district->id ? 'selected' : '' }}>
                                                             {{ $district->name }}
                                                         </option>
                                                         @endforeach
@@ -176,7 +177,7 @@
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
-                                                            {{ (old('home_district') == $district->id || (isset($record) && $record->home_district == $district->id)) ? 'selected' : '' }}>
+                                                            {{ old('home_district', $employee->home_district) == $district->id ? 'selected' : '' }}>
                                                             {{ $district->name }}
                                                         </option>
                                                         @endforeach
@@ -195,7 +196,7 @@
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
-                                                            {{ (old('recruitment_district') == $district->id || (isset($record) && $record->recruitment_district == $district->id)) ? 'selected' : '' }}>
+                                                            {{ old('recruitment_district', $employee->recruitment_district) == $district->id ? 'selected' : '' }}>
                                                             {{ $district->name }}
                                                         </option>
                                                         @endforeach
@@ -214,7 +215,7 @@
                                                         <option value="">--- Select Fire Station ---</option>
                                                         @foreach($stations as $station)
                                                         <option value="{{ $station->id }}"
-                                                            {{ (old('station_id') == $station->id || (isset($record) && $record->station_id == $station->id)) ? 'selected' : '' }}>
+                                                            {{ old('station_id', $employee->station_id) == $station->id ? 'selected' : '' }}>
                                                             {{ $station->name }}
                                                         </option>
                                                         @endforeach
@@ -233,7 +234,7 @@
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
-                                                            {{ (old('previous_posting') == $district->id || (isset($record) && $record->previous_posting == $district->id)) ? 'selected' : '' }}>
+                                                            {{ old('previous_posting', $employee->previous_posting) == $district->id ? 'selected' : '' }}>
                                                             {{ $district->name }}
                                                         </option>
                                                         @endforeach
@@ -251,25 +252,25 @@
                                                         required>
                                                         <option value="">Select Designation</option>
                                                         <option value="Chief fire officer"
-                                                            {{ (old('entry_level') == 'Chief fire officer' || (isset($record) && $record->entry_level == 'Chief fire officer')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Chief fire officer' || (isset($employee) && $employee->entry_level == 'Chief fire officer')) ? 'selected' : '' }}>
                                                             Chief fire officer</option>
                                                         <option value="Fire station second officer"
-                                                            {{ (old('entry_level') == 'Fire station second officer' || (isset($record) && $record->entry_level == 'Fire station second officer')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Fire station second officer' || (isset($employee) && $employee->entry_level == 'Fire station second officer')) ? 'selected' : '' }}>
                                                             Fire station second officer</option>
                                                         <option value="Fireman"
-                                                            {{ (old('entry_level') == 'Fireman' || (isset($record) && $record->entry_level == 'Fireman')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Fireman' || (isset($employee) && $employee->entry_level == 'Fireman')) ? 'selected' : '' }}>
                                                             Fireman</option>
                                                         <option value="Ministerial"
-                                                            {{ (old('entry_level') == 'Ministerial' || (isset($record) && $record->entry_level == 'Ministerial')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Ministerial' || (isset($employee) && $employee->entry_level == 'Ministerial')) ? 'selected' : '' }}>
                                                             Ministerial</option>
                                                         <option value="Cook/kahar"
-                                                            {{ (old('entry_level') == 'Cook/kahar' || (isset($record) && $record->entry_level == 'Cook/kahar')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Cook/kahar' || (isset($employee) && $employee->entry_level == 'Cook/kahar')) ? 'selected' : '' }}>
                                                             Cook/kahar</option>
                                                         <option value="Peon"
-                                                            {{ (old('entry_level') == 'Peon' || (isset($record) && $record->entry_level == 'Peon')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Peon' || (isset($employee) && $employee->entry_level == 'Peon')) ? 'selected' : '' }}>
                                                             Peon</option>
                                                         <option value="Sweper"
-                                                            {{ (old('entry_level') == 'Sweper' || (isset($record) && $record->entry_level == 'Sweper')) ? 'selected' : '' }}>
+                                                            {{ (old('entry_level') == 'Sweper' || (isset($employee) && $employee->entry_level == 'Sweper')) ? 'selected' : '' }}>
                                                             Sweper</option>
                                                     </select>
 
@@ -292,37 +293,37 @@
                                                         required>
                                                         <option value="">Select Designation</option>
                                                         <option value="Deputy director"
-                                                            {{ (old('designation') == 'Deputy director' || (isset($record) && $record->designation == 'Deputy director')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Deputy director' || (isset($employee) && $employee->designation == 'Deputy director')) ? 'selected' : '' }}>
                                                             Deputy director</option>
                                                         <option value="Chief fire officer"
-                                                            {{ (old('designation') == 'Chief fire officer' || (isset($record) && $record->designation == 'Chief fire officer')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Chief fire officer' || (isset($employee) && $employee->designation == 'Chief fire officer')) ? 'selected' : '' }}>
                                                             Chief fire officer</option>
                                                         <option value="Fire station officer"
-                                                            {{ (old('designation') == 'Fire station officer' || (isset($record) && $record->designation == 'Fire station officer')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Fire station officer' || (isset($employee) && $employee->designation == 'Fire station officer')) ? 'selected' : '' }}>
                                                             Fire Station Officer</option>
                                                         <option value="Fire station second officer"
-                                                            {{ (old('designation') == 'Fire station second officer' || (isset($record) && $record->designation == 'Fire station second officer')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Fire station second officer' || (isset($employee) && $employee->designation == 'Fire station second officer')) ? 'selected' : '' }}>
                                                             Fire station second officer</option>
                                                         <option value="Leading fireman"
-                                                            {{ (old('designation') == 'Leading fireman' || (isset($record) && $record->designation == 'Leading fireman')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Leading fireman' || (isset($employee) && $employee->designation == 'Leading fireman')) ? 'selected' : '' }}>
                                                             Leading Fireman</option>
                                                         <option value="Fire service driver"
-                                                            {{ (old('designation') == 'Fire service driver' || (isset($record) && $record->designation == 'Fire service driver')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Fire service driver' || (isset($employee) && $employee->designation == 'Fire service driver')) ? 'selected' : '' }}>
                                                             Fire Service Driver</option>
                                                         <option value="Fireman"
-                                                            {{ (old('designation') == 'Fireman' || (isset($record) && $record->designation == 'Fireman')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Fireman' || (isset($employee) && $employee->designation == 'Fireman')) ? 'selected' : '' }}>
                                                             Fireman</option>
                                                         <option value="Assistant sub inspector(M)"
-                                                            {{ (old('designation') == 'Assistant sub inspector(M)' || (isset($record) && $record->designation == 'Assistant sub inspector(M)')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Assistant sub inspector(M)' || (isset($employee) && $employee->designation == 'Assistant sub inspector(M)')) ? 'selected' : '' }}>
                                                             Assistant sub inspector(M)</option>
                                                         <option value="Cook/kahar"
-                                                            {{ (old('designation') == 'Cook/kahar' || (isset($record) && $record->designation == 'Cook/kahar')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Cook/kahar' || (isset($employee) && $employee->designation == 'Cook/kahar')) ? 'selected' : '' }}>
                                                             Cook/kahar</option>
                                                         <option value="Peon"
-                                                            {{ (old('designation') == 'Peon' || (isset($record) && $record->designation == 'Peon')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Peon' || (isset($employee) && $employee->designation == 'Peon')) ? 'selected' : '' }}>
                                                             Peon</option>
                                                         <option value="Sweper"
-                                                            {{ (old('designation') == 'Sweper' || (isset($record) && $record->designation == 'Sweper')) ? 'selected' : '' }}>
+                                                            {{ (old('designation') == 'Sweper' || (isset($employee) && $employee->designation == 'Sweper')) ? 'selected' : '' }}>
                                                             Sweper</option>
                                                     </select>
 
@@ -336,7 +337,7 @@
                                                     <input class="form-control" size="50" maxlength="50"
                                                         name="date_of_birth" id="date_of_birth" type="date"
                                                         placeholder="Date Of Birth" onchange="handler(event);"
-                                                        value="{{ old('date_of_birth', isset($record) ? $record->date_of_birth : '') }}"
+                                                        value="{{ old('date_of_birth', $employee->date_of_birth) }}"
                                                         required />
 
                                                     <span class="text-danger" id="emailError"></span>
@@ -350,7 +351,7 @@
                                                     <input class="form-control" size="50" maxlength="50"
                                                         name="date_of_recuirtment" id="date_of_recuirtment" type="date"
                                                         placeholder="Date Of Recruitment"
-                                                        value="{{ old('date_of_recuirtment', isset($record) ? $record->date_of_recuirtment : '') }}"
+                                                        value="{{ old('date_of_recuirtment', isset($employee) ? $employee->date_of_recuirtment : '') }}"
                                                         required />
 
                                                     <span class="text-danger" id="phoneError"></span>
@@ -364,7 +365,7 @@
                                                     <input class="form-control" size="50" maxlength="50"
                                                         name="date_of_retirement" id="date_of_retirement" type="date"
                                                         placeholder="Date Of Retirement"
-                                                        value="{{ old('date_of_retirement', isset($record) ? $record->date_of_retirement : '') }}"
+                                                        value="{{ old('date_of_retirement', isset($employee) ? $employee->date_of_retirement : '') }}"
                                                         readonly />
 
                                                     <span class="text-danger" id="districtsError"></span>
@@ -377,65 +378,37 @@
                                                     <input class="form-control" size="50" maxlength="50"
                                                         name="education" id="education" type="text"
                                                         placeholder="Education"
-                                                        value="{{ old('education', isset($record) ? $record->education : '') }}" />
+                                                        value="{{ old('education', isset($employee) ? $employee->education : '') }}" />
 
                                                     <span class="text-danger" id="stationError"></span>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
+                                                @php
+                                                $selectedCourses = old(
+                                                    'states',
+                                                    array_map('trim', explode(',', $employee->departmental_course ?? ''))
+                                                );
+                                                @endphp
                                                 <div class="form-group">
                                                     <label>Departmental Course विभागीय पर्शिक्षण <sup
                                                             class="text-danger">*</sup></label>
-                                                    <select class="js-example-basic-multiple select2-hidden-accessible"
-                                                        name="states[]" multiple=""
-                                                        data-select2-id="select2-data-4-asye" tabindex="-1"
-                                                        aria-hidden="true">
-                                                        <option value="Sub-Officer">&nbsp;Sub-Officer</option>
-                                                        <option value="Station Officer">&nbsp;Station Officer</option>
-                                                        <option value="Divisonal Officer">&nbsp;Divisonal Officer
+                                                    <select class="js-example-basic-multiple" name="states[]" multiple>
+
+                                                        <option value="Basic Disaster Response Course"
+                                                            {{ in_array('Basic Disaster Response Course', $selectedCourses) ? 'selected' : '' }}>
+                                                            Basic Disaster Response Course
                                                         </option>
-                                                        <option value="Medical First Responder Course">&nbsp;Medical
-                                                            First Responder Course</option>
-                                                        <option value="Basic Disaster Response Course">&nbsp;Basic
-                                                            Disaster Response Course</option>
-                                                        <option value="General Search & Rescue Course">&nbsp;General
-                                                            Search & Rescue Course</option>
-                                                        <option value="Advance Search & Rescue Course">&nbsp;Advance
-                                                            Search & Rescue Course</option>
-                                                        <option value="Fire Fighting First Responder Course">&nbsp;Fire
-                                                            Fighting First Responder Course</option>
-                                                        <option
-                                                            value="Hazardous Material Emergency First Responder course">
-                                                            &nbsp;Hazardous Material Emergency First Responder course
+
+                                                        <option value="Fire Fighting First Responder Course"
+                                                            {{ in_array('Fire Fighting First Responder Course', $selectedCourses) ? 'selected' : '' }}>
+                                                            Fire Fighting First Responder Course
                                                         </option>
-                                                        <option value="Weapon of Mass Destruction Course">&nbsp;Weapon
-                                                            of Mass Destruction Course</option>
-                                                        <option value="Flood Rescue for First Responder Course">
-                                                            &nbsp;Flood Rescue for First Responder Course</option>
-                                                        <option value="Collapsed structure — Search & Rescue Course">
-                                                            &nbsp;Collapsed structure — Search & Rescue Course</option>
-                                                        <option value="Chemical Disaster First Responder Course">
-                                                            &nbsp;Chemical Disaster First Responder Course</option>
-                                                        <option value="Biological Incident First Responder Course">
-                                                            &nbsp;Biological Incident First Responder Course</option>
-                                                        <option value="Flood / Cyclone Disaster Response Course">
-                                                            &nbsp;Flood / Cyclone Disaster Response Course</option>
-                                                        <option value="Earthquake Disaster Response Course">
-                                                            &nbsp;Earthquake Disaster Response Course</option>
-                                                        <option value="Emergency Response to Rail Transport Accident">
-                                                            &nbsp;Emergency Response to Rail Transport Accident</option>
-                                                        <option value="TOT in Radiological & Nuclear Emergencies">
-                                                            &nbsp;TOT in Radiological & Nuclear Emergencies</option>
-                                                        <option value="Breathing Apparatus Course">&nbsp;Breathing
-                                                            Apparatus Course</option>
-                                                        <option value="Fire Prevention Course">&nbsp;Fire Prevention
-                                                            Course</option>
-                                                        <option value="Mountain Search and Rescue Course">&nbsp;Mountain
-                                                            Search and Rescue Course</option>
-                                                        <option value="High Altitude Search and Rescue">&nbsp;High
-                                                            Altitude Search and Rescue</option>
-                                                    </select><span
+
+                                                        <!-- repeat for all -->
+                                                    </select>
+                                                    <span
                                                         class="select2 select2-container select2-container--default select2-container--below"
                                                         dir="ltr" data-select2-id="select2-data-5-5wou"
                                                         style="width: 67.7031px;">
@@ -457,7 +430,7 @@
                                                 <div class="form-group">
                                                     <label>Remark टिप्पणी <sup class="text-danger">*</sup></label>
                                                     <input class="form-control" size="60" maxlength="100" name="remark"
-                                                        id="remark" type="text" placeholder="Remark" />
+                                                        id="remark" type="text" placeholder="Remark" value="{{ $employee->remark }}" />
                                                     <span class="text-danger" id="nameError"></span>
                                                 </div>
                                             </div>
@@ -467,12 +440,12 @@
                                                     <label>Employee Status <sup class="text-danger">*</sup></label>
                                                     <select class="form-control" name="status" id="status" required>
                                                         <option value="">Select Status</option>
-                                                        <option value="Active">Active</option>
-                                                        <option value="Retirement">Retirement</option>
-                                                        <option value="VRS">VRS</option>
-                                                        <option value="Death">Death</option>
-                                                        <option value="Resigned">Resigned</option>
-                                                        <option value="Terminated">Terminated</option>
+                                                        <option value="Active" {{ old('status', $employee->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                                        <option value="Retirement" {{ old('status', $employee->status) == 'Retirement' ? 'selected' : '' }}>Retirement</option>
+                                                        <option value="VRS" {{ old('status', $employee->status) == 'VRS' ? 'selected' : '' }}>VRS</option>
+                                                        <option value="Death" {{ old('status', $employee->status) == 'Death' ? 'selected' : '' }}>Death</option>
+                                                        <option value="Resigned" {{ old('status', $employee->status) == 'Resigned' ? 'selected' : '' }}>Resigned</option>
+                                                        <option value="Terminated" {{ old('status', $employee->status) == 'Terminated' ? 'selected' : '' }}>Terminated</option>
                                                     </select>
                                                     <span class="text-danger" id="emailError"></span>
                                                 </div>

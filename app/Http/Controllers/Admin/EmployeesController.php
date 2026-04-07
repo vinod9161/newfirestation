@@ -11,6 +11,7 @@ use App\Models\Employee\EmployeeModel as Employee;
 use App\Models\location\DistrictModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EmployeesController extends Controller{
     public function index(){
@@ -59,6 +60,33 @@ class EmployeesController extends Controller{
         $data['districts'] = DistrictModel::all();
         $data['stations'] = DB::table('fire_stations')->get();
         return view('admin.Employee.edit',$data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $employee = Employee::findOrFail($id);
+
+        $request->merge([
+            'employee_code' => trim($request->employee_code)
+        ]);
+
+        $request->validate([
+            'employee_code' => [
+                'required',
+                Rule::unique(Employee::class, 'employee_code')->ignore($employee->id)
+            ],
+            'name' => 'required|string|max:255'
+        ]);
+
+        $data = $request->except(['_token', '_method']);
+
+        if ($request->states) {
+            $data['departmental_course'] = implode(", ", $request->states);
+        }
+
+        $employee->update($data);
+
+        return redirect()->route('admin.employees')->with('success', 'Employee updated successfully!');
     }
 
     
