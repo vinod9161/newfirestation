@@ -14,28 +14,6 @@
         margin: 0;
     }
 
-    /* ===== HEADER (FIXED) ===== */
-    /* .app-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 70px;
-        z-index: 1000;
-        background: #fff;
-    } */
-
-    /* ===== SIDEBAR (FIXED) ===== */
-    /* .app-sidebar {
-        position: fixed;
-        top: 70px; 
-        left: 0;
-        width: 240px; 
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-        background: #fff;
-    } */
-
     /* ===== MAIN CONTENT (SCROLL AREA) ===== */
     .main-content {
         margin-top: 70px;   /* header space */
@@ -288,11 +266,7 @@
                                                         <div style="width:220px">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                            <ul style="font-size:13px;color:var(--muted)">
-                                                                <li>Letter from Development Authority Missing — 43%</li>
-                                                                <li>Proposed Map Missing — 19%</li>
-                                                                <li>Incomplete Map — 9%</li>
-                                                                <li>Other — 29%</li>
+                                                            <ul style="font-size:13px;color:var(--muted)" id="all_reject_list">
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -480,11 +454,7 @@
                                                         <div style="width:220px">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                            <ul style="font-size:13px;color:var(--muted)">
-                                                                <li>Letter from Development Authority Missing — 43%</li>
-                                                                <li>Proposed Map Missing — 19%</li>
-                                                                <li>Incomplete Map — 9%</li>
-                                                                <li>Other — 29%</li>
+                                                            <ul style="font-size:13px;color:var(--muted)" id="pre_est_reject_list">
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -679,11 +649,7 @@
                                                         <div style="width:220px">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Pre-Operational</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                            <ul style="font-size:13px;color:var(--muted)">
-                                                                <li>Letter from Development Authority Missing — 43%</li>
-                                                                <li>Proposed Map Missing — 19%</li>
-                                                                <li>Incomplete Map — 9%</li>
-                                                                <li>Other — 29%</li>
+                                                            <ul style="font-size:13px;color:var(--muted)" id="pre_op_reject_list">
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -873,11 +839,7 @@
                                                         <div style="width:220px">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Renewal</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                            <ul style="font-size:13px;color:var(--muted)">
-                                                                <li>Letter from Development Authority Missing — 43%</li>
-                                                                <li>Proposed Map Missing — 19%</li>
-                                                                <li>Incomplete Map — 9%</li>
-                                                                <li>Other — 29%</li>
+                                                            <ul style="font-size:13px;color:var(--muted)" id="renewal_reject_list">
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -1594,13 +1556,6 @@
                     </div>
                     
                     <div class="row" style="margin-top: 20px;">
-                        <!-- <div class="col-md-5">
-                            <div class="card custom-card">
-                                <div class="card-body dash1">
-                                    <canvas id="FireReportMonthReportPieChart"></canvas>
-                                </div>    
-                            </div>
-                        </div> -->
                         <div class="col-md-5">
                             <div class="card custom-card">
                                 <div class="card-body dash1">
@@ -2074,150 +2029,76 @@
 <!-- <script src="{{ asset('/public/admin/js/dashboard-two.js') }}"></script> -->
 
 <script>
-    // new Chart(document.getElementById('AllNOCRejectPie'), {
-    //     type: 'doughnut',
-    //     data: {
-    //         labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
-    //         datasets: [{
-    //             data: [43, 19, 9, 29],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'right'
-    //             }
-    //         },
-    //         aspectRatio: 1.2
-    //     }
-    // });
 
     function updateRejectPieChart(data, canvasId) {
 
-        let labels = data.map(item => item.reason);
+        let fullLabels = data.map(item => item.reason);
         let values = data.map(item => item.total);
 
+        // ✅ Short labels
+        let shortLabels = fullLabels.map(label => 
+            label.length > 25 ? label.substring(0, 25) + '...' : label
+        );
+
+        // ✅ Destroy old chart safely
         if (window[canvasId] && typeof window[canvasId].destroy === 'function') {
             window[canvasId].destroy();
         }
 
+        // ✅ Create new chart
         window[canvasId] = new Chart(document.getElementById(canvasId), {
             type: 'doughnut',
             data: {
-                labels: labels,
+                labels: shortLabels,
                 datasets: [{
                     data: values,
                     backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
                 plugins: {
-                    legend: { position: 'right' }
-                },
-                aspectRatio: 1.2
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 10,
+                            padding: 10,
+                            font: { size: 10 }
+                        }
+                    },
+
+                    // ✅ Full text tooltip
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let index = context.dataIndex;
+                                let fullText = fullLabels[index];
+                                let value = context.raw;
+
+                                let total = values.reduce((a, b) => a + b, 0);
+                                let percent = ((value / total) * 100).toFixed(1);
+
+                                return fullText + ' : ' + value + ' (' + percent + '%)';
+                            }
+                        }
+                    }
+                }
             }
         });
+
+        // ✅ 🔥 VERY IMPORTANT (FIX TAB ISSUE)
+        setTimeout(() => {
+            if (window[canvasId]) {
+                window[canvasId].resize();
+            }
+        }, 200);
     }
-    new Chart(document.getElementById('PreEstablishmentRejectPie'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
-            datasets: [{
-                data: [43, 19, 9, 29],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'right'
-                }
-            },
-            aspectRatio: 1.2
-        }
-    });
 
-    new Chart(document.getElementById('PreOperationalRejectPie'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
-            datasets: [{
-                data: [43, 19, 9, 29],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'right'
-                }
-            },
-            aspectRatio: 1.2
-        }
-    });
-
-    new Chart(document.getElementById('RenewalRejectPie'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Letter Missing', 'Proposed Map', 'Incomplete Map', 'Other'],
-            datasets: [{
-                data: [43, 19, 9, 29],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#b9b9b9', '#ffd166']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'right'
-                }
-            },
-            aspectRatio: 1.2
-        }
-    });
-
-
-    // new Chart(document.getElementById('VehiclePieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
-    //         datasets: [{
-    //             data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-    //             backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    let pieChart = null;
     let charts = {};
     let barChart = null;
 
-    // new Chart(document.getElementById('AllNOCApplicationByStatusPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
 
     function updatePieChart(data, chartId) {
 
@@ -2225,9 +2106,6 @@
 
         if (!ctx) return;
 
-        // if (pieChart) {
-        //     pieChart.destroy();
-        // }
         if (charts[chartId]) {
             charts[chartId].destroy();
         }
@@ -2288,217 +2166,6 @@
         });
     }
 
-    // new Chart(document.getElementById('AllNOCApplicationByStatusBarChart'), {
-    //     type: 'bar',
-    //     data: {
-    //         labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-    //         datasets: [{
-    //             label: 'No. of Application',
-    //             data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
-    //         }]
-    //     },
-    //     options: {
-    //         scales: {
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 display: false
-    //             }
-    //         }
-    //     }
-    // });
-
-    // new Chart(document.getElementById('PreEstablishmentApplicationByStatusPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('PreOperationalApplicationByStatusPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('RenewalApplicationByStatusPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Approved', 'Reverted', 'Under Process', 'Pending'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('FireReportCategoryIncidentPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-    // new Chart(document.getElementById('RescueReportCategoryIncidentPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('ReliefReportCategoryIncidentPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('FireHydrentPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Working', 'Not Working', 'Proposed'],
-    //         datasets: [{
-    //             data: [46, 18, 27],
-    //             backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-
-    new Chart(document.getElementById('FireReportMonthReportPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Small Fire', 'Major Fire', 'Serious Fire ', 'Special Fire'],
-            datasets: [{
-                data: [46, 18, 27, 9],
-                backgroundColor: ['#2f80ed', '#ff7f50', '#98a0a8', '#f5b041']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
-    // new Chart(document.getElementById('FireReportNoOfFireCallPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['Commercial', 'Residential', 'High Rise', 'Forest', 'Farm', 'Industry', 'Vehicle', 'Landscape', 'Other'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9, 51, 29, 33, 19, 40],
-    //             backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41', '#f5b0ff']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
-
-    // new Chart(document.getElementById('EmployeeVacancyPieChart'), {
-    //     type: 'pie',
-    //     data: {
-    //         labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-    //         datasets: [{
-    //             data: [46, 18, 27, 9, 51, 29, 33, 19],
-    //             backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41']
-    //         }]
-    //     },
-    //     options: {
-    //         plugins: {
-    //             legend: {
-    //                 position: 'bottom'
-    //             }
-    //         },
-    //         aspectRatio: 1.4
-    //     }
-    // });
 
 
     new Chart(document.getElementById('DisasterEquipmentPieChart'), {
@@ -2562,126 +2229,6 @@
 
 
 
-    new Chart(document.getElementById('PreEstablishmentApplicationByStatusBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
-    new Chart(document.getElementById('PreOperationalApplicationByStatusBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
-    new Chart(document.getElementById('RenewalApplicationByStatusBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [5, 12, 30, 18, 80, 65, 55, 44, 16, 8, 33, 70, 10]
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
-
-    // new Chart(document.getElementById('FireReportNoOfIncidentChart'), {
-    //   type:'bar',
-    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-    //   },
-    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-    // });
-
-    // new Chart(document.getElementById('RescueReportNoOfIncidentChart'), {
-    //   type:'bar',
-    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-    //   },
-    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-    // });
-    // new Chart(document.getElementById('ReliefReportNoOfIncidentChart'), {
-    //   type:'bar',
-    //   data:{labels:['Almora','Bageshwar','Chamoli','Champawat','Dehradun','Haridwar','Nainital','Pauri Garhwal','Pithoragarh','Rudraprayag','Tehri Garhwal','Udham Singh Nagar','Uttarkashi'],
-    //     datasets:[{label:'No. of Application',data:[5,12,30,18,80,65,55,44,16,8,33,70,10]}]
-    //   },
-    //   options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}
-    // });
-
-
-
-    // new Chart(document.getElementById('AllNOCApplicationByTypeBarChart'), {
-    //     type: 'bar',
-    //     data: {
-    //         labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
-    //         datasets: [{
-    //             label: 'No. of Application',
-    //             data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
-    //         }]
-    //     },
-    //     options: {
-    //         indexAxis: 'x',
-    //         scales: {
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 display: false
-    //             }
-    //         },
-    //         aspectRatio: 1.6
-    //     }
-    // });
-
     function updateTypeBarChart(data, canvasId) {
 
         let labels = data.map(item => item.type);
@@ -2712,627 +2259,42 @@
         });
     }
 
-    new Chart(document.getElementById('PreEstablishmentApplicationByTypeBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
-            }]
-        },
-        options: {
-            indexAxis: 'x',
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            aspectRatio: 1.6
-        }
-    });
-
-    new Chart(document.getElementById('PreOperationalApplicationByTypeBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
-            }]
-        },
-        options: {
-            indexAxis: 'x',
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            aspectRatio: 1.6
-        }
-    });
-
-    new Chart(document.getElementById('RenewalApplicationByTypeBarChart'), {
-        type: 'bar',
-        data: {
-            labels: ['Residential', 'Educational', 'Institutional', 'Business', 'Mercantile', 'Industrial', 'Hazardous', 'Storage', 'Arm Lines', 'Petrol Pump', 'Cinema Hall', 'Fire Cracker', 'Other'],
-            datasets: [{
-                label: 'No. of Application',
-                data: [8, 18, 22, 12, 80, 65, 55, 45, 22, 10, 12, 34, 10]
-            }]
-        },
-        options: {
-            indexAxis: 'x',
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            aspectRatio: 1.6
-        }
-    });
-
-
-    // Get the canvas element
-    // const ctx = document.getElementById('VehicleChart').getContext('2d');
-
-    // // Data for the bar chart
-    // const data = {
-    //     labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
-    //     datasets: [{
-    //             label: 'Working',
-    //             data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
-    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
-    //             borderColor: 'rgba(6, 154, 235, 1)',
-    //             borderWidth: 1,
-    //         },
-    //         {
-    //             label: 'Not-Working',
-    //             data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
-    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
-    //             borderColor: 'rgba(255, 159, 67, 1)',
-    //             borderWidth: 1,
-    //         }
-    //     ]
-    // };
-
-    // // Chart configuration
-    // const config = {
-    //     type: 'bar', // Bar chart type
-    //     data: data,
-    //     options: {
-    //         responsive: true,
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top',
-    //             },
-    //             title: {
-    //                 display: true,
-    //                 text: 'No. of Vehicle'
-    //             }
-    //         },
-    //         scales: {
-    //             x: {
-    //                 stacked: false // Set to true if you want stacked bars
-    //             },
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         }
-    //     }
-    // };
-
-    // // Render the chart
-    // new Chart(ctx, config);
-    
-    // Get the canvas element
-    // const ctx1 = document.getElementById('FireHydrentChart').getContext('2d');
-
-    // // Data for the bar chart
-    // const data1 = {
-    //     labels: ['Almora', 'Bageshwer', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udhamsingh Nagar', 'Uttarkashi'],
-    //     datasets: [{
-    //             label: 'Working',
-    //             data: [50, 60, 100, 270, 108, 167, 188, 98, 67, 46, 92, 28, 56],
-    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
-    //             borderColor: 'rgba(6, 154, 235, 1)',
-    //             borderWidth: 1,
-    //         },
-    //         {
-    //             label: 'Not-Working',
-    //             data: [20, 10, 19, 90, 40, 10, 46, 21, 17, 10, 13, 5, 11],
-    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
-    //             borderColor: 'rgba(255, 159, 67, 1)',
-    //             borderWidth: 1,
-    //         },
-    //         {
-    //             label: 'Approved',
-    //             data: [60, 30, 36, 50, 77, 11, 25, 45, 37, 8, 20, 15, 31],
-    //             backgroundColor: 'rgba(152, 160, 168, 0.7)',
-    //             borderColor: 'rgba(152, 160, 168, 1)',
-    //             borderWidth: 1,
-    //         }
-    //     ]
-    // };
-
-    // // Chart configuration
-    // const config1 = {
-    //     type: 'bar', // Bar chart type
-    //     data: data1,
-    //     options: {
-    //         responsive: true,
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top',
-    //             },
-    //             title: {
-    //                 display: true,
-    //                 text: 'No. of Vehicle'
-    //             }
-    //         },
-    //         scales: {
-    //             x: {
-    //                 stacked: false // Set to true if you want stacked bars
-    //             },
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         }
-    //     }
-    // };
-
-    // // Render the chart
-    // new Chart(ctx1, config1);
-
-
-    // Get the canvas element
-    // const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
-
-    // // Data for the bar chart
-    // const data2 = {
-    //     labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-    //     datasets: [{
-    //             label: 'Working',
-    //             data: [50, 60, 100, 270, 108, 167, 188, 98],
-    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
-    //             borderColor: 'rgba(6, 154, 235, 1)',
-    //             borderWidth: 1,
-    //         },
-    //         {
-    //             label: 'Not-Working',
-    //             data: [20, 10, 19, 90, 40, 10, 46, 21],
-    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
-    //             borderColor: 'rgba(255, 159, 67, 1)',
-    //             borderWidth: 1,
-    //         }
-    //     ]
-    // };
-
-    // // Chart configuration
-    // const config2 = {
-    //     type: 'bar', // Bar chart type
-    //     data: data2,
-    //     options: {
-    //         responsive: true,
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top',
-    //             }
-    //         },
-    //         scales: {
-    //             x: {
-    //                 stacked: false // Set to true if you want stacked bars
-    //             },
-    //             y: {
-    //                 beginAtZero: true
-    //             }
-    //         }
-    //     }
-    // };
-
-    // // Render the chart
-    // new Chart(ctx2, config2);
-
-    
-
-    // const labels = ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'];
-
-    // // BAR DATA
-    // const productA = [30, 40, 50, 60, 50, 45, 30, 40, 20];
-    // const productB = [20, 30, 40, 20, 35, 30, 40, 50, 60];
-
-    // // LINE DATA (same values as bar stack)
-    // const lineA = [...productA];
-    // const lineB = [...productB];
-
-    // const ctx3 = document.getElementById('comboChart').getContext('2d');
-
-    // new Chart(ctx3, {
-    //     data: {
-    //         labels: labels,
-    //         datasets: [
-    //             /* STACKED BARS */
-    //             {
-    //                 type: 'bar',
-    //                 label: 'Male',
-    //                 data: productA,
-    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
-    //                 stack: 'stack1'
-    //             },
-    //             {
-    //                 type: 'bar',
-    //                 label: 'Female',
-    //                 data: productB,
-    //                 backgroundColor: 'rgba(255, 159, 64, 0.85)',
-    //                 stack: 'stack1'
-    //             },
-
-    //             /* LINES FOR EACH STACK */
-    //             {
-    //                 type: 'line',
-    //                 label: 'Male',
-    //                 data: lineA,
-    //                 borderColor: 'blue',
-    //                 borderWidth: 2,
-    //                 tension: 0.3,
-    //                 fill: false,
-    //                 pointRadius: 4,
-    //                 pointBackgroundColor: 'blue'
-    //             },
-    //             {
-    //                 type: 'line',
-    //                 label: 'Female',
-    //                 data: lineB,
-    //                 borderColor: 'orange',
-    //                 borderWidth: 2,
-    //                 tension: 0.3,
-    //                 fill: false,
-    //                 pointRadius: 4,
-    //                 pointBackgroundColor: 'orange'
-    //             }
-    //         ]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //         scales: {
-    //             x: {
-    //                 stacked: true
-    //             },
-    //             y: {
-    //                 stacked: true,
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top'
-    //             }
-    //         }
-    //     }
-    // });
-
-    
-
-    // const labelsFireReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
-
-    // // BAR DATA
-    // const productAFireReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
-
-    // // LINE DATA (same values as bar stack)
-    // const lineAFireReport = [...productAFireReport];
-
-    // const ctx4 = document.getElementById('FireReportNoOfIncidentChart').getContext('2d');
-
-    // new Chart(ctx4, {
-    //     data: {
-    //         labels: labelsFireReport,
-    //         datasets: [
-    //             /* STACKED BARS */
-    //             {
-    //                 type: 'bar',
-    //                 label: '',
-    //                 data: productAFireReport,
-    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
-    //                 stack: 'stack1'
-    //             },
-
-    //             /* LINES FOR EACH STACK */
-    //             {
-    //                 type: 'line',
-    //                 label: '',
-    //                 data: lineAFireReport,
-    //                 borderColor: 'blue',
-    //                 borderWidth: 2,
-    //                 tension: 0.3,
-    //                 fill: false,
-    //                 pointRadius: 4,
-    //                 pointBackgroundColor: 'blue'
-    //             }
-    //         ]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //         scales: {
-    //             x: {
-    //                 stacked: true
-    //             },
-    //             y: {
-    //                 stacked: true,
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top'
-    //             }
-    //         }
-    //     }
-    // });
-
-    
-
-    // const labelsRescueReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
-
-    // // BAR DATA
-    // const productARescueReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
-
-    // // LINE DATA (same values as bar stack)
-    // const lineARescueReport = [...productARescueReport];
-
-    // const ctx5 = document.getElementById('RescueReportNoOfIncidentChart').getContext('2d');
-
-    // new Chart(ctx5, {
-    //     data: {
-    //         labels: labelsRescueReport,
-    //         datasets: [
-    //             /* STACKED BARS */
-    //             {
-    //                 type: 'bar',
-    //                 label: '',
-    //                 data: productARescueReport,
-    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
-    //                 stack: 'stack1'
-    //             },
-
-    //             /* LINES FOR EACH STACK */
-    //             {
-    //                 type: 'line',
-    //                 label: '',
-    //                 data: lineARescueReport,
-    //                 borderColor: 'blue',
-    //                 borderWidth: 2,
-    //                 tension: 0.3,
-    //                 fill: false,
-    //                 pointRadius: 4,
-    //                 pointBackgroundColor: 'blue'
-    //             }
-    //         ]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //         scales: {
-    //             x: {
-    //                 stacked: true
-    //             },
-    //             y: {
-    //                 stacked: true,
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top'
-    //             }
-    //         }
-    //     }
-    // });
-
-    
-    
-    // const labelsReliefReport = ['Almora', 'Bageshwar', 'Chamoli', 'Champawat', 'Dehradun', 'Haridwar', 'Nainital', 'Pauri Garhwal', 'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 'Udham Singh Nagar', 'Uttarkashi'];
-
-    // // BAR DATA
-    // const productAReliefReport = [30, 40, 50, 60, 50, 45, 30, 40, 20, 30, 40, 50, 60];
-
-    // // LINE DATA (same values as bar stack)
-    // const lineAReliefReport = [...productAReliefReport];
-
-    // const ctx6 = document.getElementById('ReliefReportNoOfIncidentChart').getContext('2d');
-
-    // new Chart(ctx6, {
-    //     data: {
-    //         labels: labelsReliefReport,
-    //         datasets: [
-    //             /* STACKED BARS */
-    //             {
-    //                 type: 'bar',
-    //                 label: '',
-    //                 data: productAReliefReport,
-    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
-    //                 stack: 'stack1'
-    //             },
-
-    //             /* LINES FOR EACH STACK */
-    //             {
-    //                 type: 'line',
-    //                 label: '',
-    //                 data: lineAReliefReport,
-    //                 borderColor: 'blue',
-    //                 borderWidth: 2,
-    //                 tension: 0.3,
-    //                 fill: false,
-    //                 pointRadius: 4,
-    //                 pointBackgroundColor: 'blue'
-    //             }
-    //         ]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //         scales: {
-    //             x: {
-    //                 stacked: true
-    //             },
-    //             y: {
-    //                 stacked: true,
-    //                 beginAtZero: true
-    //             }
-    //         },
-    //         plugins: {
-    //             legend: {
-    //                 position: 'top'
-    //             }
-    //         }
-    //     }
-    // });
 
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).on('change', '#dashboard_dis', function () {
+    $(document).on('change', '#dashboard_dis', function () {
 
-    let district_id = $(this).val();
+        let district_id = $(this).val();
 
-    // reset fire station dropdown
-    $('#dashboard_fire').html('<option value="">Loading...</option>');
+        $('#dashboard_fire').html('<option value="">Loading...</option>');
 
-    if (district_id == '') {
-        $('#dashboard_fire').html('<option value="">--- Select Fire Station ---</option>');
-        return;
-    }
-
-    $.ajax({
-        url: "{{ url('get-fire-stations') }}/" + district_id,
-        type: "GET",
-        success: function (res) {
-
-            let options = '<option value="">--- Select Fire Station ---</option>';
-
-            res.forEach(function (fs) {
-                options += `<option value="${fs.id}">${fs.name}</option>`;
-            });
-
-            $('#dashboard_fire').html(options);
+        if (district_id == '') {
+            $('#dashboard_fire').html('<option value="">--- Select Fire Station ---</option>');
+            return;
         }
-    });
 
-});
+        $.ajax({
+            url: "{{ url('get-fire-stations') }}/" + district_id,
+            type: "GET",
+            success: function (res) {
+
+                let options = '<option value="">--- Select Fire Station ---</option>';
+
+                res.forEach(function (fs) {
+                    options += `<option value="${fs.id}">${fs.name}</option>`;
+                });
+
+                $('#dashboard_fire').html(options);
+            }
+        });
+
+    });
 </script>
 <script>
     let dashboardData = null;
-    // $(document).on('click', '#dashboardfilterBtn', function () {
-
-    //     let start_date  = $('#start_date').val();
-    //     let end_date    = $('#end_date').val();
-    //     let district_id = $('#dashboard_dis').val();
-    //     let station_id  = $('#dashboard_fire').val();
-
-    //     $.ajax({
-    //         url: "{{ route('admin.getNocDashboardData') }}",
-    //         type: "POST",
-    //         data: {
-    //             _token: "{{ csrf_token() }}",
-    //             start_date,
-    //             end_date,
-    //             district_id,
-    //             station_id
-    //         },
-    //         success: function(res) {
-
-    //             dashboardData = res;
-
-    //             $('#all_total_received').text(res.all.total_received);
-    //             $('#all_total_approved').text(res.all.approved);
-    //             $('#all_total_reverted').text(res.all.reverted);
-    //             $('#all_total_in_process').text(res.all.in_process);
-    //             $('#all_total_pending').text(res.all.pending);
-
-    //             $('#pre_total_received').text(res.pre_est.total_received);
-    //             $('#pre_total_approved').text(res.pre_est.approved);
-    //             $('#pre_total_reverted').text(res.pre_est.reverted);
-    //             $('#pre_total_in_process').text(res.pre_est.in_process);
-    //             $('#pre_total_pending').text(res.pre_est.pending);
-
-    //             // 🔥 Pre-Operational
-    //             $('#op_total_received').text(res.pre_op.total_received);
-    //             $('#op_total_approved').text(res.pre_op.approved);
-    //             $('#op_total_reverted').text(res.pre_op.reverted);
-    //             $('#op_total_in_process').text(res.pre_op.in_process);
-    //             $('#op_total_pending').text(res.pre_op.pending);
-
-    //             // 🔥 Renewal
-    //             $('#ren_total_received').text(res.renewal.total_received);
-    //             $('#ren_total_approved').text(res.renewal.approved);
-    //             $('#ren_total_reverted').text(res.renewal.reverted);
-    //             $('#ren_total_in_process').text(res.renewal.in_process);
-    //             $('#ren_total_pending').text(res.renewal.pending);
-
-    //             renderTable(res.tables.all.approved, '#all_approved_table');
-    //             renderTable(res.tables.all.reverted, '#all_reverted_table');
-
-    //             renderTable(res.tables.pre_est.approved, '#pre_est_approved_table');
-    //             renderTable(res.tables.pre_est.reverted, '#pre_est_reverted_table');
-
-    //             renderTable(res.tables.pre_op.approved, '#pre_op_approved_table');
-    //             renderTable(res.tables.pre_op.reverted, '#pre_op_reverted_table');
-
-    //             renderTable(res.tables.renewal.approved, '#renewal_approved_table');
-    //             renderTable(res.tables.renewal.reverted, '#renewal_reverted_table');
-
-    //             updatePieChart(res.all, 'AllNOCApplicationByStatusPieChart');
-    //             updateBarChart(res.district_chart.all, 'AllNOCApplicationByStatusBarChart');
-
-    //             updateTypeBarChart(res.type_chart.all, 'AllNOCApplicationByTypeBarChart');
-    //             updateRejectPieChart(res.reject_chart.all, 'AllNOCRejectPie');
-
-    //             renderStatusTable(res.status_table.all, '#all_status_table');
-    //         },
-    //         complete: function() {
-    //             let start = formatDate(start_date);
-    //             let end   = formatDate(end_date);
-
-    //             // ALL
-    //             $('#all_approved_title').text(`All (Approved) — ${start} to ${end}`);
-    //             $('#all_reverted_title').text(`All (Reverted) — ${start} to ${end}`);
-
-
-    //             // Pre-Establishment
-    //             $('#pre_est_approved_title').text(`Pre-Establishment (Approved) — ${start} to ${end}`);
-    //             $('#pre_est_reverted_title').text(`Pre-Establishment (Reverted) — ${start} to ${end}`);
-
-    //             // Pre-Operational
-    //             $('#pre_op_approved_title').text(`Pre-Operational (Approved) — ${start} to ${end}`);
-    //             $('#pre_op_reverted_title').text(`Pre-Operational (Reverted) — ${start} to ${end}`);
-
-    //             // Renewal
-    //             $('#renewal_approved_title').text(`Renewal (Approved) — ${start} to ${end}`);
-    //             $('#renewal_reverted_title').text(`Renewal (Reverted) — ${start} to ${end}`);
-
-    //         }
-
-    //     });
-
-    // });
 
     function loadNOCDashboardData() {
 
@@ -3367,14 +2329,12 @@ $(document).on('change', '#dashboard_dis', function () {
                 $('#pre_total_in_process').text(res.pre_est.in_process);
                 $('#pre_total_pending').text(res.pre_est.pending);
 
-                // 🔥 Pre-Operational
                 $('#op_total_received').text(res.pre_op.total_received);
                 $('#op_total_approved').text(res.pre_op.approved);
                 $('#op_total_reverted').text(res.pre_op.reverted);
                 $('#op_total_in_process').text(res.pre_op.in_process);
                 $('#op_total_pending').text(res.pre_op.pending);
 
-                // 🔥 Renewal
                 $('#ren_total_received').text(res.renewal.total_received);
                 $('#ren_total_approved').text(res.renewal.approved);
                 $('#ren_total_reverted').text(res.renewal.reverted);
@@ -3398,6 +2358,7 @@ $(document).on('change', '#dashboard_dis', function () {
 
                 updateTypeBarChart(res.type_chart.all, 'AllNOCApplicationByTypeBarChart');
                 updateRejectPieChart(res.reject_chart.all, 'AllNOCRejectPie');
+                renderRejectList(res.reject_chart.all, '#all_reject_list');
 
                 renderStatusTable(res.status_table.all, '#all_status_table');
             },
@@ -3405,20 +2366,16 @@ $(document).on('change', '#dashboard_dis', function () {
                 let start = formatDate(start_date);
                 let end   = formatDate(end_date);
 
-                // ALL
                 $('#all_approved_title').text(`All (Approved) — ${start} to ${end}`);
                 $('#all_reverted_title').text(`All (Reverted) — ${start} to ${end}`);
 
 
-                // Pre-Establishment
                 $('#pre_est_approved_title').text(`Pre-Establishment (Approved) — ${start} to ${end}`);
                 $('#pre_est_reverted_title').text(`Pre-Establishment (Reverted) — ${start} to ${end}`);
 
-                // Pre-Operational
                 $('#pre_op_approved_title').text(`Pre-Operational (Approved) — ${start} to ${end}`);
                 $('#pre_op_reverted_title').text(`Pre-Operational (Reverted) — ${start} to ${end}`);
 
-                // Renewal
                 $('#renewal_approved_title').text(`Renewal (Approved) — ${start} to ${end}`);
                 $('#renewal_reverted_title').text(`Renewal (Reverted) — ${start} to ${end}`);
 
@@ -3439,6 +2396,7 @@ $(document).on('change', '#dashboard_dis', function () {
             updateBarChart(dashboardData.district_chart.all, 'AllNOCApplicationByStatusBarChart');
             updateTypeBarChart(dashboardData.type_chart.all, 'AllNOCApplicationByTypeBarChart');
             updateRejectPieChart(dashboardData.reject_chart.all, 'AllNOCRejectPie');
+            renderRejectList(dashboardData.reject_chart.all, '#all_reject_list');
             renderStatusTable(dashboardData.status_table.all, '#all_status_table');
         } 
         else if (selected === 'PreEstablishment') {
@@ -3446,6 +2404,7 @@ $(document).on('change', '#dashboard_dis', function () {
             updateBarChart(dashboardData.district_chart.pre_est, 'PreEstablishmentApplicationByStatusBarChart');
             updateTypeBarChart(dashboardData.type_chart.pre_est, 'PreEstablishmentApplicationByTypeBarChart');
             updateRejectPieChart(dashboardData.reject_chart.pre_est, 'PreEstablishmentRejectPie');
+            renderRejectList(dashboardData.reject_chart.pre_est, '#pre_est_reject_list');
             renderStatusTable(dashboardData.status_table.pre_est, '#pre_est_status_table');
         } 
         else if (selected === 'PreOperational') {
@@ -3453,6 +2412,7 @@ $(document).on('change', '#dashboard_dis', function () {
             updateBarChart(dashboardData.district_chart.pre_op, 'PreOperationalApplicationByStatusBarChart');
             updateTypeBarChart(dashboardData.type_chart.pre_op, 'PreOperationalApplicationByTypeBarChart');
             updateRejectPieChart(dashboardData.reject_chart.pre_op, 'PreOperationalRejectPie');
+            renderRejectList(dashboardData.reject_chart.pre_op, '#pre_op_reject_list');
             renderStatusTable(dashboardData.status_table.pre_op, '#pre_op_status_table');
         } 
         else if (selected === 'Renewal') {
@@ -3460,14 +2420,79 @@ $(document).on('change', '#dashboard_dis', function () {
             updateBarChart(dashboardData.district_chart.renewal, 'RenewalApplicationByStatusBarChart');
             updateTypeBarChart(dashboardData.type_chart.renewal, 'RenewalApplicationByTypeBarChart');
             updateRejectPieChart(dashboardData.reject_chart.renewal, 'RenewalRejectPie');
+            renderRejectList(dashboardData.reject_chart.renewal, '#renewal_reject_list');
             renderStatusTable(dashboardData.status_table.renewal, '#renewal_status_table');
         }
 
     });
 
+    $('input[name="tab2"]').change(function () {
+
+        let selected = $(this).attr('id');
+        // let data = window.dashboardData;
+        let data = dashboardData;
+        console.log('Selected Tab:', selected);
+        console.log('Dashboard Data:', data);
+
+        setTimeout(() => {
+
+            if (selected === 'PreEstablishment') {
+
+                updateRejectPieChart(
+                    data.reject_chart.pre_est,
+                    'PreEstablishmentRejectPie'
+                );
+
+                renderRejectList(
+                    data.reject_chart.pre_est,
+                    '#pre_est_reject_list'
+                );
+            }
+
+            else if (selected === 'PreOperational') {
+
+                updateRejectPieChart(
+                    data.reject_chart.pre_op,
+                    'PreOperationalRejectPie'
+                );
+
+                renderRejectList(
+                    data.reject_chart.pre_op,
+                    '#pre_op_reject_list'
+                );
+            }
+
+            else if (selected === 'Renewal') {
+
+                updateRejectPieChart(
+                    data.reject_chart.renewal,
+                    'RenewalRejectPie'
+                );
+
+                renderRejectList(
+                    data.reject_chart.renewal,
+                    '#renewal_reject_list'
+                );
+            }
+
+            else {
+
+                updateRejectPieChart(
+                    data.reject_chart.all,
+                    'AllNOCRejectPie'
+                );
+
+                renderRejectList(
+                    data.reject_chart.all,
+                    '#all_reject_list'
+                );
+            }
+
+        }, 100); // 🔥 important delay
+    });
+
     $(document).ready(function() {
         $('#dashboardfilterBtn').click();
-        // loadNOCDashboardData();
         toggleFilters();
     });
 
@@ -3549,7 +2574,6 @@ $(document).on('change', '#dashboard_dis', function () {
 
             data.forEach((row, index) => {
 
-                // ✅ accumulate totals
                 totals.not_assigned += Number(row.not_assigned || 0);
                 totals.assigned_not_verified += Number(row.assigned_not_verified || 0);
                 totals.verified += Number(row.verified || 0);
@@ -3572,7 +2596,6 @@ $(document).on('change', '#dashboard_dis', function () {
                 `;
             });
 
-            // ✅ add TOTAL row
             html += `
                 <tr style="font-weight:bold; background:#f2f2f2;">
                     <td>Total</td>
@@ -3634,7 +2657,6 @@ $(document).on('change', '#dashboard_dis', function () {
 
         if (vehiclePieChart) vehiclePieChart.destroy();
 
-        // ✅ FILTER ZERO VALUES
         let filteredLabels = [];
         let filteredData = [];
 
@@ -3645,7 +2667,6 @@ $(document).on('change', '#dashboard_dis', function () {
             }
         });
 
-        // ❗ Optional: handle no data case
         if (filteredData.length === 0) {
             console.warn("No data available for pie chart");
         }
@@ -3653,9 +2674,9 @@ $(document).on('change', '#dashboard_dis', function () {
         vehiclePieChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: filteredLabels, // ✅ filtered
+                labels: filteredLabels,
                 datasets: [{
-                    data: filteredData, // ✅ filtered
+                    data: filteredData,
                     backgroundColor: [
                         '#36A2EB', '#FF6384', '#FFCE56',
                         '#4BC0C0', '#9966FF', '#FF9F40'
@@ -3714,7 +2735,6 @@ $(document).on('change', '#dashboard_dis', function () {
     };
     function updateVehicleKPI(data) {
 
-        // reset all to 0 first
         $('.kpi-card .value').text(0);
 
         for (let key in data) {
@@ -3772,7 +2792,7 @@ $(document).on('change', '#dashboard_dis', function () {
         data.forEach(row => {
 
             let districtId = row.district_id;
-            let districtName = row.district_name; // ✅ NEW
+            let districtName = row.district_name;
             let typeHindi = row.vehicle_type;
             let typeEnglish = vehicleMap[typeHindi];
 
@@ -3783,7 +2803,7 @@ $(document).on('change', '#dashboard_dis', function () {
 
             if (!grouped[districtId]) {
                 grouped[districtId] = {
-                    name: districtName, // ✅ store name
+                    name: districtName,
                     data: {}
                 };
             }
@@ -3818,13 +2838,23 @@ $(document).on('change', '#dashboard_dis', function () {
     });
 
     function loadFireReportData(){
-        fetch("{{ route('dashboard.fireReportData') }}")
+
+        let params = new URLSearchParams({
+            district_id: $('#dashboard_dis').val(),
+            station_id: $('#dashboard_fire').val(),
+            from_date: $('#start_date').val(),
+            to_date: $('#end_date').val()
+        });
+
+        fetch("{{ route('dashboard.fireReportData') }}?" + params.toString())
             .then(res => res.json())
             .then(response => {
+
                 updateFireChart(response.labels, response.data);
                 updateFireCategoryPie(response.categoryLabels, response.categoryData);
                 updateFireTypePie(response.typeLabels, response.typeData);
-                updateFireTable(response.raw);
+                updateFireTable(response.table);
+
             })
             .catch(err => console.error(err));
     }
@@ -3873,7 +2903,6 @@ $(document).on('change', '#dashboard_dis', function () {
 
         const ctx = document.getElementById('FireReportNoOfIncidentChart').getContext('2d');
 
-        // destroy old chart
         if (fireChart) {
             fireChart.destroy();
         }
@@ -3908,7 +2937,6 @@ $(document).on('change', '#dashboard_dis', function () {
 
         const ctx = document.getElementById('FireReportCategoryIncidentPieChart');
 
-        // destroy old chart
         if (fireCategoryPieChart) {
             fireCategoryPieChart.destroy();
         }
@@ -3948,29 +2976,36 @@ $(document).on('change', '#dashboard_dis', function () {
 
         let i = 1;
 
-        data.forEach(item => {
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="15">No Data</td></tr>`;
+            return;
+        }
 
-            let row = `
+        data.forEach(row => {
+
+            let html = `
                 <tr>
                     <td>${i++}</td>
-                    <td>${item.districts_name}</td>
-                    <td>${new Date(item.created_at).getMonth() + 1}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>1</td>
+                    <td>${row.district}</td>
+
+                    <td>${row.january || 0}</td>
+                    <td>${row.february || 0}</td>
+                    <td>${row.march || 0}</td>
+                    <td>${row.april || 0}</td>
+                    <td>${row.may || 0}</td>
+                    <td>${row.june || 0}</td>
+                    <td>${row.july || 0}</td>
+                    <td>${row.august || 0}</td>
+                    <td>${row.september || 0}</td>
+                    <td>${row.october || 0}</td>
+                    <td>${row.november || 0}</td>
+                    <td>${row.december || 0}</td>
+
+                    <td><strong>${row.total || 0}</strong></td>
                 </tr>
             `;
 
-            tbody.innerHTML += row;
+            tbody.innerHTML += html;
         });
     }
 
@@ -3986,7 +3021,6 @@ $(document).on('change', '#dashboard_dis', function () {
         }
     }
 
-    // Run on tab change
     $(document).on('change', 'input[name="tab"]', function () {
         toggleFilters();
     });
@@ -4015,13 +3049,6 @@ $(document).on('change', '#dashboard_dis', function () {
         });
     }
 
-    // $(document).on('click', '#dashboardfilterBtn', function () {
-    //     let activeTab = $('input[name="tab"]:checked').attr('id');
-
-    //     if (activeTab === 'rescue') {
-    //         loadRescueDashboardData();
-    //     }
-    // });
 
     let rescueBarChart;
 
@@ -4824,6 +3851,32 @@ $(document).on('change', '#dashboard_dis', function () {
         }
 
         $('#employee_table_body').html(html);
+    }
+
+    function renderRejectList(data, listId) {
+
+        let html = '';
+        let total = data.reduce((sum, item) => sum + Number(item.total), 0);
+
+        data.forEach(item => {
+
+            let percent = total > 0 
+                ? ((item.total / total) * 100).toFixed(0) 
+                : 0;
+
+            // ✅ shorten text
+            let shortText = item.reason.length > 40 
+                ? item.reason.substring(0, 40) + '...' 
+                : item.reason;
+
+            html += `
+                <li title="${item.reason}" style="cursor:pointer">
+                    ${shortText} — ${percent}%
+                </li>
+            `;
+        });
+
+        $(listId).html(html);
     }
 
 

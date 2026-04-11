@@ -308,14 +308,6 @@ class DashboardController extends Controller
                 ->get();
         };
 
-        // $getRejectChart = function($query) {
-        //     return (clone $query)
-        //         ->where('status', 'REJECTED')
-        //         ->select('rejection_reason as reason', DB::raw('COUNT(*) as total'))
-        //         ->groupBy('rejection_reason')
-        //         ->get();
-        // };
-
         $getRejectRaw = function($query) {
             return (clone $query)
                 ->where('status', 'REVERTED')
@@ -585,6 +577,14 @@ class DashboardController extends Controller
             $query->where('fs_fire_report.district_id', Auth::user()->district_id);
         }
 
+        if ($request->filled('district_id')) {
+            $query->where('fs_fire_report.district_id', $request->district_id);
+        }
+
+        if ($request->filled('station_id')) {
+            $query->where('fs_fire_report.station_id', $request->station_id);
+        }
+
         if ($request->filled('from_date')) {
             $query->where('fs_fire_report.created_at', '>=', $request->from_date . ' 00:00:00');
         }
@@ -595,13 +595,14 @@ class DashboardController extends Controller
 
         $reports = $query->get();
 
-        // Example aggregation (customize as needed)
-        $districtData = $reports->groupBy('districts_name')->map->count();
+        $districtData = $reports
+            ->groupBy('districts_name')
+            ->map(fn($items) => count($items));
 
         $categoryLabelsMap = [
             1 => 'Small Fire',
             2 => 'Medium Fire',
-            3 => 'Major/special Fire',
+            3 => 'Major Fire',
             4 => 'Serious Fire',
         ];
 
@@ -636,14 +637,57 @@ class DashboardController extends Controller
             $typeValues[] = $count;
         }
 
+        $tableRaw = DB::table('fs_fire_report as f')
+            ->join('districts as d', 'd.id', '=', 'f.district_id')
+
+            ->when($request->filled('district_id'), fn($q) =>
+                $q->where('f.district_id', $request->district_id)
+            )
+            ->when($request->filled('station_id'), fn($q) =>
+                $q->where('f.station_id', $request->station_id)
+            )
+            ->when($request->filled('from_date'), fn($q) =>
+                $q->where('f.created_at', '>=', $request->from_date . ' 00:00:00')
+            )
+            ->when($request->filled('to_date'), fn($q) =>
+                $q->where('f.created_at', '<=', $request->to_date . ' 23:59:59')
+            )
+
+            ->selectRaw("
+                f.district_id,
+                d.name as district,
+
+                SUM(CASE WHEN MONTH(f.created_at)=1 THEN 1 ELSE 0 END) as january,
+                SUM(CASE WHEN MONTH(f.created_at)=2 THEN 1 ELSE 0 END) as february,
+                SUM(CASE WHEN MONTH(f.created_at)=3 THEN 1 ELSE 0 END) as march,
+                SUM(CASE WHEN MONTH(f.created_at)=4 THEN 1 ELSE 0 END) as april,
+                SUM(CASE WHEN MONTH(f.created_at)=5 THEN 1 ELSE 0 END) as may,
+                SUM(CASE WHEN MONTH(f.created_at)=6 THEN 1 ELSE 0 END) as june,
+                SUM(CASE WHEN MONTH(f.created_at)=7 THEN 1 ELSE 0 END) as july,
+                SUM(CASE WHEN MONTH(f.created_at)=8 THEN 1 ELSE 0 END) as august,
+                SUM(CASE WHEN MONTH(f.created_at)=9 THEN 1 ELSE 0 END) as september,
+                SUM(CASE WHEN MONTH(f.created_at)=10 THEN 1 ELSE 0 END) as october,
+                SUM(CASE WHEN MONTH(f.created_at)=11 THEN 1 ELSE 0 END) as november,
+                SUM(CASE WHEN MONTH(f.created_at)=12 THEN 1 ELSE 0 END) as december,
+
+                COUNT(*) as total
+            ")
+            ->groupBy('f.district_id', 'd.name')
+            ->orderBy('d.name')
+            ->get();
+
         return response()->json([
-            'labels' => $districtData->keys(),
-            'data' => $districtData->values(),
+            'labels'         => $districtData->keys()->values(),
+            'data'           => $districtData->values(),
+
             'categoryLabels' => $categoryLabels,
-            'categoryData' => $categoryValues,
-            'typeLabels' => $typeLabels,
-            'typeData' => $typeValues,
-            'raw' => $reports
+            'categoryData'   => $categoryValues,
+
+            'typeLabels'     => $typeLabels,
+            'typeData'       => $typeValues,
+
+            'table'          => $tableRaw,
+            'raw'            => $reports
         ]);
     }
 
@@ -945,7 +989,6 @@ class DashboardController extends Controller
             ->groupBy('e.designation')
             ->get();
 
-        // ================= PIE =================
         $pie = (clone $query)
             ->select(
                 'e.designation',
@@ -954,7 +997,6 @@ class DashboardController extends Controller
             ->groupBy('e.designation')
             ->get();
 
-        // ================= KPI =================
         $kpi = (clone $query)
             ->select(
                 'e.designation',
@@ -963,7 +1005,6 @@ class DashboardController extends Controller
             ->groupBy('e.designation')
             ->get();
 
-        // ================= TABLE (FIXED ✅) =================
         $table = (clone $query)
             ->select(
                 'd.name as district_name',
