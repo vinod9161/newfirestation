@@ -47,11 +47,9 @@ class DashboardController extends Controller
                 : $this->commonModel->getData($table);
         };
 
-        // 📊 Basic Lists
         $fireStactionList = $getData('fire_stations');
         $districtList     = $this->commonModel->getData('districts'); // usually global
 
-        // 📊 Counts
         $fire_station_count = count($getData('fire_stations')) ?? 0;
         $man_power_count    = count($getData('users')) ?? 0;
         $vehicles_count     = count($getData('fs_vehicles')) ?? 0;
@@ -908,6 +906,77 @@ class DashboardController extends Controller
         return response()->json([
             'bar' => $bar,
             'pie' => $pie
+        ]);
+    }
+
+    public function getEmployeeDashboardData(Request $request)
+    {
+        $district_id = $request->district_id;
+        $station_id  = $request->station_id;
+
+        $query = DB::table('fs_employee as e')
+            ->leftJoin('districts as d', 'd.id', '=', 'e.district_id');
+
+        if (!empty($district_id)) {
+            $query->where('e.district_id', $district_id);
+        }
+
+        if (!empty($station_id)) {
+            $query->where('e.station_id', $station_id);
+        }
+
+        // ================= GENDER =================
+        $gender = (clone $query)
+            ->select(
+                'e.designation',
+                DB::raw("SUM(CASE WHEN e.gender = 'Male' THEN 1 ELSE 0 END) as male"),
+                DB::raw("SUM(CASE WHEN e.gender = 'Female' THEN 1 ELSE 0 END) as female")
+            )
+            ->groupBy('e.designation')
+            ->get();
+
+        // ================= BAR =================
+        $bar = (clone $query)
+            ->select(
+                'e.designation',
+                DB::raw("SUM(CASE WHEN e.status = 'Active' THEN 1 ELSE 0 END) as working"),
+                DB::raw("SUM(CASE WHEN e.status != 'Active' THEN 1 ELSE 0 END) as not_working")
+            )
+            ->groupBy('e.designation')
+            ->get();
+
+        // ================= PIE =================
+        $pie = (clone $query)
+            ->select(
+                'e.designation',
+                DB::raw('COUNT(e.id) as total')
+            )
+            ->groupBy('e.designation')
+            ->get();
+
+        // ================= KPI =================
+        $kpi = (clone $query)
+            ->select(
+                'e.designation',
+                DB::raw('COUNT(e.id) as available')
+            )
+            ->groupBy('e.designation')
+            ->get();
+
+        // ================= TABLE (FIXED ✅) =================
+        $table = (clone $query)
+            ->select(
+                'd.name as district_name',
+                'e.designation'
+            )
+            ->get();
+
+        return response()->json([
+            'bar'    => $bar,
+            'gender' => $gender,
+            'pie'    => $pie,
+            'kpi'    => $kpi,
+            'table'  => $table
         ]);
     }
 

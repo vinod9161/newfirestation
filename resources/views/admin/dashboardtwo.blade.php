@@ -1934,7 +1934,7 @@
                   
                     <div class="row">
                         <div class="col-md-12" style="overflow-x: scroll;">
-                            <div class="card-container">
+                            <div class="card-container" id="employee_kpi_container">
                                 <div class="kpi-card">
                                     <h4>DDT</h4>
                                     <div class="value">20/28</div>
@@ -2039,7 +2039,7 @@
                                                     <th class="text-center">Available</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="employee_table_body">
                                               <tr><td>1</td><td>Almora</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td></tr>
                                               <tr><td>2</td><td>Bageshwar</td><td>2</td><td>1</td><td>0</td><td>6.33</td><td>3</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td></tr>
                                               <tr><td>3</td><td>Chamoli</td><td>0</td><td>0</td><td>1</td><td>5.00</td><td>1</td><td>1</td><td>0</td><td>1</td><td>4.50</td><td>2</td><td>1</td><td>4.50</td></tr>
@@ -2481,24 +2481,24 @@
     //     }
     // });
 
-    new Chart(document.getElementById('EmployeeVacancyPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-            datasets: [{
-                data: [46, 18, 27, 9, 51, 29, 33, 19],
-                backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('EmployeeVacancyPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
+    //         datasets: [{
+    //             data: [46, 18, 27, 9, 51, 29, 33, 19],
+    //             backgroundColor: ['#f67fa7', '#5f7670', '#98a0a8', '#f5b041', '#2f80ed', '#ff7f50', '#00a0a8', '#f5ff41']
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
 
     new Chart(document.getElementById('DisasterEquipmentPieChart'), {
@@ -2901,131 +2901,131 @@
 
 
     // Get the canvas element
-    const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
+    // const ctx2 = document.getElementById('EmployeeSanctionedAvailableChart').getContext('2d');
 
-    // Data for the bar chart
-    const data2 = {
-        labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
-        datasets: [{
-                label: 'Working',
-                data: [50, 60, 100, 270, 108, 167, 188, 98],
-                backgroundColor: 'rgba(6, 154, 235, 0.7)',
-                borderColor: 'rgba(6, 154, 235, 1)',
-                borderWidth: 1,
-            },
-            {
-                label: 'Not-Working',
-                data: [20, 10, 19, 90, 40, 10, 46, 21],
-                backgroundColor: 'rgba(255, 159, 67, 0.7)',
-                borderColor: 'rgba(255, 159, 67, 1)',
-                borderWidth: 1,
-            }
-        ]
-    };
+    // // Data for the bar chart
+    // const data2 = {
+    //     labels: ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'],
+    //     datasets: [{
+    //             label: 'Working',
+    //             data: [50, 60, 100, 270, 108, 167, 188, 98],
+    //             backgroundColor: 'rgba(6, 154, 235, 0.7)',
+    //             borderColor: 'rgba(6, 154, 235, 1)',
+    //             borderWidth: 1,
+    //         },
+    //         {
+    //             label: 'Not-Working',
+    //             data: [20, 10, 19, 90, 40, 10, 46, 21],
+    //             backgroundColor: 'rgba(255, 159, 67, 0.7)',
+    //             borderColor: 'rgba(255, 159, 67, 1)',
+    //             borderWidth: 1,
+    //         }
+    //     ]
+    // };
 
-    // Chart configuration
-    const config2 = {
-        type: 'bar', // Bar chart type
-        data: data2,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            },
-            scales: {
-                x: {
-                    stacked: false // Set to true if you want stacked bars
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    };
+    // // Chart configuration
+    // const config2 = {
+    //     type: 'bar', // Bar chart type
+    //     data: data2,
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top',
+    //             }
+    //         },
+    //         scales: {
+    //             x: {
+    //                 stacked: false // Set to true if you want stacked bars
+    //             },
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         }
+    //     }
+    // };
 
-    // Render the chart
-    new Chart(ctx2, config2);
+    // // Render the chart
+    // new Chart(ctx2, config2);
 
     
 
-    const labels = ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'];
+    // const labels = ['DDT', 'CFO', 'FSO', 'FSSO', 'LFM', 'DVR', 'FM', '4th Class'];
 
-    // BAR DATA
-    const productA = [30, 40, 50, 60, 50, 45, 30, 40, 20];
-    const productB = [20, 30, 40, 20, 35, 30, 40, 50, 60];
+    // // BAR DATA
+    // const productA = [30, 40, 50, 60, 50, 45, 30, 40, 20];
+    // const productB = [20, 30, 40, 20, 35, 30, 40, 50, 60];
 
-    // LINE DATA (same values as bar stack)
-    const lineA = [...productA];
-    const lineB = [...productB];
+    // // LINE DATA (same values as bar stack)
+    // const lineA = [...productA];
+    // const lineB = [...productB];
 
-    const ctx3 = document.getElementById('comboChart').getContext('2d');
+    // const ctx3 = document.getElementById('comboChart').getContext('2d');
 
-    new Chart(ctx3, {
-        data: {
-            labels: labels,
-            datasets: [
-                /* STACKED BARS */
-                {
-                    type: 'bar',
-                    label: 'Male',
-                    data: productA,
-                    backgroundColor: 'rgba(54, 162, 235, 0.85)',
-                    stack: 'stack1'
-                },
-                {
-                    type: 'bar',
-                    label: 'Female',
-                    data: productB,
-                    backgroundColor: 'rgba(255, 159, 64, 0.85)',
-                    stack: 'stack1'
-                },
+    // new Chart(ctx3, {
+    //     data: {
+    //         labels: labels,
+    //         datasets: [
+    //             /* STACKED BARS */
+    //             {
+    //                 type: 'bar',
+    //                 label: 'Male',
+    //                 data: productA,
+    //                 backgroundColor: 'rgba(54, 162, 235, 0.85)',
+    //                 stack: 'stack1'
+    //             },
+    //             {
+    //                 type: 'bar',
+    //                 label: 'Female',
+    //                 data: productB,
+    //                 backgroundColor: 'rgba(255, 159, 64, 0.85)',
+    //                 stack: 'stack1'
+    //             },
 
-                /* LINES FOR EACH STACK */
-                {
-                    type: 'line',
-                    label: 'Male',
-                    data: lineA,
-                    borderColor: 'blue',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'blue'
-                },
-                {
-                    type: 'line',
-                    label: 'Female',
-                    data: lineB,
-                    borderColor: 'orange',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'orange'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    stacked: true
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top'
-                }
-            }
-        }
-    });
+    //             /* LINES FOR EACH STACK */
+    //             {
+    //                 type: 'line',
+    //                 label: 'Male',
+    //                 data: lineA,
+    //                 borderColor: 'blue',
+    //                 borderWidth: 2,
+    //                 tension: 0.3,
+    //                 fill: false,
+    //                 pointRadius: 4,
+    //                 pointBackgroundColor: 'blue'
+    //             },
+    //             {
+    //                 type: 'line',
+    //                 label: 'Female',
+    //                 data: lineB,
+    //                 borderColor: 'orange',
+    //                 borderWidth: 2,
+    //                 tension: 0.3,
+    //                 fill: false,
+    //                 pointRadius: 4,
+    //                 pointBackgroundColor: 'orange'
+    //             }
+    //         ]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         scales: {
+    //             x: {
+    //                 stacked: true
+    //             },
+    //             y: {
+    //                 stacked: true,
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         plugins: {
+    //             legend: {
+    //                 position: 'top'
+    //             }
+    //         }
+    //     }
+    // });
 
     
 
@@ -3491,6 +3491,8 @@ $(document).on('change', '#dashboard_dis', function () {
         } 
         else if (selectedTab === 'hydrent') {
             loadHydrantDashboardData();
+        }else if (selectedTab === 'employee') {
+            loadEmployeeDashboardData();
         }
     
     });
@@ -4380,7 +4382,6 @@ $(document).on('change', '#dashboard_dis', function () {
 
         if (hydrantPieChart) hydrantPieChart.destroy();
 
-        // 🔥 filter zero
         let labels = [];
         let values = [];
 
@@ -4401,6 +4402,428 @@ $(document).on('change', '#dashboard_dis', function () {
                 }]
             }
         });
+    }
+
+    $(document).on('click', 'label[for="employee"]', function () {
+        loadEmployeeDashboardData();
+    });
+
+    function loadEmployeeDashboardData() {
+
+        let district_id = $('#dashboard_dis').val();
+        let station_id  = $('#dashboard_fire').val();
+
+        $.ajax({
+            url: "{{ route('admin.getEmployeeDashboardData') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                district_id,
+                station_id
+            },
+            success: function(res) {
+
+                updateEmployeeBar(res.bar);
+                updateEmployeeGenderChart(res.gender);
+                updateEmployeePie(res.pie);
+                renderEmployeeKPI(res.kpi);
+                renderEmployeeTable(res.table);
+
+            }
+        });
+    }
+
+    let employeeBarChart;
+
+    function updateEmployeeBar(data) {
+
+        let ctx = document.getElementById('EmployeeSanctionedAvailableChart');
+
+        if (employeeBarChart) employeeBarChart.destroy();
+
+        const designationOrder = ["DDT","CFO","FSO","FSSO","LFM","DVR","FM","4th Class"];
+
+        const designationMap = {
+            "deputy director": "DDT",
+            "chief fire officer": "CFO",
+            "fire station officer": "FSO",
+            "fire station second officer": "FSSO",
+            "leading fireman": "LFM",
+            "fire service driver": "DVR",
+            "driver": "DVR",
+            "fireman": "FM",
+            "sweeper": "4th Class",
+            "cook/kahar": "4th Class"
+        };
+
+        // 👉 Step 1: Aggregate
+        let grouped = {};
+
+        data.forEach(d => {
+            let key = d.designation.toLowerCase().trim();
+            let short = designationMap[key] || d.designation;
+
+            if (!grouped[short]) {
+                grouped[short] = { working: 0, not_working: 0 };
+            }
+
+            grouped[short].working += parseInt(d.working || 0);
+            grouped[short].not_working += parseInt(d.not_working || 0);
+        });
+
+        // 👉 Step 2: Apply FIXED ORDER
+        let labels = [];
+        let workingData = [];
+        let notWorkingData = [];
+
+        designationOrder.forEach(role => {
+            labels.push(role);
+            workingData.push(grouped[role]?.working || 0);
+            notWorkingData.push(grouped[role]?.not_working || 0);
+        });
+
+        // 👉 Chart
+        employeeBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Working',
+                        data: workingData,
+                        backgroundColor: 'rgba(6, 154, 235, 0.7)'
+                    },
+                    {
+                        label: 'Not-Working',
+                        data: notWorkingData,
+                        backgroundColor: 'rgba(255, 159, 67, 0.7)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: {
+                        stacked: false
+                    },
+                    y: { beginAtZero: true, }
+                }
+            }
+        });
+    }
+
+    let employeeGenderChart;
+
+
+    function updateEmployeeGenderChart(data) {
+
+        let ctx = document.getElementById('comboChart');
+
+        if (employeeGenderChart) employeeGenderChart.destroy();
+
+        const designationOrder = ["DDT","CFO","FSO","FSSO","LFM","DVR","FM","4th Class"];
+
+        const designationMap = {
+            "deputy director": "DDT",
+            "chief fire officer": "CFO",
+            "fire station officer": "FSO",
+            "fire station second officer": "FSSO",
+            "leading fireman": "LFM",
+            "fire service driver": "DVR",
+            "driver": "DVR",
+            "fireman": "FM",
+            "sweeper": "4th Class",
+            "cook/kahar": "4th Class"
+        };
+
+        // 👉 Step 1: Aggregate
+        let grouped = {};
+
+        data.forEach(d => {
+            let key = d.designation.toLowerCase().trim();
+            let short = designationMap[key] || d.designation;
+
+            if (!grouped[short]) {
+                grouped[short] = { male: 0, female: 0 };
+            }
+
+            grouped[short].male += parseInt(d.male || 0);
+            grouped[short].female += parseInt(d.female || 0);
+        });
+
+        // 👉 Step 2: Fixed Order
+        let labels = [];
+        let maleData = [];
+        let femaleData = [];
+
+        designationOrder.forEach(role => {
+            labels.push(role);
+            maleData.push(grouped[role]?.male || 0);
+            femaleData.push(grouped[role]?.female || 0);
+        });
+
+        // 👉 Chart
+        employeeGenderChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+
+                    // 🔵 BAR - Male
+                    {
+                        type: 'bar',
+                        label: 'Male',
+                        data: maleData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.85)',
+                        stack: 'stack1'
+                    },
+
+                    // 🟠 BAR - Female
+                    {
+                        type: 'bar',
+                        label: 'Female',
+                        data: femaleData,
+                        backgroundColor: 'rgba(255, 159, 64, 0.85)',
+                        stack: 'stack1'
+                    },
+
+                    // 🔵 LINE - Male
+                    {
+                        type: 'line',
+                        label: 'Male Trend',
+                        data: maleData,
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4
+                    },
+
+                    // 🟠 LINE - Female
+                    {
+                        type: 'line',
+                        label: 'Female Trend',
+                        data: femaleData,
+                        borderColor: 'orange',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 50
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    let employeePieChart;
+
+    function updateEmployeePie(data) {
+
+        let ctx = document.getElementById('EmployeeVacancyPieChart');
+
+        if (employeePieChart) employeePieChart.destroy();
+
+        const designationOrder = ["DDT","CFO","FSO","FSSO","LFM","DVR","FM","4th Class"];
+
+        const designationMap = {
+            "deputy director": "DDT",
+            "chief fire officer": "CFO",
+            "fire station officer": "FSO",
+            "fire station second officer": "FSSO",
+            "leading fireman": "LFM",
+            "fire service driver": "DVR",
+            "driver": "DVR",
+            "fireman": "FM",
+            "sweeper": "4th Class",
+            "cook/kahar": "4th Class"
+        };
+
+        // 👉 Step 1: Aggregate
+        let grouped = {};
+
+        data.forEach(d => {
+            let key = d.designation.toLowerCase().trim();
+            let short = designationMap[key] || d.designation;
+
+            if (!grouped[short]) {
+                grouped[short] = 0;
+            }
+
+            grouped[short] += parseInt(d.total || 0);
+        });
+
+        // 👉 Step 2: Apply fixed order
+        let labels = [];
+        let values = [];
+
+        designationOrder.forEach(role => {
+            let val = grouped[role] || 0;
+
+            if (val > 0) {   // 🔥 hide zero values
+                labels.push(role);
+                values.push(val);
+            }
+        });
+
+        // 👉 Chart
+        employeePieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        '#2f80ed',
+                        '#ff7f50',
+                        '#98a0a8',
+                        '#f5b041',
+                        '#00a0a8',
+                        '#9b59b6',
+                        '#e74c3c',
+                        '#2ecc71'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    function renderEmployeeKPI(data) {
+
+        const designationOrder = ["DDT","CFO","FSO","FSSO","LFM","DVR","FM","4th Class"];
+
+        const designationMap = {
+            "deputy director": "DDT",
+            "chief fire officer": "CFO",
+            "fire station officer": "FSO",
+            "fire station second officer": "FSSO",
+            "leading fireman": "LFM",
+            "fire service driver": "DVR",
+            "driver": "DVR",
+            "fireman": "FM",
+            "sweeper": "4th Class",
+            "cook/kahar": "4th Class"
+        };
+
+        let grouped = {};
+
+        data.forEach(d => {
+            let key = d.designation.toLowerCase().trim();
+            let short = designationMap[key];
+
+            if (!short) return;
+
+            if (!grouped[short]) {
+                grouped[short] = { available: 0, approved: 0 };
+            }
+
+            grouped[short].available += parseInt(d.available || 0);
+            grouped[short].approved += parseInt(d.approved || 0);
+        });
+
+        let html = '';
+
+        designationOrder.forEach(role => {
+
+            let available = grouped[role]?.available || 0;
+            let approved  = grouped[role]?.approved || 0;
+
+            html += `
+                <div class="kpi-card">
+                    <h4>${role}</h4>
+                    <div class="value">${available}/${approved}</div>
+                </div>
+            `;
+        });
+
+        $('#employee_kpi_container').html(html);
+    }
+
+    function renderEmployeeTable(data) {
+
+        if (!data || !Array.isArray(data)) return;
+
+        const designationMap = {
+            "chief fire officer": "CFO",
+            "fire station officer": "FSO",
+            "fire station second officer": "FSSO",
+            "leading fireman": "LFM",
+            "fire service driver": "DVR",
+            "driver": "DVR",
+            "fireman": "FM"
+        };
+
+        const roles = ["CFO","FSO","FSSO","LFM","DVR","FM"];
+
+        let grouped = {};
+
+        data.forEach(row => {
+
+            let district = row.district_name;
+
+            let key = row.designation.toLowerCase().trim();
+            let role = designationMap[key];
+
+            if (!role) return; // skip unknown
+
+            // init district
+            if (!grouped[district]) {
+                grouped[district] = {};
+                roles.forEach(r => {
+                    grouped[district][r] = { approved: 0, available: 0 };
+                });
+            }
+
+            // ✅ Available = count employees
+            grouped[district][role].available += 1;
+        });
+
+        let html = '';
+        let sr = 1;
+
+        for (let district in grouped) {
+
+            html += `<tr>`;
+            html += `<td>${sr++}</td>`;
+            html += `<td>${district}</td>`;
+
+            roles.forEach(role => {
+                html += `<td>${grouped[district][role].approved}</td>`;
+                html += `<td>${grouped[district][role].available}</td>`;
+            });
+
+            html += `</tr>`;
+        }
+
+        $('#employee_table_body').html(html);
     }
 
 

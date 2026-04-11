@@ -125,6 +125,7 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::post('/admin/rescue-dashboard-data', [DashboardController::class, 'getRescueDashboardData'])->name('admin.getRescueDashboardData');
     Route::post('/admin/relief-dashboard-data', [DashboardController::class, 'getReliefDashboardData'])->name('admin.getReliefDashboardData');
     Route::post('/admin/hydrant-dashboard-data', [DashboardController::class, 'getHydrantDashboardData'])->name('admin.getHydrantDashboardData');
+    Route::post('/admin/employee-dashboard-data', [DashboardController::class, 'getEmployeeDashboardData'])->name('admin.getEmployeeDashboardData');
     // Route::post('dashboard/noc-table-data', [DashboardController::class, 'getNocTableData'])->name('admin.getNocTableData');
     
     Route::get('awarnessChart', [DashboardController::class, 'postawarnessChart'])->name('admin.postawarnessChart');
