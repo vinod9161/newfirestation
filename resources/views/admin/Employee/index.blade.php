@@ -21,9 +21,11 @@
             </a>
         </div>
         <div>
+            @if(Auth::user()->type == 0 || Auth::user()->type == 1)
             <a href="<?php echo route('admin.addemployees');?>" class="btn ripple btn-wave  btn-success mb-0">
                 <i class="fe fe-plus me-1"></i> Add New Employee
             </a>
+            @endif
         </div>
     </div>
 </div>
@@ -35,49 +37,41 @@
         <div class="advanced-search br-3">
             <div class="row align-items-center">
                 <div class="col-md-12">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Page :</label>
-                                <input type="text" class="form-control" id="filter_page" placeholder=" Enter Page">
-                            </div>
+                            <select id="filter_district" class="form-control" {{ Auth::user()->type == 2 ? 'disabled' : '' }}>
+                                <option value="">All District</option>
+                                @foreach($districts as $district)
+                                    <option value="{{ $district->id }}"
+                                        {{ request('district', Auth::user()->district_id) == $district->id ? 'selected' : '' }}>
+                                        {{ $district->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Title :</label>
-                                <input type="text" class="form-control" id="filter_title" placeholder=" Enter Title">
-                            </div>
+                            <select id="filter_station" class="form-control">
+                                <option value="">All Station</option>
+                            </select>
                         </div>
+
                         <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Type :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
+                            <input type="text" id="filter_designation" class="form-control" placeholder="Designation">
                         </div>
+
                         <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Status :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_status">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
-                            </div>
+                            <button class="btn btn-primary" onclick="applyFilter()">Apply</button>
+                            <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <hr>
+            <!-- <hr>
             <div class="text-end">
                 <a href="javascript:void(0);" onclick="filter_slider();" class="btn btn-primary">Apply</a>
                 <a href="javascript:void(0);" class="btn btn-secondary">Reset</a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -130,11 +124,13 @@
                                     aria-label="Fire Station: activate to sort column ascending" style="width: 106px;">
                                     Fire Station
                                 </th>
-                                <th class="d-none d-md-table-cell text-right sorting" style="width: 133px;" tabindex="0"
-                                    aria-controls="employee-table" rowspan="1" colspan="1"
-                                    aria-label="Actions: activate to sort column ascending">Actions<div
-                                        style="height: 25px;"></div>
-                                </th>
+                                @if(Auth::user()->type != 3)
+                                    <th class="d-none d-md-table-cell text-right sorting" style="width: 133px;" tabindex="0"
+                                        aria-controls="employee-table" rowspan="1" colspan="1"
+                                        aria-label="Actions: activate to sort column ascending">Actions<div
+                                            style="height: 25px;"></div>
+                                    </th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -147,19 +143,24 @@
                                 <td>{{ $employee->designation }}</td>
                                 <td>{{ $employee->district_name }}</td>
                                 <td>{{ $employee->fire_station_name }}</td>
-                                <td class="text-right">
-                                    <a href="{{ route('admin.editemployees', $employee->id) }}"
-                                        class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <form action="{{ route('admin.deleteemployees', $employee->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this Employee?');">
-                                            <i class="fe fe-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
+                                @if(Auth::user()->type != 3)
+                                    <td class="text-right">
+                                        <a href="{{ route('admin.editemployees', $employee->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        @if(Auth::user()->type == 0)
+                                        <form action="{{ route('admin.deleteemployees', $employee->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this Employee?');">
+                                                <i class="fe fe-trash"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>
@@ -200,5 +201,106 @@ $(function(e) {
         },
     });
 });
+
+
+    $(document).ready(function(){
+        // $(document).on('change', '#filter_district', function() {
+        //     let districts = $(this).val();
+        //     let filter_station = '';
+
+        //     if (districts === '') {
+        //         $('#error1').html('Missing Districts Data').delay(3000).fadeOut().css('display', 'block');
+        //         return false;
+        //     }
+
+        //     $.ajax({
+        //         url: '{{ route("admin.getfirestation") }}',
+        //         type: 'POST',
+        //         data: {
+        //             districts: districts,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function(resp) 
+        //         {
+        //             station = '<option value="">Select Station फायर स्टेशन</option>';
+
+        //             console.log(resp);
+                    
+        //             if (resp.status === 0) 
+        //             {
+        //                 station += '<option value="" class="text-danger">No fire station found against this districts</option>';
+        //             } 
+        //             else 
+        //             {
+        //                 $.each(resp.data, function(key, value) 
+        //                 {
+        //                     station += '<option value="' + value.id + '">' + value.name + '</option>';
+        //                 });
+        //             }
+        //             $('#filter_station').html(station);
+
+        //             if ($('#filter_station').data('select2')) {
+        //                 $('#filter_station').select2().val(null).trigger('change'); // Reset and refresh
+        //             } 
+        //             else {
+        //                 $('#filter_station').val(null); // If not using a plugin, just reset the value
+        //             }
+        //         }
+        //     });
+        // });
+    });
+
+    $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    function applyFilter() {
+        let district = $('#filter_district').val();
+        let station = $('#filter_station').val();
+        let designation = $('#filter_designation').val();
+
+        window.location.href =
+            `?district=${district}&station=${station}&designation=${designation}`;
+    }
 </script>
 @stop

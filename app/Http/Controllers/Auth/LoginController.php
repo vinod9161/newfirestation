@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use App\Services\SmsService;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -215,6 +217,110 @@ class LoginController extends Controller
     }
 
 
+
+    // public function login(Request $request, SmsService $smsService)
+    // {
+    //     $request->session()->regenerate(true);
+
+    //     $validator = Validator::make($request->all(), [
+    //         'username' => 'required|regex:/^[A-Za-z0-9@. ]+$/',
+    //         'password' => 'required',
+    //         'captcha'  => 'required|regex:/^[A-Za-z0-9 ]+$/',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return redirect()->route('login')
+    //             ->withErrors($validator)
+    //             ->withInput();
+    //     }
+
+    //     $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+    //     if (Auth::attempt([$fieldType => $request->username, 'password' => $request->password])) {
+
+    //         $user = Auth::user();
+
+    //         $otp = rand(100000, 999999);
+
+    //         $user->update([
+    //             'otp' => Hash::make($otp),
+    //         ]);
+
+    //         session([
+    //             'otp_user_id' => $user->id,
+    //             'otp_expires_at' => now()->addMinutes(5)
+    //         ]);
+
+    //         $smsService->sendOtp($user->mobile, $otp);
+
+    //         return redirect()->route('loginotp')
+    //             ->with('message', 'OTP sent to your registered mobile.');
+    //     }
+
+    //     return redirect()->route('login')
+    //         ->with('error', 'Username and Password are incorrect.');
+    // }
+
+    // public function verifyOtp(Request $request)
+    // {
+    //     $request->validate([
+    //         'otp_combined' => 'required|digits:6',
+    //     ]);
+
+    //     $otp = $request->input('otp_combined');
+
+    //     $userId = session('otp_user_id');
+    //     $expiresAt = session('otp_expires_at');
+
+    //     if (!$userId) {
+    //         return redirect()->route('login')->with('error', 'Session expired. Please login again.');
+    //     }
+
+    //     $user = \App\Models\User::find($userId);
+
+    //     if (!$user) {
+    //         return redirect()->route('login')->with('error', 'User not found.');
+    //     }
+
+    //     if ($expiresAt && now()->gt($expiresAt)) {
+    //         return redirect()->back()->with('error', 'OTP expired. Please request a new one.');
+    //     }
+
+    //     if (!Hash::check($otp, $user->otp)) {
+    //         return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+    //     }
+
+    //     $user->update([
+    //         'is_verify' => 1,
+    //         'otp' => null // clear OTP after success
+    //     ]);
+
+    //     session()->regenerate();
+    //     Auth::login($user);
+
+    //     session()->forget(['otp_user_id', 'otp_expires_at']);
+
+    //     switch ($user->type) {
+    //         case '0':
+    //         case '1':
+    //         case '2':
+    //         case '3':
+    //         case '5':
+    //             return redirect()->route('admin.dashboard');
+
+    //         case '4':
+    //             return redirect()->route('citizen.account');
+
+    //         case '6':
+    //             return redirect()->route('agency.account');
+
+    //         case '7':
+    //             return redirect()->route('auditor.account');
+
+    //         default:
+    //             return redirect()->route('login')->with('error', 'Invalid user type.');
+    //     }
+    // }
 
     public function resendOtp(Request $request){
         $request->validate([

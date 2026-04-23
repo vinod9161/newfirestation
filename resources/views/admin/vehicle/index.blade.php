@@ -164,11 +164,13 @@
                                 <td>{{ ucfirst($vehicle->vehicle_remark)??'NA' }}</td> 
                                 <td class="text-right">
                                     <a href="{{ route('admin.editvehicle', $vehicle->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                    @if(Auth::user()->type == 0)
                                     <form action="{{ route('admin.deletevehicle', $vehicle->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
+                                    @endif
                                 </td>
                                 </tr>
                             @endforeach

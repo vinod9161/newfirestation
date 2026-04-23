@@ -74,15 +74,17 @@
                         <div class="col-md-12" style="margin:0 auto;">
                             <div class="card">
                                 <div class="card-body">
+                                    @php
+                                        $isRestricted = in_array(Auth::user()->type, [2,3]);
+                                    @endphp
                                     <form action="{{ route('admin.updatevehicle') }}" method="post">
                                         @csrf
                                         <div class="row">
-                                            <?php // echo "<pre>"; print_r($fs_vehicles); die;?>
                                             
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>District जनपद <sup class="text-danger">*</sup></label>
-                                                    <select name="districts" id="districts" class="form-control js-example-basic-single">
+                                                    <select name="districts" id="districts" class="form-control js-example-basic-single" {{ $isRestricted ? 'disabled' : '' }}>
                                                         <option value="">Select District जनपद</option>
                                                         @if ($getDistricts)
                                                             @foreach ($getDistricts as $key => $row)
@@ -98,6 +100,9 @@
                                                            <option value="" class="text-danger"> No Districts Available</option>
                                                         @endif
                                                     </select>
+                                                    @if($isRestricted)
+                                                        <input type="hidden" name="districts" value="{{ $fs_vehicles->district_id }}">
+                                                    @endif
                                                     <span class="text-danger" id="districtsError"></span>
                                                 </div>
                                             </div>
@@ -105,7 +110,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Fire Station फायर स्टेशन <sup class="text-danger">*</sup></label>
-                                                    <select name="firestation" id="firestation" class="form-control js-example-basic-single">
+                                                    <select name="firestation" id="firestation" class="form-control js-example-basic-single" {{ $isRestricted ? 'disabled' : '' }}>
                                                         <option value="">--- Select Station फायर स्टेशन ---</option>
                                                         @if ($getfirestation)
                                                             @foreach ($getfirestation as $key => $row)
@@ -120,6 +125,9 @@
                                                         @endif
 
                                                     </select>
+                                                    @if($isRestricted)
+                                                    <input type="hidden" name="firestation" value="{{ $fs_vehicles->station_id }}">
+                                                    @endif
                                                     <span class="text-danger" id="stationError"></span>
                                                 </div>
                                             </div>
@@ -128,21 +136,21 @@
                                             <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Registration Number<sup class="text-danger">*</sup></label>
-                                                 <input class="form-control"  name="reg_number" id="reg_number" type="text" placeholder="Registration Number" value="{{ $fs_vehicles->reg_number ?? 'NA' }}" required />
+                                                 <input class="form-control"  name="reg_number" id="reg_number" type="text" placeholder="Registration Number" value="{{ $fs_vehicles->reg_number ?? 'NA' }}" {{ $isRestricted ? 'readonly' : '' }} required />
                                               </div>
                                            </div>
 
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Chassis Number<sup class="text-danger">*</sup></label>
-                                                 <input class="form-control"  name="chassis_number" id="chassis_number" type="text" placeholder="Chassis Number" value="{{ $fs_vehicles->chassis_number ?? 'NA' }}" required />
+                                                 <input class="form-control"  name="chassis_number" id="chassis_number" type="text" placeholder="Chassis Number" value="{{ $fs_vehicles->chassis_number ?? 'NA' }}" {{ $isRestricted ? 'readonly' : '' }} required />
                                               </div>
                                            </div>
 
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Engine Number<sup class="text-danger">*</sup></label>
-                                                 <input class="form-control"  name="engine_number" id="engine_number" type="text" placeholder="Engine Number" value="{{ $fs_vehicles->engine_number ?? 'NA' }}" required />
+                                                 <input class="form-control"  name="engine_number" id="engine_number" type="text" placeholder="Engine Number" value="{{ $fs_vehicles->engine_number ?? 'NA' }}" {{ $isRestricted ? 'readonly' : '' }} required />
                                               </div>
                                            </div>
 
@@ -150,7 +158,7 @@
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Vehicle Type<sup class="text-danger">*</sup></label>
-                                                 <select class="form-control js-example-basic-single" name="vehicle_type" id="vehicle_type" required>
+                                                 <select class="form-control js-example-basic-single" name="vehicle_type" id="vehicle_type" {{ $isRestricted ? 'disabled' : '' }} required>
                                                     <option value="">--- Select Type ---</option>
                                                     @if ($getvehicleTypes)
                                                         @foreach ($getvehicleTypes as $key => $row)
@@ -160,13 +168,16 @@
                                                        <option value="" class="text-danger"> No Vehicle Type Available</option>
                                                     @endif
                                                  </select>
+                                                 @if($isRestricted)
+                                                    <input type="hidden" name="vehicle_type" value="{{ $fs_vehicles->vehicle_type }}">
+                                                 @endif
                                               </div>
                                            </div>
 
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Make Year मेक वर्ष<sup class="text-danger">*</sup></label>
-                                                 <select class="form-control js-example-basic-single" name="make_year" id="make_year" required>
+                                                 <select class="form-control js-example-basic-single" name="make_year" id="make_year" {{ $isRestricted ? 'disabled' : '' }} required>
                                                     <option value="">Select Make Year मेक वर्ष</option>
 
                                                     <?php
@@ -189,13 +200,16 @@
                                                     ?>
 
                                                  </select>
+                                                 @if($isRestricted)
+                                                    <input type="hidden" name="make_year" value="{{ $fs_vehicles->make_year }}">
+                                                 @endif
                                               </div>
                                            </div>
 
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Make and Model मेक माडल कम्पनी सहित <sup class="text-danger">*</sup></label>
-                                                 <input class="form-control" name="year" id="year" type="text" placeholder="मेक माडल कम्पनी सहित" value="{{ $fs_vehicles->year ?? 'NA' }}" required />
+                                                 <input class="form-control" name="year" id="year" type="text" placeholder="मेक माडल कम्पनी सहित" value="{{ $fs_vehicles->year ?? 'NA' }}" {{ $isRestricted ? 'readonly' : '' }} required />
                                               </div>
                                            </div>
                                            <div class="col-md-4">
@@ -207,7 +221,7 @@
                                            <div class="col-md-4">
                                               <div class="form-group">
                                                  <label>Used Date प्रयोग तिथि<sup class="text-danger">*</sup></label>
-                                                 <input class="form-control"  name="use_date" id="use_date" type="date" placeholder="प्रयोग तिथि" value="{{ $fs_vehicles->use_date ?? 'NA' }}" required />
+                                                 <input class="form-control"  name="use_date" id="use_date" type="date" placeholder="प्रयोग तिथि" value="{{ $fs_vehicles->use_date ?? 'NA' }}" {{ $isRestricted ? 'readonly' : '' }} required />
                                               </div>
                                            </div>
                                            <div class="col-md-4">

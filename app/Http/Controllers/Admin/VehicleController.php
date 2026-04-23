@@ -156,8 +156,37 @@ class VehicleController extends Controller
                         ->get()
                         ->first();   
                         
-        $vehicleStatement  = VehicleStatementModel::where('vehicle_id', '=', $id)->get();
-        return view('admin.vehicle.viewedit', compact('fs_vehicles','vehicleStatement'));
+        $vehicleStatement = VehicleStatementModel::where('vehicle_id', $id)
+                    ->orderBy('year', 'desc')
+                    ->orderBy('month', 'desc')
+                    ->get();
+
+        $lastStatement = $vehicleStatement->first();
+
+        $runFireTotal = $vehicleStatement->sum('total_run_fire');
+        $runOtherTotal = $vehicleStatement->sum('total_run_other');
+
+        $kmDrive = $fs_vehicles->km_drive ?? 0;
+
+        $grandTotal = $runFireTotal + $runOtherTotal + $kmDrive;
+
+        if ($lastStatement) {
+            $label = $lastStatement->month . ' ' . $lastStatement->year;
+        } else {
+            $label = \Carbon\Carbon::parse($fs_vehicles->created_at)->format('F Y');
+        }
+
+        $maintenanceTotal = $vehicleStatement->sum('total_maintenance_expense');
+        $baseInvest = $fs_vehicles->total_invest ?? 0;
+        $totalMaintenance = $maintenanceTotal + $baseInvest;
+
+        return view('admin.vehicle.viewedit', compact(
+            'fs_vehicles',
+            'vehicleStatement',
+            'grandTotal',
+            'label',
+            'totalMaintenance'
+        ));
     }
 
 
@@ -184,73 +213,96 @@ class VehicleController extends Controller
         return view('admin.vehicle.editdata',compact('getDistricts','getvehicleTypes','fs_vehicles','getfirestation','vehicle','vehicleStatement'));
     }
 
+
     public function updatevehicle(Request $request)
     {
         $this->commonModel = new CommonModel;
+        $user = Auth::user();
 
-        // Normalize reg number (IMPORTANT)
+        $vid = $request->input('vid');
+
+        // Normalize
         $request->merge([
             'reg_number' => strtoupper(trim($request->reg_number))
         ]);
 
-        $vid = $request->input('vid');
-
-        $validator = Validator::make($request->all(), [
-            'districts' => 'required|string',
-            'firestation' => 'required|string',
-
-            'reg_number' => [
-                'required',
-                'string',
-                Rule::unique('fs_vehicles', 'reg_number')->ignore($vid, 'id')
-            ],
-
-            'chassis_number' => 'required|string',
-            'engine_number' => 'required|string',
-            'vehicle_type' => 'required|string',
-            'make_year' => 'required|string',
-            'year' => 'required|string',
-            'capacity' => 'required|string',
-            'use_date' => 'required|date',
+        // ✅ Base validation (for all)
+        $rules = [
+            'capacity' => 'required|numeric',
             'km_drive' => 'required|integer',
             'total_invest' => 'required|string',
             'total_fire' => 'required|string',
-            'vehicle_remark' => 'nullable|string'
-        ], [
+            'vehicle_remark' => 'required|string',
+        ];
+
+        // ✅ Admin extra validation
+        if (!in_array($user->type, [2, 3])) {
+
+            $rules = array_merge($rules, [
+                'districts' => 'required',
+                'firestation' => 'required',
+
+                'reg_number' => [
+                    'required',
+                    Rule::unique('fs_vehicles', 'reg_number')->ignore($vid, 'id')
+                ],
+
+                'chassis_number' => 'required',
+                'engine_number' => 'required',
+                'vehicle_type' => 'required',
+                'make_year' => 'required',
+                'year' => 'required',
+                'use_date' => 'required|date',
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
             'reg_number.unique' => 'Vehicle registration number already exists.'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $data = [
-            'reg_number'        => $request->reg_number,
-            'chassis_number'    => $request->chassis_number,
-            'engine_number'     => $request->engine_number,
-            'district_id'       => $request->districts,
-            'station_id'        => $request->firestation,
-            'vehicle_type'      => $request->vehicle_type,
-            'make_year'         => $request->make_year,
-            'year'              => $request->year,
-            'capacity'          => $request->capacity,
-            'use_date'          => $request->use_date,
-            'km_drive'          => $request->km_drive,
-            'total_invest'      => $request->total_invest,
-            'total_fire'        => $request->total_fire,
-            'vehicle_remark'    => $request->vehicle_remark
-        ];
+        // ✅ Data based on role
+        if (in_array($user->type, [2, 3])) {
+            // 🔒 CFO & FSO → restricted update
+            $data = [
+                'capacity'        => $request->capacity,
+                'km_drive'        => $request->km_drive,
+                'total_invest'    => $request->total_invest,
+                'total_fire'      => $request->total_fire,
+                'vehicle_remark'  => $request->vehicle_remark,
+            ];
+
+        } else {
+            // ✅ Admin → full update
+            $data = [
+                'reg_number'      => $request->reg_number,
+                'chassis_number'  => $request->chassis_number,
+                'engine_number'   => $request->engine_number,
+                'district_id'     => $request->districts,
+                'station_id'      => $request->firestation,
+                'vehicle_type'    => $request->vehicle_type,
+                'make_year'       => $request->make_year,
+                'year'            => $request->year,
+                'capacity'        => $request->capacity,
+                'use_date'        => $request->use_date,
+                'km_drive'        => $request->km_drive,
+                'total_invest'    => $request->total_invest,
+                'total_fire'      => $request->total_fire,
+                'vehicle_remark'  => $request->vehicle_remark,
+            ];
+        }
 
         $where = ['id' => $vid];
 
-        $result = $this->commonModel->updateDataByOneCondition($tbl = 'fs_vehicles', $where, $data);
+        $result = $this->commonModel->updateDataByOneCondition('fs_vehicles', $where, $data);
 
         if ($result) {
             return redirect()->back()->with('success', 'Vehicle updated successfully');
         } else {
-            return redirect()->back()->with('failed', 'Something Went Wrong Try Later!');
+            return redirect()->back()->with('failed', 'Something went wrong!');
         }
     }
 

@@ -38,13 +38,13 @@ class StandbyController extends Controller
 
     public function addStandby()
     {
-        if(Auth::user()->type == 2)
+        if(Auth::user()->type == 1 || Auth::user()->type == 0)
         {
-            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
+            $district = $this->commonModel->getData('districts');
         }
         else
         {
-            $district = $this->commonModel->getData('districts');
+            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
         }
         
         $categories = $this->commonModel->getData('categories');
@@ -86,7 +86,8 @@ class StandbyController extends Controller
             'program_datetime'      =>  $request->input('program_datetime'),
             'crowd_size'            =>  $request->input('crowd_size'),
             'user_id'               =>  Auth::user()->id,
-            'otp'                   => $otp??123456
+            'otp'                   => $otp??123456,
+            'is_verify'            => 1
         ];
 
         $result = $this->commonModel->insertData('fs_standby_duty_request', $data);
@@ -95,7 +96,7 @@ class StandbyController extends Controller
             $resp = [
                 'code' => 1,
                 'status' => 'success',
-                'message' => 'Application saved successfully | One Time Password Sent to Registered Mobile Number.'
+                'message' => 'Application saved successfully. Your application id is : "  '.$appliaction_id.'"'
             ];
             return json_encode($resp);
         }

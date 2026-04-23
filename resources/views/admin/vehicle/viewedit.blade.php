@@ -99,13 +99,15 @@
                                           </tr>
 
                                           <tr>
-                                             <td>29 फरवरी 2020 तक चले किमी0</td>
-                                             <td>{{ $fs_vehicles->km_drive ?? 'NA' }}</td>
+                                             <!-- <td>29 फरवरी 2020 तक चले किमी0</td>
+                                             <td>{{ $fs_vehicles->km_drive ?? 'NA' }}</td> -->
+                                             <td>{{ $label }} तक चले किमी0</td>
+                                             <td>{{ $grandTotal }}</td>
                                           </tr>
 
                                           <tr>
                                              <td>प्रयोग तिथि से अब तक वाहन पर मरम्मत पर व्यय</td>
-                                             <td>{{ $fs_vehicles->total_invest ?? 'NA' }}</td>
+                                             <td>{{ $totalMaintenance ?? 'NA' }}</td>
                                           </tr>
 
                                           <tr>

@@ -71,32 +71,32 @@ label {
                             <div class="body-box-admin">
                                 <div class="body-box-admin tab-content card" style="padding:0px">
                                     <h2 class="text-center heading_info">Add Inspection by Officers</h2>
-                                    <p class="note" style="margin-left:10px">Fields with <span class="required">*</span>
+                                    <p class="note" style="margin-left:10px">Fields with <span class="text-danger">*</span>
                                         are required.</p>
                                     <div class="row mt-3" style="padding: 0 30px 25px;">
 
                                         <div class="col-md-4 col-sm-12" style="float: left">
                                             <div class="form-group">
                                                 <label class="control-label required" style="text-align: right;"
-                                                    for="FireReport_district_id">District जपपद <span
-                                                        class="required">*</span></label>
+                                                    for="districts">District जपपद <span class="text-danger">*</span></label>
                                                 <select class="form-control" name="district_id"
-                                                    id="FireReport_district_idll"  required>
+                                                    id="districts"  required>
+                                                    <option value="">Select District जनपद</option>
                                                     @foreach ($districts as $dist)
 
                                                     <option value="{{ $dist->id }}">{{ ucfirst($dist->name) }} </option>
 
                                                     @endforeach
                                                 </select>
+                                                <span class="text-danger" id="districtsError"></span>
                                             </div>
                                         </div>
 
                                         <div class="col-md-4 col-sm-12" style="float: right">
                                             <div class="form-group">
                                                 <label class="control-label required" style="text-align: right;"
-                                                    for="FireReport_fire_station_id">Fire Station फायर स्टेशन <span
-                                                        class="required">*</span></label>
-                                                <select class="form-control" name="station_id" id="station_id" readonly
+                                                    for="FireReport_fire_station_id">Fire Station फायर स्टेशन <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="station_id" id="firestation" 
                                                     required>
                                                     <option value="{{$fso_station->id ?? ''}}">
                                                         {{$fso_station->name ?? ''}} </option>
@@ -106,7 +106,7 @@ label {
 
                                         <div class="col-md-4 col-sm-6 col-xs-12">
                                             <div class="form-group">
-                                                <label class="form-label">Designation of Officer*</label>
+                                                <label class="form-label">Designation of Officer <span class="text-danger">*</span></label>
                                                 <input type="text" name="designation" class="form-control"
                                                     id="designation" placeholder="Designation of Officer" required />
                                             </div>
@@ -114,7 +114,7 @@ label {
 
                                         <div class="col-md-4 col-sm-6 col-xs-12">
                                             <div class="form-group">
-                                                <label class="form-label">Name of Officer*</label>
+                                                <label class="form-label">Name of Officer <span class="text-danger">*</span></label>
                                                 <input type="text" name="officer_name" class="form-control"
                                                     id="officer_name" placeholder="Name of Officer  " required />
                                             </div>
@@ -123,7 +123,7 @@ label {
                                         <div class="col-md-4 col-sm-10 col-xs-12">
                                             <div class="form-group">
                                                 <label class="form-control-label" for="input-username">Date of
-                                                    Inspection*</label>
+                                                    Inspection <span class="text-danger">*</span></label>
                                                 <input type="date" name="date" class="form-control" id="date"
                                                     placeholder="Date of Inspection" required />
                                             </div>
@@ -133,7 +133,7 @@ label {
                                             <div class="form-group">
                                                 <label class="control-label required" style="text-align: right;"
                                                     for="FireReport_fire_station_id">Type Of inspection <span
-                                                        class="required">*</span></label>
+                                                        class="text-danger">*</span></label>
                                                 <select class="form-control" name="type" id="type" required>
                                                     <option value="">Select Type Of inspection</option>
                                                     <option value="Yearly">Yearly</option>
@@ -147,7 +147,7 @@ label {
 
                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-group">
-                                                <label class="form-label">Other Comments*</label>
+                                                <label class="form-label">Other Comments <span class="text-danger">*</span></label>
                                                 <textarea name="comment" class="form-control" id="comment"
                                                     placeholder="Other Comments" style="height:40px;"
                                                     required></textarea>
@@ -187,6 +187,54 @@ label {
 <script src="{{ asset('/public/admin/js/select2.js') }}"></script>
 
 <script src="{{ asset('')}}"></script>
+<script>
+    $(document).ready(function(){
+        $(document).on('change', '#districts', function() {
+            let districts = $(this).val();
+            let firestation = '';
+
+            if (districts === '') {
+                $('#districtsError').html('Missing Districts Data').delay(3000).fadeOut().css('display', 'block');
+                return false;
+            }
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districts,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(resp) 
+                {
+                    station = '<option value="">Select Station फायर स्टेशन</option>';
+
+                    console.log(resp);
+                    
+                    if (resp.status === 0) 
+                    {
+                        station += '<option value="" class="text-danger">No fire station found against this districts</option>';
+                    } 
+                    else 
+                    {
+                        $.each(resp.data, function(key, value) 
+                        {
+                            station += '<option value="' + value.id + '">' + value.name + '</option>';
+                        });
+                    }
+                    $('#firestation').html(station);
+
+                    if ($('#firestation').data('select2')) {
+                        $('#firestation').select2().val(null).trigger('change'); // Reset and refresh
+                    } 
+                    else {
+                        $('#firestation').val(null); // If not using a plugin, just reset the value
+                    }
+                }
+            });
+        });
+    });
+</script>
 <script>
 $(function(e) {
 

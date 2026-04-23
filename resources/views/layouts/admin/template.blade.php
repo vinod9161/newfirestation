@@ -36,6 +36,58 @@
     <link rel="stylesheet" href="{{ asset('/public/admin/libs/flatpickr/flatpickr.min.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     @yield ('style');
+    <style>
+        /* ===== RESET ===== */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        /* ===== MAIN CONTENT (SCROLL AREA) ===== */
+        .main-content {
+            margin-top: 70px;   /* header space */
+            margin-left: 240px; /* sidebar width */
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 15px;
+            background: #f5f6fa;
+        }
+
+        /* ===== CONTAINER FIX ===== */
+        .container-fluid {
+            height: auto;
+        }
+
+        /* ===== SMOOTH SCROLL ===== */
+        .main-content {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== OPTIONAL: SCROLLBAR STYLE ===== */
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 10px;
+        }
+
+        /* ===== OPTIONAL: STICKY FILTER BAR ===== */
+        #dashboardFilterForm {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff;
+            padding: 10px;
+        }
+
+        /* ===== OPTIONAL: CARD FIX ===== */
+        .card {
+            overflow: visible;
+        }
+    </style>
 </head>
 <body>
     <!-- Loader -->

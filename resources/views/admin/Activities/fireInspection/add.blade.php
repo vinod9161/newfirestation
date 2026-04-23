@@ -94,6 +94,7 @@
                             <div class="form-group">
                                 <label>District जपपद <sup class="text-danger">*</sup></label>          
                                 <select class="form-control js-example-basic-single" name="district_id" id="district_id" readonly>
+                                    <option value="">-- Select District --</option>
                                     @foreach ($districts as $dist)
                                         <option value="{{ $dist->id }}">{{ ucfirst($dist->name) }} </option>
                                     @endforeach
@@ -178,6 +179,54 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('/public/admin/js/select2.js') }}"></script>
+<script>
+    $(document).ready(function(){
+        $(document).on('change', '#district_id', function() {
+            let districts = $(this).val();
+            let firestation = '';
+
+            if (districts === '') {
+                $('#error1').html('Missing Districts Data').delay(3000).fadeOut().css('display', 'block');
+                return false;
+            }
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districts,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(resp) 
+                {
+                    station = '<option value="">Select Station फायर स्टेशन</option>';
+
+                    console.log(resp);
+                    
+                    if (resp.status === 0) 
+                    {
+                        station += '<option value="" class="text-danger">No fire station found against this districts</option>';
+                    } 
+                    else 
+                    {
+                        $.each(resp.data, function(key, value) 
+                        {
+                            station += '<option value="' + value.id + '">' + value.name + '</option>';
+                        });
+                    }
+                    $('#station_id').html(station);
+
+                    if ($('#station_id').data('select2')) {
+                        $('#station_id').select2().val(null).trigger('change'); // Reset and refresh
+                    } 
+                    else {
+                        $('#station_id').val(null); // If not using a plugin, just reset the value
+                    }
+                }
+            });
+        });
+    });
+</script>
  <script>  
     $(document).ready(function(){  
         $('.js-example-basic-multiple').select2();

@@ -74,10 +74,7 @@
                                         class="btn btn-primary btn-sm" title="Edit"><i class="fa fa-eye"></i>
                                         &nbsp;</a>
 
-                                    <a onclick="return confirm('Are you sure you Want to Delete ?')"
-                                        href="{{route('admin.deleteRewardPanishment', $ins->id)}}"
-                                        class="btn btn-danger btn-sm" title="Delete"><i
-                                            class="far fa-trash-alt"></i> </a>
+                                    <!-- <a onclick="return confirm('Are you sure you Want to Delete ?')" href="{{route('admin.deleteRewardPanishment', $ins->id)}}" class="btn btn-danger btn-sm" title="Delete"><i class="far fa-trash-alt"></i> </a> -->
 
                                 </td>
                             </tr>

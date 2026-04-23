@@ -36,7 +36,15 @@ class IncidentController extends Controller
 
     public function addIncident()
     {
-        $district = $this->commonModel->getData('districts');
+        // $district = $this->commonModel->getData('districts');
+        if(Auth::user()->type == 1 || Auth::user()->type == 0)
+        {
+            $district = $this->commonModel->getData('districts');
+        }
+        else
+        {
+            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
+        }
         $categories = $this->commonModel->getData('categories');
         $unique_no =  Carbon::now()->timestamp;
         return view('admin.incident.add',compact('district','categories','unique_no'));

@@ -116,9 +116,11 @@ Route::post('agencyRegister', [AgencyController::class, 'register'])->name('agen
 
 Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function () {
 
-    Route::get('home-dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+    // Route::get('home-dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('home-dashboard-two', [DashboardController::class, 'dashboard'])->name('admin.dashboardtwo');
 
-    Route::get('home-dashboard-two', [DashboardController::class, 'dashboardTwo'])->name('admin.dashboardtwo');
+    // Route::get('home-dashboard-two', [DashboardController::class, 'dashboardTwo'])->name('admin.dashboardtwo');
+    Route::get('home-dashboard', [DashboardController::class, 'dashboardTwo'])->name('admin.dashboard');
     Route::post('dashboard/noc-data', [DashboardController::class, 'getNocDashboardData'])->name('admin.getNocDashboardData');
     Route::post('/dashboard/vehicle-data', [DashboardController::class, 'getVehicleData'])->name('dashboard.vehicle.data');
     Route::get('/dashboard/fire-report-data', [DashboardController::class, 'getFireReportData'])->name('dashboard.fireReportData');
@@ -126,6 +128,7 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::post('/admin/relief-dashboard-data', [DashboardController::class, 'getReliefDashboardData'])->name('admin.getReliefDashboardData');
     Route::post('/admin/hydrant-dashboard-data', [DashboardController::class, 'getHydrantDashboardData'])->name('admin.getHydrantDashboardData');
     Route::post('/admin/employee-dashboard-data', [DashboardController::class, 'getEmployeeDashboardData'])->name('admin.getEmployeeDashboardData');
+    Route::get('/dashboard/equipment-data', [DashboardController::class, 'getEquipmentData'])->name('dashboard.equipmentData');
     // Route::post('dashboard/noc-table-data', [DashboardController::class, 'getNocTableData'])->name('admin.getNocTableData');
     
     Route::get('awarnessChart', [DashboardController::class, 'postawarnessChart'])->name('admin.postawarnessChart');

@@ -71,6 +71,7 @@
                         <form method="post" id="standbyForm">
                             @csrf
                             <div class="row">
+                                <input type="hidden" name="is_verify" id="is_verify" value="1">
 
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -336,9 +337,14 @@ $(document).ready(function(){
                 let Phone = $('#mobile_no').val();
                 if (obj.code === 1) {
                     $('.standbytoaster').addClass('alert alert-success').html(obj.message || "Form submitted successfully!").fadeIn().delay(5000).fadeOut();
-                    $('.standbyaddFsoFormDiv').hide();
-                    $('#otpVerifydiv').show();
-                    $('#otpMobile').val(Phone);
+                    // $('.standbyaddFsoFormDiv').hide();
+                    // $('#otpVerifydiv').show();
+                    // $('#otpMobile').val(Phone);
+
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
 
                 } 
                 else {

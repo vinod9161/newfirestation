@@ -17,158 +17,183 @@ class DashboardController extends Controller
         $this->commonModel = new CommonModel;
     }
  
+    // public function dashboardTwo()
+    // {
+    //     $user = Auth::user();
+
+    //     $where = [];
+
+    //     if ($user->type == 3) {
+    //         // FSO (station level)
+    //         $where = [
+    //             'district_id' => $user->district_id,
+    //             'station_id'  => $user->station_id
+    //         ];
+    //     } elseif ($user->type == 0 || $user->type == 1) {
+    //         // Admin (no filter)
+    //         $where = [];
+    //     } else {
+    //         // CFO (district level)
+    //         $where = [
+    //             'district_id' => $user->district_id
+    //         ];
+    //     }
+
+    //     // 🔁 Helper function usage
+    //     $getData = function($table) use ($where) {
+    //         return !empty($where)
+    //             ? $this->commonModel->getDataByOneCondition($table, $where)
+    //             : $this->commonModel->getData($table);
+    //     };
+
+    //     $fireStactionList = $getData('fire_stations');
+    //     $districtList     = $this->commonModel->getData('districts'); // usually global
+
+    //     $fire_station_count = count($getData('fire_stations')) ?? 0;
+    //     $man_power_count    = count($getData('users')) ?? 0;
+    //     $vehicles_count     = count($getData('fs_vehicles')) ?? 0;
+    //     $equipment_count    = count($getData('equipment')) ?? 0;
+
+    //     $fire_Calls_Count   = count($getData('fs_fire_report')) ?? 0;
+    //     $rescue_Calls_Count = count($getData('fs_rescue_report')) ?? 0;
+    //     $relief_Calls_Count = count($getData('fs_relief_work_report')) ?? 0;
+
+    //     $totalReliefRescueCount = $rescue_Calls_Count + $relief_Calls_Count;
+
+    //     // 🔥 Life Saved
+    //     $lifeSaved = 0;
+    //     foreach ($getData('fs_fire_report') as $row) {
+    //         $lifeSaved += $row->life_saved_human ?? 0;
+    //     }
+    //     $save_life_count = $lifeSaved;
+
+    //     // 🏠 Property Saved
+    //     $propertySaved = 0;
+    //     foreach ($getData('fs_fire_report') as $row) {
+    //         $propertySaved += $row->property_saved ?? 0;
+    //     }
+    //     $save_property_count = $propertySaved;
+
+    //     // 📄 NOC & Others
+    //     $noc_count                 = count($getData('applications')) ?? 0;
+    //     $awareness_program_count   = count($getData('fs_awareness_program_request')) ?? 0;
+    //     $op_duty_count            = count($getData('operational_applications')) ?? 0;
+
+    //     // 📊 NOC Status Counts (Make sure function accepts $where)
+    //     $filterNocDat = $this->commonModel->getAllCountByNocStatus($where);
+
+    //     $noc_total_received   = $filterNocDat['total_received'] ?? 0;
+    //     $noc_total_approved   = $filterNocDat['approved'] ?? 0;
+    //     $noc_total_reverted   = $filterNocDat['reverted'] ?? 0;
+    //     $noc_total_pending    = $filterNocDat['pending'] ?? 0;
+    //     $noc_total_in_process = $filterNocDat['in_process'] ?? 0;
+
+    //     // 🥧 Pie Chart
+    //     $nocStatusCounts = $this->commonModel->getNOCStatusCounts($where);
+
+    //     $nocLabels = ['Pending', 'Reverted', 'In-Process', 'Received', 'Approved'];
+    //     $nocCounts = array_fill(0, count($nocLabels), 0);
+
+    //     foreach ($nocStatusCounts as $status) {
+    //         switch ($status->status) {
+    //             case 'PENDING':
+    //                 $nocCounts[0] = (int)$status->count;
+    //                 break;
+    //             case 'REVERTED':
+    //                 $nocCounts[1] = (int)$status->count;
+    //                 break;
+    //             case 'IN-PROCESS':
+    //                 $nocCounts[2] = (int)$status->count;
+    //                 break;
+    //             case 'RECEIVED':
+    //                 $nocCounts[3] = (int)$status->count;
+    //                 break;
+    //             case 'APPROVED':
+    //                 $nocCounts[4] = (int)$status->count;
+    //                 break;
+    //         }
+    //     }
+
+    //     // 🚒 Vehicles by District (update function to accept $where if needed)
+    //     $vehicleByDistrict = $this->commonModel->getVehicleCountByDistrict($where);
+
+    //     $districts = [];
+    //     $vehicleCounts = [];
+
+    //     foreach ($vehicleByDistrict as $row) {
+    //         $districts[] = $row->district;
+    //         $vehicleCounts[] = (int)$row->total;
+    //     }
+
+    //     // 📈 Monthly Charts
+    //     $fire   = $this->commonModel->getCountReport('fs_fire_report', 'created_at', $where);
+    //     $rescue = $this->commonModel->getCountReport('fs_rescue_report', 'created_at', $where);
+
+    //     $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    //                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    //     $fireChartData   = is_array($fire) ? array_values($fire) : array_fill(0, 12, 0);
+    //     $rescueChartData = is_array($rescue) ? array_values($rescue) : array_fill(0, 12, 0);
+
+    //     // 🌈 Custom Chart
+    //     $getNocData = $this->getNocApplicationData($where);
+        
+    //     $allNocCountData = $this->commonModel->allNocCountData();
+
+    //     return view('admin.dashboardtwo', compact(
+    //         'fireStactionList',
+    //         'districtList',
+    //         'fire_station_count',
+    //         'man_power_count',
+    //         'vehicles_count',
+    //         'equipment_count',
+    //         'fire_Calls_Count',
+    //         'totalReliefRescueCount',
+    //         'save_life_count',
+    //         'save_property_count',
+    //         'noc_count',
+    //         'awareness_program_count',
+    //         'op_duty_count',
+    //         'noc_total_received',
+    //         'noc_total_approved',
+    //         'noc_total_reverted',
+    //         'noc_total_pending',
+    //         'noc_total_in_process',
+    //         'nocLabels',
+    //         'nocCounts',
+    //         'districts',
+    //         'vehicleCounts',
+    //         'monthNames',
+    //         'fireChartData',
+    //         'rescueChartData',
+    //         'getNocData',
+    //         'allNocCountData'
+    //     ));
+    // }
+
     public function dashboardTwo()
     {
         $user = Auth::user();
 
-        // 🔥 Role-based filter
         $where = [];
 
         if ($user->type == 3) {
-            // FSO (station level)
             $where = [
                 'district_id' => $user->district_id,
                 'station_id'  => $user->station_id
             ];
-        } elseif ($user->type == 0 || $user->type == 1) {
-            // Admin (no filter)
-            $where = [];
-        } else {
-            // CFO (district level)
+        } elseif ($user->type != 0 && $user->type != 1) {
             $where = [
                 'district_id' => $user->district_id
             ];
         }
 
-        // 🔁 Helper function usage
-        $getData = function($table) use ($where) {
-            return !empty($where)
-                ? $this->commonModel->getDataByOneCondition($table, $where)
-                : $this->commonModel->getData($table);
-        };
-
-        $fireStactionList = $getData('fire_stations');
-        $districtList     = $this->commonModel->getData('districts'); // usually global
-
-        $fire_station_count = count($getData('fire_stations')) ?? 0;
-        $man_power_count    = count($getData('users')) ?? 0;
-        $vehicles_count     = count($getData('fs_vehicles')) ?? 0;
-        $equipment_count    = count($getData('equipment')) ?? 0;
-
-        $fire_Calls_Count   = count($getData('fs_fire_report')) ?? 0;
-        $rescue_Calls_Count = count($getData('fs_rescue_report')) ?? 0;
-        $relief_Calls_Count = count($getData('fs_relief_work_report')) ?? 0;
-
-        $totalReliefRescueCount = $rescue_Calls_Count + $relief_Calls_Count;
-
-        // 🔥 Life Saved
-        $lifeSaved = 0;
-        foreach ($getData('fs_fire_report') as $row) {
-            $lifeSaved += $row->life_saved_human ?? 0;
-        }
-        $save_life_count = $lifeSaved;
-
-        // 🏠 Property Saved
-        $propertySaved = 0;
-        foreach ($getData('fs_fire_report') as $row) {
-            $propertySaved += $row->property_saved ?? 0;
-        }
-        $save_property_count = $propertySaved;
-
-        // 📄 NOC & Others
-        $noc_count                 = count($getData('applications')) ?? 0;
-        $awareness_program_count   = count($getData('fs_awareness_program_request')) ?? 0;
-        $op_duty_count            = count($getData('operational_applications')) ?? 0;
-
-        // 📊 NOC Status Counts (Make sure function accepts $where)
-        $filterNocDat = $this->commonModel->getAllCountByNocStatus($where);
-
-        $noc_total_received   = $filterNocDat['total_received'] ?? 0;
-        $noc_total_approved   = $filterNocDat['approved'] ?? 0;
-        $noc_total_reverted   = $filterNocDat['reverted'] ?? 0;
-        $noc_total_pending    = $filterNocDat['pending'] ?? 0;
-        $noc_total_in_process = $filterNocDat['in_process'] ?? 0;
-
-        // 🥧 Pie Chart
-        $nocStatusCounts = $this->commonModel->getNOCStatusCounts($where);
-
-        $nocLabels = ['Pending', 'Reverted', 'In-Process', 'Received', 'Approved'];
-        $nocCounts = array_fill(0, count($nocLabels), 0);
-
-        foreach ($nocStatusCounts as $status) {
-            switch ($status->status) {
-                case 'PENDING':
-                    $nocCounts[0] = (int)$status->count;
-                    break;
-                case 'REVERTED':
-                    $nocCounts[1] = (int)$status->count;
-                    break;
-                case 'IN-PROCESS':
-                    $nocCounts[2] = (int)$status->count;
-                    break;
-                case 'RECEIVED':
-                    $nocCounts[3] = (int)$status->count;
-                    break;
-                case 'APPROVED':
-                    $nocCounts[4] = (int)$status->count;
-                    break;
-            }
-        }
-
-        // 🚒 Vehicles by District (update function to accept $where if needed)
-        $vehicleByDistrict = $this->commonModel->getVehicleCountByDistrict($where);
-
-        $districts = [];
-        $vehicleCounts = [];
-
-        foreach ($vehicleByDistrict as $row) {
-            $districts[] = $row->district;
-            $vehicleCounts[] = (int)$row->total;
-        }
-
-        // 📈 Monthly Charts
-        $fire   = $this->commonModel->getCountReport('fs_fire_report', 'created_at', $where);
-        $rescue = $this->commonModel->getCountReport('fs_rescue_report', 'created_at', $where);
-
-        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-        $fireChartData   = is_array($fire) ? array_values($fire) : array_fill(0, 12, 0);
-        $rescueChartData = is_array($rescue) ? array_values($rescue) : array_fill(0, 12, 0);
-
-        // 🌈 Custom Chart
-        $getNocData = $this->getNocApplicationData($where);
-        
-        $allNocCountData = $this->commonModel->allNocCountData();
+        $fireStactionList = $this->commonModel->getData('fire_stations');
+        $districtList     = $this->commonModel->getData('districts');
 
         return view('admin.dashboardtwo', compact(
             'fireStactionList',
-            'districtList',
-            'fire_station_count',
-            'man_power_count',
-            'vehicles_count',
-            'equipment_count',
-            'fire_Calls_Count',
-            'totalReliefRescueCount',
-            'save_life_count',
-            'save_property_count',
-            'noc_count',
-            'awareness_program_count',
-            'op_duty_count',
-            'noc_total_received',
-            'noc_total_approved',
-            'noc_total_reverted',
-            'noc_total_pending',
-            'noc_total_in_process',
-            'nocLabels',
-            'nocCounts',
-            'districts',
-            'vehicleCounts',
-            'monthNames',
-            'fireChartData',
-            'rescueChartData',
-            'getNocData',
-            'allNocCountData'
+            'districtList'
         ));
     }
 
@@ -1019,6 +1044,62 @@ class DashboardController extends Controller
             'kpi'    => $kpi,
             'table'  => $table
         ]);
+    }
+
+    public function getEquipmentData()
+    {
+        $categories = [22, 20, 21];
+
+        $data = DB::table('equipment')
+            ->join('equipment_category', 'equipment.category_id', '=', 'equipment_category.id')
+            ->join('equipment_name', 'equipment.equipment_name', '=', 'equipment_name.id')
+            ->join('districts', 'equipment.district_id', '=', 'districts.id')
+
+            ->when(request('district_id'), fn($q) =>
+                $q->where('equipment.district_id', request('district_id'))
+            )
+
+            ->when(request('station_id'), fn($q) =>
+                $q->where('equipment.station_id', request('station_id'))
+            )
+
+            ->select(
+                'equipment.category_id',
+                'equipment_category.name as category_name',
+                'equipment_name.name as equipment_name',
+                'districts.name as district',
+                DB::raw('SUM(equipment.total_equipemnt) as total')
+            )
+            ->whereIn('equipment.category_id', $categories)
+            ->groupBy(
+                'equipment.category_id',
+                'equipment_category.name',
+                'equipment_name.name',
+                'districts.name'
+            )
+            ->get();
+
+        $grouped = $data->groupBy('category_id');
+
+        return response()->json([
+            'disaster' => $this->formatChart($grouped[22] ?? collect()),
+            'ppe' => $this->formatChart($grouped[20] ?? collect()),
+            'mountain' => $this->formatChart($grouped[21] ?? collect()),
+
+            'disaster_table' => $grouped[22] ?? [],
+            'ppe_table' => $grouped[20] ?? [],
+            'mountain_table' => $grouped[21] ?? [],
+        ]);
+    }
+
+    private function formatChart($collection)
+    {
+        $grouped = $collection->groupBy('equipment_name')->map->sum('total');
+
+        return [
+            'labels' => $grouped->keys()->values(),
+            'data' => $grouped->values()
+        ];
     }
 
 

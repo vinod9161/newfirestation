@@ -258,18 +258,37 @@
                                         <div class="col-md-6">
                                             <div class="card custom-card">
                                                 <div class="card-body dash1">
-                                                    <h3 style="text-align:left">Reason of Rejection</h3>
-                                                    <div style="display:flex;gap:12px;align-items:center">
-                                                        <div style="flex:1">
-                                                            <canvas id="AllNOCRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
-                                                        </div>
-                                                        <div style="width:220px">
-                                                            <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
-                                                            <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
-                                                            <ul style="font-size:13px;color:var(--muted)" id="all_reject_list">
-                                                            </ul>
-                                                        </div>
+
+                                                    <h3 style="text-align:left;margin-bottom:10px;">
+                                                        Reason of Rejection
+                                                    </h3>
+
+                                                    <div style="text-align:center;">
+                                                        <canvas id="AllNOCRejectPie" style="max-width:300px;height:250px;margin:auto;">
+                                                        </canvas>
                                                     </div>
+
+                                                    <hr style="margin:15px 0;">
+
+                                                    <div style="text-align:left;margin-bottom:8px;">
+                                                        <h4 style="color:#c0392b;margin-bottom:4px;">
+                                                            Pre-Establishment
+                                                        </h4>
+                                                        <p style="font-weight:600;color:#d35400;margin:0;">
+                                                            Reason of Rejection
+                                                        </p>
+                                                    </div>
+
+                                                    <ul id="all_reject_list"
+                                                        style="
+                                                            font-size:13px;
+                                                            color:#555;
+                                                            max-height:200px;
+                                                            overflow-y:auto;
+                                                            padding-left:15px;
+                                                        ">
+                                                    </ul>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -341,18 +360,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="all_status_table">
-                                                                @foreach($allNocCountData as $row)
-                                                                <tr>
-                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
-                                                                </tr>
-                                                                @endforeach
+                                                                <tr><td>Almora</td><td>1</td><td>0</td><td>1</td><td>2</td><td>0</td><td>0</td><td>0</td><th>3</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -447,11 +455,12 @@
                                             <div class="card custom-card">
                                                 <div class="card-body dash1">
                                                     <h3 style="text-align:left">Reason of Rejection</h3>
-                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                    <div style="align-items:center">
                                                         <div style="flex:1">
                                                             <canvas id="PreEstablishmentRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
                                                         </div>
-                                                        <div style="width:220px">
+                                                        <hr style="margin:15px 0;">
+                                                        <div style="text-align:left;margin-bottom:8px;">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Pre-Establishment</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
                                                             <ul style="font-size:13px;color:var(--muted)" id="pre_est_reject_list">
@@ -532,18 +541,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="pre_est_status_table">
-                                                                @foreach($allNocCountData as $row)
-                                                                <tr>
-                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
-                                                                </tr>
-                                                                @endforeach
+                                                                <tr><td>Almora</td><td>1</td><td>0</td><td>1</td><td>2</td><td>0</td><td>0</td><td>0</td><th>3</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -642,11 +640,12 @@
                                             <div class="card custom-card">
                                                 <div class="card-body dash1">
                                                     <h3 style="text-align:left">Reason of Rejection</h3>
-                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                    <div style="text-align:center;">
                                                         <div style="flex:1">
                                                             <canvas id="PreOperationalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
                                                         </div>
-                                                        <div style="width:220px">
+                                                        <hr style="margin:15px 0;">
+                                                        <div style="text-align:left;margin-bottom:8px;">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Pre-Operational</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
                                                             <ul style="font-size:13px;color:var(--muted)" id="pre_op_reject_list">
@@ -726,18 +725,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="pre_op_status_table">
-                                                                @foreach($allNocCountData as $row)
-                                                                <tr>
-                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
-                                                                </tr>
-                                                                @endforeach
+                                                                <tr><td>Almora</td><td>1</td><td>0</td><td>1</td><td>2</td><td>0</td><td>0</td><td>0</td><th>3</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -832,11 +820,12 @@
                                             <div class="card custom-card">
                                                 <div class="card-body dash1">
                                                     <h3 style="text-align:left">Reason of Rejection</h3>
-                                                    <div style="display:flex;gap:12px;align-items:center">
+                                                    <div style="text-align:center;">
                                                         <div style="flex:1">
                                                             <canvas id="RenewalRejectPie" style="max-width:420px;margin:0 auto;display:block;"></canvas>
                                                         </div>
-                                                        <div style="width:220px">
+                                                        <hr style="margin:15px 0;">
+                                                        <div style="text-align:left;margin-bottom:8px;">
                                                             <h4 style="margin-bottom:8px;color:#c0392b">Renewal</h4>
                                                             <p style="font-weight:700;color:#d35400">Reason of Rejection</p>
                                                             <ul style="font-size:13px;color:var(--muted)" id="renewal_reject_list">
@@ -1013,18 +1002,16 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="renewal_status_table">
-                                                                @foreach($allNocCountData as $row)
                                                                 <tr>
-                                                                    <td>{{ $row['District Name'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Not Assigned'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Assigned But Not Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Verified'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Approved'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Rejected'] ?? '0' }}</td>
-                                                                    <td>{{ $row['Pending'] ?? '0' }}</td>
-                                                                    <th>{{ $row['Total'] ?? '0' }}</th>
-                                                                </tr>
-                                                                @endforeach
+                                                                    <td>Almora</td>
+                                                                    <td>1</td>
+                                                                    <td>0</td>
+                                                                    <td>1</td>
+                                                                    <td>2</td>
+                                                                    <td>0</td>
+                                                                    <td>0</td>
+                                                                    <td>0</td>
+                                                                    <td>3</td>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1231,7 +1218,7 @@
                         <div class="card custom-card">
                             <div class="card-body dash1">
                                 <div class="tabel-responsive">
-                                    <table>
+                                    <table id="disaster_table">
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th colspan="16" style="text-align: center;font-size: 20px">Disaster Equipment</th>
@@ -1308,7 +1295,7 @@
                         <div class="card custom-card">
                             <div class="card-body dash1">
                                 <div class="tabel-responsive">
-                                    <table>
+                                    <table id="ppe_table">
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th colspan="16" style="text-align: center;font-size: 20px">Personal Protective Equipment</th>
@@ -1405,7 +1392,7 @@
                         <div class="card custom-card">
                             <div class="card-body dash1">
                                 <div class="tabel-responsive">
-                                    <table>
+                                    <table id="mountain_table">
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th colspan="16" style="text-align: center;font-size: 20px">Mountaineering Serach & Rescue Equipment</th>
@@ -1428,7 +1415,7 @@
                                                 <th>Double Pulley</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="mountain_table">
                                           <tr>
                                             <td>Almora</td><td>4</td><td>5</td><td>10</td><td>61</td><td>-</td><td>-</td><td>-</td><td>52</td><td>-</td><td>5</td><td>55</td><td>-</td><td>-</td>
                                           </tr>
@@ -2168,64 +2155,64 @@
 
 
 
-    new Chart(document.getElementById('DisasterEquipmentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
-            datasets: [{
-                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('DisasterEquipmentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+    //         datasets: [{
+    //             data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+    //             backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
 
-    new Chart(document.getElementById('PersonalProtectiveEquipmentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
-            datasets: [{
-                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('PersonalProtectiveEquipmentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+    //         datasets: [{
+    //             data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+    //             backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
 
-    new Chart(document.getElementById('MountaineeringSerachRescueEquipmentPieChart'), {
-        type: 'pie',
-        data: {
-            labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
-            datasets: [{
-                data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
-                backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            aspectRatio: 1.4
-        }
-    });
+    // new Chart(document.getElementById('MountaineeringSerachRescueEquipmentPieChart'), {
+    //     type: 'pie',
+    //     data: {
+    //         labels: ['Foam Tender', 'Water Tender', 'Crash Fire Tender', 'Mini High Fire', 'Water Mist', 'Rescue Tender', 'PCBC', 'Bulero', 'Tools Pump', 'Multipurpose Fire Tender', 'Hydrolic Platform', 'DRFT Tender', 'Backfire Set', 'Ambulance'],
+    //         datasets: [{
+    //             data: [15, 19, 5, 18, 7, 2, 5, 5, 5, 1, 0, 3, 15, 1],
+    //             backgroundColor: ["#4e79a7", "#59a14f", "#9c755f", "#f28e2b", "#76b7b2", "#edc948", "#af7aa1", "#ff9da7", "#8cd17d", "#b6992d", "#bab0ab", "#e15759", "#79706e", "#6b4f82"]
+    //         }]
+    //     },
+    //     options: {
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom'
+    //             }
+    //         },
+    //         aspectRatio: 1.4
+    //     }
+    // });
 
 
 
@@ -2518,6 +2505,8 @@
             loadHydrantDashboardData();
         }else if (selectedTab === 'employee') {
             loadEmployeeDashboardData();
+        }else if (selectedTab === 'equip') {
+            loadEquipmentData();
         }
     
     });
@@ -3877,6 +3866,95 @@
         });
 
         $(listId).html(html);
+    }
+
+    $(document).on('click', 'label[for="equip"]', function () {
+        loadEquipmentData();
+    });
+
+    function loadEquipmentData() {
+
+        let params = new URLSearchParams({
+            district_id: $('#dashboard_dis').val(),
+            station_id: $('#dashboard_fire').val(),
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val()
+        });
+
+        fetch("{{ route('dashboard.equipmentData') }}?" + params.toString())
+            .then(res => res.json())
+            .then(response => {
+
+                updateEquipmentChart(response.disaster, 'DisasterEquipmentPieChart');
+                updateEquipmentChart(response.ppe, 'PersonalProtectiveEquipmentPieChart');
+                updateEquipmentChart(response.mountain, 'MountaineeringSerachRescueEquipmentPieChart');
+
+                renderEquipmentTable(response.disaster_table, '#disaster_table');
+                renderEquipmentTable(response.ppe_table, '#ppe_table');
+                renderEquipmentTable(response.mountain_table, '#mountain_table');
+            })
+            .catch(err => console.error(err));
+    }
+
+    let charts2 = {};
+
+    function updateEquipmentChart(dataset, canvasId) {
+
+        const ctx = document.getElementById(canvasId);
+
+        // ✅ destroy if exists
+        if (charts2[canvasId]) {
+            charts2[canvasId].destroy();
+        }
+
+        charts2[canvasId] = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: dataset.labels,
+                datasets: [{
+                    data: dataset.data,
+                    backgroundColor: [
+                        '#4e79a7', '#59a14f', '#9c755f',
+                        '#f28e2b', '#76b7b2', '#edc948'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+    
+    function renderEquipmentTable(data, tableId) {
+
+        let tbody = document.querySelector(tableId + ' tbody');
+        tbody.innerHTML = '';
+
+        let grouped = {};
+
+        data.forEach(item => {
+
+            if (!grouped[item.district]) {
+                grouped[item.district] = {};
+            }
+
+            grouped[item.district][item.equipment_name] = item.total;
+        });
+
+        Object.keys(grouped).forEach(district => {
+
+            let row = `<tr><td>${district}</td>`;
+
+            Object.values(grouped[district]).forEach(val => {
+                row += `<td>${val}</td>`;
+            });
+
+            row += `</tr>`;
+
+            tbody.innerHTML += row;
+        });
     }
 
 

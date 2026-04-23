@@ -44,7 +44,14 @@ class AwarenessController extends Controller
 
     public function addAwareness()
     {
-        $district = $this->commonModel->getData('districts');
+        if(Auth::user()->type == 1 || Auth::user()->type == 0)
+        {
+            $district = $this->commonModel->getData('districts');
+        }
+        else
+        {
+            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
+        }
         $categories = $this->commonModel->getData('categories');
         $unique_no =  Carbon::now()->timestamp;
         return view('admin.awareness.add',compact('district','categories','unique_no'));
@@ -90,7 +97,8 @@ class AwarenessController extends Controller
             'latitude'          =>  $request->input('latitude'),
             'longitude'         =>  $request->input('longitude'),
             'user_id'           =>  Auth::user()->id,
-            'otp'               =>  $otp??123456
+            'otp'               =>  $otp??123456,
+            'is_verify'         =>  1
         ];
 
         $result = $this->commonModel->insertData('fs_awareness_program_request', $data);
@@ -99,7 +107,7 @@ class AwarenessController extends Controller
             $resp = [
                 'code' => 1,
                 'status' => 'success',
-                'message' => 'Awareness saved successfully | One Time Password Sent to Registered Mobile Number.'
+                'message' => 'Awareness saved successfully. Your application id is : "  '.$appliaction_id.'"'
             ];
             return json_encode($resp);
         }

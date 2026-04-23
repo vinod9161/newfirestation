@@ -77,9 +77,9 @@
                                 <td>{{date('d-M-Y', strtotime($ins->date))}}</td>
                                 <td>{{$ins->type}}</td>
                                 <td class="d-none d-md-table-cell text-right">
-                                    <a href="{{route('admin.viewInspectionByOfficer', $ins->id)}}" class="btn btn-light btn-edit" title="Edit"><i class="fa fa-eye"></i> &nbsp;</a>
+                                    <a href="{{route('admin.viewInspectionByOfficer', $ins->id)}}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i> &nbsp;</a>
 
-                                    <a onclick="return confirm('Are you sure you Want to Delete ?')" href="{{route('admin.deleteInspectionByOfficer', $ins->id)}}" class="btn btn-light btn-delete" title="Delete"><i class="far fa-trash-alt"></i> </a>
+                                    <!-- <a onclick="return confirm('Are you sure you Want to Delete ?')" href="{{route('admin.deleteInspectionByOfficer', $ins->id)}}" class="btn btn-light btn-delete" title="Delete"><i class="far fa-trash-alt"></i> </a> -->
 
                                 </td>
                             </tr>

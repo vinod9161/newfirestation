@@ -20,8 +20,10 @@ use App\Models\Common\CommonModel;
 
 class InspectionController extends Controller
 {
+    protected $commonModel;
     public function __construct(){
         //  $this->middleware('auth');
+        $this->commonModel = new CommonModel;
     }
 
     public function inspectionByOfficer()
@@ -39,8 +41,18 @@ class InspectionController extends Controller
 
     public function addInspectionByOfficer(){
         $fso_station = Station::where('id', '=', Auth::user()->station_id)->first();
+        // echo "<pre>";
+        // print_r($fso_station->toarray()); exit;
+        if(Auth::user()->type == 1 || Auth::user()->type == 0)
+        {
+            $district = $this->commonModel->getData('districts');
+        }
+        else
+        {
+            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
+        }
         return view('admin.Activities.InspectionByOfficer.add', [
-            'districts' => District::with('tehsil','block.panchayat')->take(13)->get(),
+            'districts' => $district,
             'categories' => Category::all(),
             'fso_station' =>$fso_station,
         ]);
@@ -55,13 +67,23 @@ class InspectionController extends Controller
 
     public function viewInspectionByOfficer($id)
     {
+        if(Auth::user()->type == 1 || Auth::user()->type == 0)
+        {
+            $district = $this->commonModel->getData('districts');
+        }
+        else
+        {
+            $district = $this->commonModel->getDataByOneCondition('districts', array('id' => Auth::user()->district_id));
+        }
         $inspection  = InspectionByOfficer::with('district','station')->where('id', '=', $id)->first();
 
         $users = User::where('type', '=', '3')->get();
 
         // echo "<pre>";
-        // print_r($incident->toarray()); exit;
-        return view('admin.inspectionByOfficer.view')->with('inspection',$inspection)->with('users',$users);
+        // print_r($inspection->toarray()); exit;
+        $station_id = $inspection->station_id;
+        $station = $this->commonModel->getDataByOneCondition('fire_stations', array('id' => $station_id));
+        return view('admin.Activities.InspectionByOfficer.view')->with('inspection',$inspection)->with('users',$users)->with('district',$district)->with('station',$station);
     }
 
     public function deleteInspectionByOfficer($id){

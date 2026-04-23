@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<style>
+    input[readonly], select[disabled] {
+        background-color: #e9ecef !important;
+        color: #6c757d !important;
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+</style>
 @endsection
 @section('content')
 <div class="d-md-flex d-block align-items-center justify-content-between my-4">
@@ -71,7 +79,7 @@
                                                     <input type="text" name="employee_code" id="employee_code"
                                                         class="form-control" placeholder="Enter Employee Code"
                                                         value="{{ old('employee_code', $employee->employee_code) }}"
-                                                        required>
+                                                        {{ $isCFO ? 'readonly' : '' }} required>
                                                     <span class="text-danger" id="employee_codeError"></span>
                                                 </div>
                                             </div>
@@ -79,11 +87,14 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Employee Gender लिंग <sup class="text-danger">*</sup></label>
-                                                    <select class="form-control js-searchBox" name="gender" id="gender" required>
+                                                    <select class="form-control js-searchBox" name="gender" id="gender" required {{ $isCFO ? 'disabled' : '' }}>
                                                         <option value="" disabled {{ old('gender', $employee->gender) == '' ? 'selected' : '' }}>Select Gender</option>
                                                         <option value="Male" {{ old('gender', $employee->gender) == 'Male' ? 'selected' : '' }}>Male</option>
                                                         <option value="Female" {{ old('gender', $employee->gender) == 'Female' ? 'selected' : '' }}>Female</option>
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="gender" value="{{ $employee->gender }}">
+                                                    @endif
                                                     <span class="text-danger" id="genderError"></span>
                                                 </div>
                                             </div>
@@ -92,7 +103,7 @@
                                                 <div class="form-group">
                                                     <label>Employee Category वर्ग <sup
                                                             class="text-danger">*</sup></label>
-                                                    <select class="form-control" name="category" id="category" required>
+                                                    <select class="form-control" name="category" id="category" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">Select Category</option>
                                                         <option value="GEN"
                                                             {{ (old('category', $employee->category) == 'GEN') ? 'selected' : '' }}>
@@ -107,6 +118,9 @@
                                                             {{ (old('category', $employee->category) == 'OBC') ? 'selected' : '' }}>
                                                             OBC</option>
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="category" value="{{ $employee->category }}">
+                                                    @endif
                                                     <span class="text-danger" id="categoryError"></span>
                                                 </div>
                                             </div>
@@ -116,7 +130,7 @@
                                                     <label>Name नाम <sup class="text-danger">*</sup></label>
                                                     <input class="form-control" size="60" maxlength="100" name="name"
                                                         id="name" type="text" placeholder="Name"
-                                                        value="{{ old('name', $employee->name) }}" required />
+                                                        value="{{ old('name', $employee->name) }}" {{ $isCFO ? 'readonly' : '' }} required />
                                                     <span class="text-danger" id="nameError"></span>
                                                 </div>
                                             </div>
@@ -129,7 +143,7 @@
                                                         name="name_in_hindi" id="name_in_hindi" type="text"
                                                         placeholder="Name In Hindi नाम हिंदी में"
                                                         value="{{ old('name_in_hindi', $employee->name_in_hindi) }}"
-                                                        required />
+                                                        {{ $isCFO ? 'readonly' : '' }} required />
                                                     <span class="text-danger" id="name_in_hindiError"></span>
                                                 </div>
                                             </div>
@@ -142,7 +156,7 @@
                                                         name="father_name" id="father_name" type="text"
                                                         placeholder="Father Name"
                                                         value="{{ old('father_name', $employee->father_name) }}"
-                                                        required />
+                                                        {{ $isCFO ? 'readonly' : '' }} required />
                                                     <span class="text-danger" id="father_nameError"></span>
                                                 </div>
                                             </div>
@@ -155,7 +169,7 @@
                                                     <label>Current District वर्तमान जनपद* <sup
                                                             class="text-danger">*</sup></label>
                                                     <select name="district_id" id="districts"
-                                                        class="form-control js-example-basic-single" required>
+                                                        class="form-control js-example-basic-single" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
@@ -164,6 +178,9 @@
                                                         </option>
                                                         @endforeach
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="district_id" value="{{ $employee->district_id }}">
+                                                    @endif
                                                     <span class="text-danger" id="nameError"></span>
                                                 </div>
                                             </div>
@@ -173,7 +190,7 @@
                                                     <label>Home District गृह जनपद * <sup
                                                             class="text-danger">*</sup></label>
                                                     <select name="home_district" id="home_district"
-                                                        class="form-control js-example-basic-single" required>
+                                                        class="form-control js-example-basic-single" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
@@ -182,6 +199,9 @@
                                                         </option>
                                                         @endforeach
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="home_district" value="{{ $employee->home_district }}">
+                                                    @endif
 
                                                     <span class="text-danger" id="home_districtError"></span>
                                                 </div>
@@ -192,7 +212,7 @@
                                                     <label>Recruitment District भर्ती जनपद <sup
                                                             class="text-danger">*</sup></label>
                                                     <select name="recruitment_district" id="recruitment_district"
-                                                        class="form-control js-example-basic-single" required>
+                                                        class="form-control js-example-basic-single" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
@@ -201,6 +221,9 @@
                                                         </option>
                                                         @endforeach
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="recruitment_district" value="{{ $employee->recruitment_district }}">
+                                                    @endif
 
                                                     <span class="text-danger" id="recruitment_districtError"></span>
                                                 </div>
@@ -230,7 +253,7 @@
                                                     <label>Previous Posting पिछली नियुक्ति जनपद <sup
                                                             class="text-danger">*</sup></label>
                                                     <select name="previous_posting" id="previous_posting"
-                                                        class="form-control js-example-basic-single" required>
+                                                        class="form-control js-example-basic-single" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">--- Select District जनपद ---</option>
                                                         @foreach($districts as $district)
                                                         <option value="{{ $district->id }}"
@@ -239,6 +262,9 @@
                                                         </option>
                                                         @endforeach
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="previous_posting" value="{{ $employee->previous_posting }}">
+                                                    @endif
 
                                                     <span class="text-danger" id="previous_postingError"></span>
                                                 </div>
@@ -248,7 +274,7 @@
                                                 <div class="form-group">
                                                     <label>Designation at the time of recruitment जिस पद पर भर्ती हुआ
                                                         <sup class="text-danger">*</sup></label>
-                                                    <select class="form-control" name="entry_level" id="entry_level"
+                                                    <select class="form-control" name="entry_level" id="entry_level" {{ $isCFO ? 'disabled' : '' }} 
                                                         required>
                                                         <option value="">Select Designation</option>
                                                         <option value="Chief fire officer"
@@ -273,6 +299,9 @@
                                                             {{ (old('entry_level') == 'Sweper' || (isset($employee) && $employee->entry_level == 'Sweper')) ? 'selected' : '' }}>
                                                             Sweper</option>
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="entry_level" value="{{ $employee->entry_level }}">
+                                                    @endif
 
                                                     <span class="text-danger" id="statusError"></span>
                                                 </div>
@@ -337,7 +366,7 @@
                                                     <input class="form-control" size="50" maxlength="50"
                                                         name="date_of_birth" id="date_of_birth" type="date"
                                                         placeholder="Date Of Birth" onchange="handler(event);"
-                                                        value="{{ old('date_of_birth', $employee->date_of_birth) }}"
+                                                        value="{{ old('date_of_birth', $employee->date_of_birth) }}" {{ $isCFO ? 'readonly' : '' }}
                                                         required />
 
                                                     <span class="text-danger" id="emailError"></span>
@@ -352,7 +381,7 @@
                                                         name="date_of_recuirtment" id="date_of_recuirtment" type="date"
                                                         placeholder="Date Of Recruitment"
                                                         value="{{ old('date_of_recuirtment', isset($employee) ? $employee->date_of_recuirtment : '') }}"
-                                                        required />
+                                                        {{ $isCFO ? 'readonly' : '' }} required />
 
                                                     <span class="text-danger" id="phoneError"></span>
                                                 </div>
@@ -366,7 +395,7 @@
                                                         name="date_of_retirement" id="date_of_retirement" type="date"
                                                         placeholder="Date Of Retirement"
                                                         value="{{ old('date_of_retirement', isset($employee) ? $employee->date_of_retirement : '') }}"
-                                                        readonly />
+                                                        {{ $isCFO ? 'readonly' : '' }} />
 
                                                     <span class="text-danger" id="districtsError"></span>
                                                 </div>
@@ -438,7 +467,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Employee Status <sup class="text-danger">*</sup></label>
-                                                    <select class="form-control" name="status" id="status" required>
+                                                    <select class="form-control" name="status" id="status" {{ $isCFO ? 'disabled' : '' }} required>
                                                         <option value="">Select Status</option>
                                                         <option value="Active" {{ old('status', $employee->status) == 'Active' ? 'selected' : '' }}>Active</option>
                                                         <option value="Retirement" {{ old('status', $employee->status) == 'Retirement' ? 'selected' : '' }}>Retirement</option>
@@ -447,6 +476,9 @@
                                                         <option value="Resigned" {{ old('status', $employee->status) == 'Resigned' ? 'selected' : '' }}>Resigned</option>
                                                         <option value="Terminated" {{ old('status', $employee->status) == 'Terminated' ? 'selected' : '' }}>Terminated</option>
                                                     </select>
+                                                    @if($isCFO)
+                                                        <input type="hidden" name="status" value="{{ $employee->status }}">
+                                                    @endif
                                                     <span class="text-danger" id="emailError"></span>
                                                 </div>
                                             </div>
@@ -523,13 +555,21 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function () {
+    var dob = $("#date_of_birth").val();
+    var retirement = $("#date_of_retirement").val();
+
+    if (dob && !retirement) {
+        handler();
+    }
+});
+
 function handler(e)
 {
     var getLastDayOfMonth = function(year, month) {
         return new Date(year, month + 1, 0).getDate();
     }
     var dob = new Date($("#date_of_birth").val());
-    // alert(dob);
     if (isNaN(dob.getTime())) {
         alert('Please select a valid date of birth.');
         $("#outptLbl").html("Please select date!");

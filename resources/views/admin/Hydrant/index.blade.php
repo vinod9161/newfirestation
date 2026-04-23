@@ -142,11 +142,13 @@
                                  <td class="text-right">
                                     <a href="{{ route('admin.viewhydrant', $hydrant->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a>
                                     <a href="{{ route('admin.edithydrant', $hydrant->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                    @if(Auth::user()->type == 0)
                                     <form action="{{ route('admin.deletehydrant', $hydrant->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                     </form>
+                                    @endif
 
                                     
                                 </td>

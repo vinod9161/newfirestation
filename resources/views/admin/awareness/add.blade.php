@@ -391,9 +391,9 @@ $(document).ready(function(){
                 if (obj.code === 1)
                 {
                     $('.fsotoaster').addClass('alert alert-success').html(obj.message).delay(5000).fadeOut().css('display', 'block');
-                    $('#addAwarnessFormDiv').hide();
-                    $('#otpVerifydiv').show();
-                    $('#otpMobile').val(Phone);
+                    // $('#addAwarnessFormDiv').hide();
+                    // $('#otpVerifydiv').show();
+                    // $('#otpMobile').val(Phone);
                 } 
                 else {
                     $('.fsotoaster').addClass('alert alert-danger').html(obj.message).delay(3000).fadeOut().css('display', 'block');
