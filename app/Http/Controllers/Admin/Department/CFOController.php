@@ -201,7 +201,7 @@ class CFOController extends Controller
 
     public function filter(Request $request){
        $query = User::select('users.*', 'districts.name as district_name')
-                    ->join('districts', 'users.district_id', '=', 'districts.id');
+                    ->join('districts', 'users.district_id', '=', 'districts.id')->where('users.type', '2');
         if ($request->filled('filter_name')) {
             $query->where('users.name', 'like', '%' . $request->input('filter_name') . '%');
         }

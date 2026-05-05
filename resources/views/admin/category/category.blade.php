@@ -122,10 +122,10 @@
                                     Status
                                 </th>
 
-                                <th class="sorting" tabindex="0" aria-controls="employee-table" rowspan="1" colspan="1"
+                                <!-- <th class="sorting" tabindex="0" aria-controls="employee-table" rowspan="1" colspan="1"
                                     aria-label="Gender: activate to sort column ascending" style="width: 67px;">Created
                                     at
-                                </th>
+                                </th> -->
 
                                 <th class="d-none d-md-table-cell text-right sorting" style="width: 133px;" tabindex="0"
                                     aria-controls="employee-table" rowspan="1" colspan="1"
@@ -142,11 +142,10 @@
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->project_name }}</td>
                                 <td>{{ $category->status == 1 ? 'Active' : 'Inactive' }}</td>
-                                <td>{{ $category->created_at ? $category->created_at : 'N/A' }}</td>
                                 <td class="text-right">
                                     <!-- Edit Button -->
                                     <a href="{{ route('admin.editcategory', $category->id) }}"
-                                        class="btn btn-primary btn-sm"><i class="fe fe-eye"></i></a>
+                                        class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a>
                                     <!-- Delete Button -->
                                     <a href="{{ route('admin.deletecategory', $category->id) }}"
                                         class="btn btn-danger btn-sm"

@@ -1,6 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+require_once app_path('Libraries/requests/library/Requests.php');
+
+\Requests::register_autoloader();
+
+require_once app_path('Libraries/razorpay_loader.php');
+
+use Razorpay\Api\Api;
+
 use Illuminate\Http\Request;
 use App\Models\Models\{Standby,AwarenessProgram,District,Category,Station,Employee,FireReport,Rescue,Relief,Vehicle,Organisational,RecentUpdates,SpecialRiskArea,SafetyOfficer,UserGoCircular,IncidentReport};
 use App\Models\ContactModel;
@@ -1159,10 +1167,17 @@ class MainController extends Controller{
             if ($result){
                 $where = ['mobile_no' => $request->input('otpMobile')];
                 $getData = $this->commonModel->getDataByOneCondition($tbl,$where);
+                // $resp = [
+                //     'code' => 1,
+                //     'status' => 'Success',
+                //     'message' => "Application has been saved successfully.| Your application id is: ".$getData[0]->application_id??'',
+                // ];
+
                 $resp = [
                     'code' => 1,
                     'status' => 'Success',
-                    'message' => "Application has been saved successfully.| Your application id is: ".$getData[0]->application_id??'',
+                    'application_id' => $getData[0]->application_id,
+                    'message' => "Application verified successfully"
                 ];
                 return json_encode($resp);
             }
@@ -2055,6 +2070,52 @@ class MainController extends Controller{
                     Please verify the details and try again.
                 </div>"
         ]);
+    }
+
+    public function paymentPage($id)
+    {
+        $data = $this->commonModel->getDataByOneCondition(
+            'fs_standby_duty_request',
+            ['application_id' => $id]
+        );
+
+        // TEMP amount
+        $amount = 100;
+
+        return view('fire.payment_page', compact('data','amount','id'));
+    }
+
+    public function createOrder(Request $request)
+    {
+        $key = env('RAZORPAY_KEY');
+        $secret = env('RAZORPAY_SECRET');
+
+        $api = new Api($key, $secret);
+
+        $amount = 100; // ₹100 test
+
+        $order = $api->order->create([
+            'receipt' => 'order_123',
+            'amount' => $amount * 100,
+            'currency' => 'INR'
+        ]);
+
+        return response()->json([
+            'order_id' => $order['id'],
+            'amount' => $amount
+        ]);
+    }
+
+    public function verifyPayment(Request $request)
+    {
+        DB::table('payments')
+            ->where('transaction_id', $request->razorpay_order_id)
+            ->update([
+                'status' => 'success',
+                'response' => json_encode($request->all())
+            ]);
+
+        return response()->json(['status' => 'success']);
     }
 
 

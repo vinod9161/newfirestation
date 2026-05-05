@@ -228,7 +228,7 @@ class FSOController extends Controller
 
         $query = User::select('users.*', 'districts.name as district_name')
                        ->join('districts', 'users.district_id', '=', 'districts.id')
-                       ->join('fire_stations', 'users.station_id', '=', 'fire_stations.id');
+                       ->join('fire_stations', 'users.station_id', '=', 'fire_stations.id')->where('users.type', '3');
 
         if ($request->filled('filter_name')) {
             $query->where('users.name', 'like', '%' . $request->input('filter_name') . '%');

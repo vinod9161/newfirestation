@@ -59,6 +59,23 @@
                         </li>
                     </ul>
                 </li>
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="fe fe-box side-menu__icon"></i>
+                        <span class="side-menu__label">Service Management</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1">
+                        <li class="slide">
+                            <a href="{{ route('services.index') }}" style="padding-left: 35px;">Services</a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('pricing-rules.index') }}" class="side-menu__item"
+                                style="padding-left: 35px;">Pricing Rules</a>
+                        </li>
+                        
+                    </ul>
+                </li>
                 <!-- End::slide -->
 
                 <!-- Start::Categories & Sub Categories -->

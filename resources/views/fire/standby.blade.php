@@ -359,7 +359,8 @@ $(document).on('submit', '#standbyOtpPostverify', function(e) {
         return false;
     } else {
         let otpMobile = $('#otpMobile').val();
-        let otpValue = otpinput0 + otpinput1 + otpinput2 + otpinput3 + otpinput4 + otpinput5;
+        let otpValueString = otpinput0 + otpinput1 + otpinput2 + otpinput3 + otpinput4 + otpinput5;
+        let otpValue = parseInt(otpValueString, 10);
 
         $.ajax({
             url: "{{ route('actionStandbyOtpPostVerify') }}",
@@ -373,12 +374,16 @@ $(document).on('submit', '#standbyOtpPostverify', function(e) {
                 let obj = JSON.parse(response);
 
                 if (obj.code === 1) {
-                    $('.toaster').addClass('alert alert-success').html(obj.message).delay(5000)
-                        .fadeOut().css('display', 'block');
-                    $('#otpVerifydiv').hide();
-                    $('#standbyForm')[0].reset();
-                    $('#standbyFormdiv').show();
-                    return false;
+                    // $('.toaster').addClass('alert alert-success').html(obj.message).delay(5000)
+                    //     .fadeOut().css('display', 'block');
+                    // $('#otpVerifydiv').hide();
+                    // $('#standbyForm')[0].reset();
+                    // $('#standbyFormdiv').show();
+                    // return false;
+
+                    let appId = obj.application_id;
+
+                    window.location.href = "{{ url('standby/payment') }}/" + appId;
                 } else if (obj.code === 2) {
                     $.each(obj.errors, function(key, value) {
                         $('.toaster').addClass('alert alert-danger').html(value).delay(3000)

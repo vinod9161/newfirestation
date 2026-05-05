@@ -99,7 +99,7 @@
                                 <td>{{ $type->created_at ? $type->created_at : 'N/A' }}</td>
                                 <td class="text-right">
                                     <!-- Edit Button -->
-                                    <a href="{{ route('admin.edittype', $type->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-eye"></i></a> 
+                                    <a href="{{ route('admin.edittype', $type->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a> 
                                     <!-- Delete Button -->
                                     <a href="{{ route('admin.deletetype', $type->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this type?');"><i class="fe fe-trash"></i></a>
                                 </td>

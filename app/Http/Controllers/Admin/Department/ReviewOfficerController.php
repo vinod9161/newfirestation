@@ -42,6 +42,7 @@ class ReviewOfficerController extends Controller{
             'name' => $request->name,
             'email' => $request->email,
             'number' => $request->phone,
+            'district_id' => $request->district_id,
             'type'  => '5',
             'password'=> Hash::make(12345678),
         ]);
@@ -50,10 +51,18 @@ class ReviewOfficerController extends Controller{
     }
 
 
+    // public function edit($id)
+    // {
+    //     $data['deptydirector'] = User::findOrFail($id);
+    //     $data['district'] =  DistrictModel::with('station')->take(13)->get();
+    //     return view('admin.Department.review.edit', $data);
+    // }
+
     public function edit($id)
     {
-        $data['deptydirector'] = User::findOrFail($id);
-        $data['district'] =  DistrictModel::with('station')->take(13)->get();
+        $data['review'] = User::findOrFail($id); // ✅ review officer
+        $data['district'] = DistrictModel::all(); // ✅ dropdown list
+
         return view('admin.Department.review.edit', $data);
     }
 
@@ -63,15 +72,21 @@ class ReviewOfficerController extends Controller{
         $request->validate([
             'name' => 'required|max:255|regex:/^[A-Za-z0-9 ]+$/',
             'email' => 'required|max:255|email',
-            'phone' => 'required|numeric',
+            'mobile' => 'required|numeric',
+            'district_id' => 'required'
         ]);
-        $district = User::findOrFail($id);
-        $district->update([
+
+        $review = User::findOrFail($id);
+
+        $review->update([
             'name' => $request->name,
             'email' => $request->email,
-            'number' => $request->phone,
+            'number' => $request->mobile,
+            'district_id' => $request->district_id, // 👈 important
         ]);
-        return redirect()->route('admin.review')->with('success', 'Review updated successfully!');
+
+        return redirect()->route('admin.review')
+            ->with('success', 'Review updated successfully!');
     }
 
 
@@ -81,7 +96,7 @@ class ReviewOfficerController extends Controller{
     {
 
         $query = User::select('users.*', 'districts.name as district_name')
-                       ->join('districts', 'users.district_id', '=', 'districts.id');
+                       ->join('districts', 'users.district_id', '=', 'districts.id')->where('type', '5');
 
         if ($request->filled('filter_name')) {
             $query->where('users.name', 'like', '%' . $request->input('filter_name') . '%');

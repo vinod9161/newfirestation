@@ -526,49 +526,37 @@
         } else {
             $('#datatable-2_paginate').empty();
             var employeeData = $('#datatable-basic').DataTable({
-                "lengthChange": false,
-                "processing": true,
-                "serverSide": true,
-                "order": [],
-                "lengthMenu": [10, 20, 50, 100, 500],
-                "bDestroy": true,
-                "searching": false,
-                "ajax": {
+                processing: true,
+                serverSide: true,
+                destroy: true, // better than bDestroy
+                searching: false,
+                order: [],
+                pageLength: 10,
+
+                ajax: {
                     url: "{{ route('admin.filter_noc_data') }}",
                     type: "POST",
-                    data: {
-                        _token: _token,
-                        filter_from_date: filter_from_date,
-                        filter_to_date: filter_to_date,
-                        filter_projects: filter_projects,
-                        filter_category: filter_category,
-                        filter_noc_type: filter_noc_type
-                    },
-                    dataType: "json",
-                },
-                "columnDefs": [
-                    {
-                        "targets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                        "visible": true,
-                        "orderable": false,
-                    },
-                ],
-                "dom": 'lBfrtip',
-                "buttons": [
-                    'excelHtml5',
-                    'csvHtml5',
-                    'pdfHtml5',
-                    'copyHtml5',
-                    'print'
-                ],
-                "pageLength": 10,
-                "createdRow": function(row, data, dataIndex) {
-                    if (data[data.length - 1] === 'highlight-red')
-                    {
-                        $(row).addClass('bg_red_color');
+                    data: function(d) {
+                        d._token = $('input[name="_token"]').val();
+                        d.filter_from_date = $('#filter_from_date').val();
+                        d.filter_to_date = $('#filter_to_date').val();
+                        d.filter_projects = $('#filter_projects').val();
+                        d.filter_category = $('#filter_category').val();
+                        d.filter_noc_type = $('#filter_noc_type').val();
                     }
-                    else if(data[data.length - 1] === 'highlight-orange')
+                },
+
+                columnDefs: [
                     {
+                        targets: "_all",
+                        orderable: false
+                    }
+                ],
+
+                createdRow: function(row, data) {
+                    if (data[data.length - 1] === 'highlight-red') {
+                        $(row).addClass('bg_red_color');
+                    } else if (data[data.length - 1] === 'highlight-orange') {
                         $(row).addClass('bg-orange');
                     }
                 }

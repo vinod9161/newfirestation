@@ -133,7 +133,7 @@
                                 <td class="text-right">
                                     <!-- Edit Button -->
                                     <a href="{{ route('admin.editproject', $project->id) }}"
-                                        class="btn btn-primary btn-sm"><i class="fe fe-eye"></i></a>
+                                        class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a>
                                     <!-- Delete Button -->
                                     <a href="{{ route('admin.deleteproject', $project->id) }}"
                                         class="btn btn-danger btn-sm"

@@ -74,7 +74,7 @@ class DeputyController extends Controller{
 
     public function filter(Request $request){
 
-        $query = User::select('*');
+        $query = User::select('*')->where('users.type', '1');
 
         if ($request->filled('filter_name')) {
             $query->where('users.name', 'like', '%' . $request->input('filter_name') . '%');
@@ -85,7 +85,7 @@ class DeputyController extends Controller{
         }
 
         if ($request->filled('phone')) {
-            $query->where('users.phone', 'like', '%' . $request->input('phone') . '%');
+            $query->where('users.number', 'like', '%' . $request->input('phone') . '%');
         }
 
         if ($request->filled('status')) {

@@ -35,7 +35,7 @@
 <!--Navbar-->
 <div class="responsive-background">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="{{ route('admin.reviewfilter') }}" method="GET" class="advanced-search br-3">
+        <form action="{{ route('admin.stationsfilter') }}" method="GET" class="advanced-search br-3">
             <div class="advanced-search br-3">
                 <div class="row align-items-center">
                     <div class="col-md-12">

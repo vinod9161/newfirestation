@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Admin\CMS\LeadershipSectionController;
+use App\Http\Controllers\Admin\PricingRuleController;
+use App\Http\Controllers\Admin\ServiceController;
 
 
 Route::get('/', function () {
@@ -1087,7 +1089,12 @@ Route::get('/staff-strength',[App\Http\Controllers\MainController::class,'action
 Route::get('/standby',[App\Http\Controllers\MainController::class,'actionStandby'])->name('actionStandby');
 Route::post('/actionStandbyPost',[App\Http\Controllers\MainController::class,'actionStandbyPost'])->name('actionStandbyPost');
 Route::post('/actionStandbyOtpPost',[App\Http\Controllers\MainController::class,'actionStandbyOtpPost'])->name('actionStandbyOtpPostVerify');
-
+Route::get('standby/payment/{id}', [App\Http\Controllers\MainController::class, 'paymentPage'])->name('standby.payment');
+Route::post('/create-order', [App\Http\Controllers\MainController::class, 'createOrder'])->name('create.order');
+Route::post('/verify-payment', [App\Http\Controllers\MainController::class, 'verifyPayment'])->name('verify.payment');
+Route::get('payment-success', function () {
+    return view('payment_success');
+})->name('payment.success');
 
 Route::get('/public-awareness',[App\Http\Controllers\MainController::class,'actionPublicAwareness'])->name('actionPublicAwareness');
 Route::post('/publicAwarenessPost',[App\Http\Controllers\MainController::class,'publicAwarenessPost'])->name('publicAwarenessPost')->middleware('throttle:3,1');
@@ -1224,3 +1231,21 @@ Route::get('admin/edit-leadership-section/{id}',[LeadershipSectionController::cl
 Route::post('admin/update-leadership-section',[LeadershipSectionController::class,'updateLeadershipSection'])->name('admin.updateLeadershipSection');
 Route::get('admin/delete-leadership-section/{id}',[LeadershipSectionController::class,'deleteLeadershipSection'])->name('admin.deleteLeadershipSection');
 
+Route::prefix('admin')->group(function () {
+
+    Route::get('pricing-rules', [PricingRuleController::class, 'index'])->name('pricing-rules.index');
+    Route::get('pricing-rules/create', [PricingRuleController::class, 'create'])->name('pricing-rules.create');
+    Route::post('pricing-rules', [PricingRuleController::class, 'store'])->name('pricing-rules.store');
+    Route::get('pricing-rules/{id}/edit', [PricingRuleController::class, 'edit'])->name('pricing-rules.edit');
+    Route::post('pricing-rules/{id}/update', [PricingRuleController::class, 'update'])->name('pricing-rules.update');
+    Route::get('pricing-rules/{id}/toggle', [PricingRuleController::class,'toggle'])->name('pricing-rules.toggle');
+    Route::post('pricing-rules/{id}/delete', [PricingRuleController::class, 'destroy'])->name('pricing-rules.delete');
+
+    Route::get('services', [ServiceController::class,'index'])->name('services.index');
+    Route::get('services/create', [ServiceController::class,'create'])->name('services.create');
+    Route::post('services/store', [ServiceController::class,'store'])->name('services.store');
+    Route::get('services/{id}/edit', [ServiceController::class,'edit'])->name('services.edit');
+    Route::post('services/{id}/update', [ServiceController::class,'update'])->name('services.update');
+    Route::post('services/{id}/delete', [ServiceController::class,'destroy'])->name('services.delete');
+    Route::get('services/{id}/toggle', [ServiceController::class,'toggle'])->name('services.toggle');
+});

@@ -151,20 +151,76 @@ class StationsController extends Controller
         return redirect()->route('admin.stations')->with('success', 'Stations deleted successfully.');
     }
 
-    public function filter(Request $request){
-        $query = Station::select('fire_stations.*', 'districts.name as district_name')
-                        ->join('districts', 'fire_stations.district_id', '=', 'districts.id');
+    public function filter(Request $request)
+    {
+        $commonModel = new CommonModel();
+        $user = Auth::user();
+
+        // Base query (same as index logic)
+        if ($user->type == 2 || $user->type == 3) {
+            $query = DB::table('fire_stations')
+                        ->where('district_id', $user->district_id);
+        } else {
+            $query = DB::table('fire_stations');
+        }
+
+        // Apply filters
         if ($request->filled('filter_name')) {
-            $query->where('fire_stations.name', 'like', '%' . $request->input('filter_name') . '%');
+            $query->where('name', 'like', '%' . $request->filter_name . '%');
         }
-        if ($request->filled('filter_district')) {
-            $query->where('districts.name', 'like', '%' . $request->input('filter_district') . '%');
+
+        if ($request->filled('district_name')) {
+            $districtIds = DB::table('districts')
+                            ->where('name', 'like', '%' . $request->district_name . '%')
+                            ->pluck('id');
+
+            $query->whereIn('district_id', $districtIds);
         }
+
         if ($request->filled('status')) {
-            $query->where('fire_stations.status', $request->input('status'));
+            $query->where('status', $request->status);
         }
-        $station = $query->get();
-        $data['station'] = $station;
-        return view('admin.Department.stations.index', $data);
+
+        $getAlldata = $query->get();
+
+        $stations = [];
+
+        foreach ($getAlldata as $row) {
+
+            $count_strength =
+                $row->fire_station_officer +
+                $row->fire_station_second_officer +
+                $row->leading_fireman +
+                $row->fire_service_driver +
+                $row->fireman +
+                $row->cook_peon_followers +
+                $row->sweeper;
+
+            $count_avail =
+                $row->fire_station_officer_avail +
+                $row->fire_station_second_officer_avail +
+                $row->leading_fireman_avail +
+                $row->fire_service_driver_avail +
+                $row->fireman_avail +
+                $row->cook_peon_followers_avail +
+                $row->sweeper_avail;
+
+            $district = DB::table('districts')
+                            ->where('id', $row->district_id)
+                            ->first();
+
+            $stations[] = [
+                'id' => $row->id,
+                'name' => $row->name,
+                'dname' => $district->name ?? '',
+                'land' => $row->land,
+                'building' => $row->building,
+                'count_strength' => $count_strength,
+                'count_avail' => $count_avail,
+                'status' => $row->status
+            ];
+        }
+
+        return view('admin.Department.stations.index', ['stations' => $stations]);
     }
 }

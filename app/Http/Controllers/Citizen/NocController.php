@@ -1373,21 +1373,85 @@ class NocController extends Controller
                         }
                     }
                 }
+                // $output = [];
+                // $output[] = $i;
+                // $output[] = $row->application_no ?? 'NA';
+                // $output[] = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s') ?? 'NA';
+                // $output[] = $noc_type ?? 'NA';
+                // $output[] = $row->application_type ?? 'NA';
+                // $output[] = $row->building_name ?? 'NA';
+                // $output[] = $category[0]->name ?? 'NA';
+                // $output[] = $building_height['max_height_building'] ?? 'NA';
+                // $output[] = $district[0]->name ?? 'NA';
+                // $output[] = $row->fire_station ?? 'NA';
+                // $output[] = $status;
+                // $output[] = $row->declaration_status ?? 'Valid';
+                // $output[] = $action;
+                // $output[] = $highlightRow;
+                // $resultData[] = $output;
+
                 $output = [];
+
                 $output[] = $i;
+
+                // Application Number
                 $output[] = $row->application_no ?? 'NA';
-                $output[] = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s') ?? 'NA';
-                $output[] = $noc_type ?? 'NA';
-                $output[] = $row->application_type ?? 'NA';
+
+                // Old Application Number
+                $output[] = $row->old_application_no ?? '-----';
+
+                // Application Flag
+                $output[] = $row->application_flag ?? '-----';
+
+                // Application Date
+                $output[] = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s');
+
+                // Days Since Applied
+                $submittedAt = $row->submitted_at ? new DateTime($row->submitted_at) : null;
+                $daysDiff = 'NA';
+                if ($submittedAt) {
+                    $today = new DateTime();
+                    $interval = $submittedAt->diff($today);
+                    $daysDiff = $interval->days . ' days';
+                }
+                $output[] = $daysDiff;
+
+                // Application For
+                $output[] = $noc_type;
+
+                // Type
+                $output[] = ucwords($row->application_type ?? 'NA');
+
+                // Building Name
                 $output[] = $row->building_name ?? 'NA';
+
+                // Building Category
                 $output[] = $category[0]->name ?? 'NA';
+
+                // Building Height
                 $output[] = $building_height['max_height_building'] ?? 'NA';
+
+                // District
                 $output[] = $district[0]->name ?? 'NA';
+
+                // Fire Station
                 $output[] = $row->fire_station ?? 'NA';
+
+                // Expiry Date
+                $output[] = 'NA'; // (add your expiry logic if needed)
+
+                // Status
                 $output[] = $status;
+
+                // Declaration Status
                 $output[] = $row->declaration_status ?? 'Valid';
+
+                // Actions
                 $output[] = $action;
+
+                // Highlight row (LAST)
                 $output[] = $highlightRow;
+
                 $resultData[] = $output;
 
                 $i++; 
