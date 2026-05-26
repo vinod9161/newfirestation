@@ -48,15 +48,23 @@
     <div class="container">
         <div class="row content-card content-text">
             <div class="col-lg-6 video-box">
-                <img src="{{asset('/public/fire/gallery/mockdrill.jpg')}}" class="img-fluid img-reponsive rounded" alt="">
+                @if(!empty($awarness_program->image))
+
+                <img
+                    src="{{ asset('/public/admin/services/awarness_mock_drill/'.$awarness_program->image) }}"
+                    class="img-fluid img-reponsive rounded"
+                    alt="{{ $awarness_program->hadding }}"
+                >
+
+                @endif   
             </div>
             <div class="col-lg-6 d-flex flex-column justify-content-center">
-                <p class="description"> 
-                    Uttarakhand Fire & Emergency Service conducts firefighting training, mock drills, and fire safety awareness programmes. Industries, residential societies, schools, and other institutions may submit requests to the Fire Department for organizing awareness programmes, mock drills, talk shows, seminars, or conferences.
-                    These services are provided free of cost, subject to the availability of resources. Members of the public, schools, and institutions may also schedule visits to fire stations with prior permission from the concerned Fire Station Officer.
-                    For requests or coordination, please contact the nearest fire station directly or communicate via email with the concerned fire station.
 
-                </p>
+                <div class="description">
+
+                    {!! $awarness_program->content ?? '' !!}
+
+                </div>
             </div>
         </div>
     </div>

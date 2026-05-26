@@ -1,6 +1,6 @@
 @extends('layouts.admin.template')
 @section('title')
-<title>Mission & Vision Card | Admin Dashboard</title>
+<title>Objective Content | Admin Dashboard</title>
 @endsection
 
 @section('style')
@@ -11,7 +11,7 @@
 @section('content')
 <div class="d-md-flex d-block align-items-center justify-content-between my-4">
     <div>
-        <h5 class="main-content-title text-default fs-24 mg-b-4 mb-0">Add Mission & Vision Card</h5>
+        <h5 class="main-content-title text-default fs-24 mg-b-4 mb-0">Add Objective Content</h5>
     </div>
     <div class="d-flex app-header-btn">
         <div>
@@ -27,7 +27,7 @@
         <div class="card custom-card">
             <div class="card-header">
                 <div class="card-title">
-                    Add Mission & Vision Card
+                    Add Objective Content
                 </div>
             </div>
             <div class="card-body">
@@ -68,15 +68,30 @@
                                                     <span class="text-danger" id="card_heddingError"></span>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Short Content</label>
+
+                                                    <input
+                                                        type="text"
+                                                        name="short_content"
+                                                        class="form-control"
+                                                    >
+                                                </div>
+                                            </div>
 
 
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label>Image Position <sup class="text-danger">*</sup></label>
+                                                    <label>Section Type <sup class="text-danger">*</sup></label>
                                                     <select name="imageposition" id="imageposition" class="form-control">
-                                                        <option value="">Select Position</option>
-                                                        <option value="right">Right</option>
-                                                        <option value="left">Left</option>
+                                                        <option value="">Select Section</option>
+
+                                                        <option value="top">Top Section</option>
+
+                                                        <option value="card">Objective Card</option>
+
+                                                        <option value="bottom">Bottom Section</option>
                                                     </select>
                                                     <span class="text-danger" id="card_imagepositionError"></span>
                                                 </div>

@@ -16,10 +16,72 @@ use Illuminate\Support\Facades\DB;
 
 class FSOController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['fso'] = User::with(['district','stations'])->where('type', '=', '3')->orderBy('id', 'desc')->get();
-        return view('admin.Department.fso.index',$data);
+        $query = User::with([
+                'district',
+                'stations'
+            ])
+            ->where('type', '3');
+
+        if ($request->filled('filter_name'))
+        {
+            $query->where(
+                'name',
+                'LIKE',
+                '%' . $request->filter_name . '%'
+            );
+        }
+
+        if ($request->filled('filter_email'))
+        {
+            $query->where(
+                'email',
+                'LIKE',
+                '%' . $request->filter_email . '%'
+            );
+        }
+
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        $data['fso'] = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        if (
+            Auth::user()->type == 0
+            || Auth::user()->type == 1
+        ) {
+            $data['districts'] = DB::table('districts')
+                ->orderBy('name')
+                ->get();
+        }
+        else
+        {
+            $data['districts'] = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view(
+            'admin.Department.fso.index',
+            $data
+        );
     }
 
 

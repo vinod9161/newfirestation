@@ -24,17 +24,30 @@
           <div class="row content-card content-text">
         
             <div class="col-lg-6 video-box">
-              <img src="{{asset('/public/fire/gallery/standby.jpg')}}" class="img-fluid img-reponsive rounded" alt="">
+              @if(!empty($pumping_work->image))
+
+              <img
+                  src="{{ asset('/public/admin/services/pumping_work/'.$pumping_work->image) }}"
+                  class="img-fluid img-reponsive rounded"
+                  alt="{{ $pumping_work->hadding }}"
+              >
+
+              @endif
             </div>
   
             <div class="col-lg-6 d-flex flex-column justify-content-center">
-              <h4 class="title">Pumping Work</a></h4>
-  
-                <p class="description">
-                  The Uttarakhand Fire and Emergency Service Department undertakes pumping operations during disasters, emergencies, or on the orders of competent government authorities, such as for dewatering flooded areas to prevent loss of life and property.
-                  Pumping services may also be provided for cinematography and other approved purposes, subject to availability of equipment and manpower. In such non-emergency cases, nominal charges are applicable as per departmental norms. The service is aimed at ensuring safety, damage control, and effective water management.
-                </p>              
-              </div>
+              <h4 class="title">
+
+                  {{ $pumping_work->hadding ?? 'Pumping Work' }}
+
+              </h4>
+
+              <div class="description">
+
+                  {!! $pumping_work->content ?? '' !!}
+
+              </div>            
+            </div>
   
         </div>
         </div>

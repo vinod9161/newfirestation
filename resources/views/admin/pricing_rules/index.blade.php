@@ -8,12 +8,17 @@
 
 <div class="d-md-flex d-block align-items-center justify-content-between my-4">
     <div>
-        <h5 class="main-content-title text-default fs-24 mb-0">Manage Pricing Rules</h5>
+        <h5 class="main-content-title text-default fs-24 mb-0">
+            Manage Pricing Rules
+        </h5>
     </div>
 
     <div class="d-flex app-header-btn">
-        <a href="{{ route('pricing-rules.create') }}" class="btn ripple btn-wave btn-success mb-0">
-            <i class="fe fe-plus me-1"></i> Add Pricing Rule
+        <a href="{{ route('pricing-rules.create') }}"
+           class="btn ripple btn-wave btn-success mb-0">
+
+            <i class="fe fe-plus me-1"></i>
+            Add Pricing Rule
         </a>
     </div>
 </div>
@@ -33,100 +38,226 @@
 
 {{-- Alerts --}}
 @if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
 @endif
 
 @if (session('failed'))
-    <div class="alert alert-danger">{{ session('failed') }}</div>
+    <div class="alert alert-danger">
+        {{ session('failed') }}
+    </div>
 @endif
 
 <div class="table-responsive">
 
-<table class="table table-bordered table-striped table-hover">
+<table class="table table-bordered table-striped table-hover align-middle">
+
 <thead>
 <tr>
     <th>#</th>
     <th>Service</th>
     <th>Conditions</th>
-    <th>Rate</th>
+    <th>Pricing Details</th>
     <th>Status</th>
-    <th>Action</th>
+    <th width="180">Action</th>
 </tr>
 </thead>
 
 <tbody>
-@foreach($rules as $key => $rule)
+
+@forelse($rules as $key => $rule)
+
 <tr>
+
+    {{-- SERIAL --}}
     <td>{{ $key + 1 }}</td>
 
     {{-- SERVICE --}}
-    <td>{{ $rule->service->name ?? '-' }}</td>
+    <td>
+        <strong>
+            {{ $rule->service->name ?? '-' }}
+        </strong>
+    </td>
 
     {{-- CONDITIONS --}}
     <td>
+
+        {{-- GATHERING --}}
         @if($rule->min_gathering || $rule->max_gathering)
-            <div><b>Gathering:</b> {{ $rule->min_gathering ?? 0 }} - {{ $rule->max_gathering ?? '∞' }}</div>
+            <div class="mb-1">
+                <b>Gathering:</b>
+
+                {{ $rule->min_gathering ?? 0 }}
+                -
+
+                {{ $rule->max_gathering ?? '∞' }}
+            </div>
         @endif
 
-        @if($rule->min_sq_ft || $rule->max_sq_ft)
-            <div><b>Sq Ft:</b> {{ $rule->min_sq_ft ?? 0 }} - {{ $rule->max_sq_ft ?? '∞' }}</div>
+
+        {{-- SQUARE METER --}}
+        @if($rule->min_sq_meter || $rule->max_sq_meter)
+            <div class="mb-1">
+                <b>Square Meter:</b>
+
+                {{ $rule->min_sq_meter ?? 0 }}
+                -
+
+                {{ $rule->max_sq_meter ?? '∞' }}
+            </div>
         @endif
 
+
+        {{-- HEIGHT --}}
         @if($rule->min_height || $rule->max_height)
-            <div><b>Height:</b> {{ $rule->min_height ?? 0 }} - {{ $rule->max_height ?? '∞' }}</div>
+            <div class="mb-1">
+                <b>Height:</b>
+
+                {{ $rule->min_height ?? 0 }}
+                -
+
+                {{ $rule->max_height ?? '∞' }}
+            </div>
         @endif
 
+
+        {{-- HOURS --}}
         @if($rule->min_hours || $rule->max_hours)
-            <div><b>Hours:</b> {{ $rule->min_hours ?? 0 }} - {{ $rule->max_hours ?? '∞' }}</div>
+            <div class="mb-1">
+                <b>Hours:</b>
+
+                {{ $rule->min_hours ?? 0 }}
+                -
+
+                {{ $rule->max_hours ?? '∞' }}
+            </div>
         @endif
+
     </td>
 
-    {{-- RATE --}}
+
+    {{-- PRICING --}}
     <td>
-        {{ $rule->rate }} 
-        <br>
-        <small class="text-muted">{{ $rule->rate_type }}</small>
+
+        <div>
+            <b>Rate:</b>
+
+            ₹{{ number_format($rule->rate, 2) }}
+        </div>
+
+        <div>
+            <b>Type:</b>
+
+            <span class="badge bg-info">
+
+                {{ ucwords(str_replace('_', ' ', $rule->rate_type)) }}
+
+            </span>
+        </div>
+
+        <div>
+            <b>Processing Fee:</b>
+
+            ₹{{ number_format($rule->processing_fee ?? 0, 2) }}
+        </div>
+
+        <div>
+            <b>GST:</b>
+
+            {{ $rule->cgst_percent ?? 0 }}%
+            +
+            {{ $rule->sgst_percent ?? 0 }}%
+
+            =
+            <strong>
+                {{ ($rule->cgst_percent ?? 0) + ($rule->sgst_percent ?? 0) }}%
+            </strong>
+        </div>
+
+        <div>
+            <b>Priority:</b>
+
+            {{ $rule->priority }}
+        </div>
+
     </td>
+
 
     {{-- STATUS --}}
     <td>
+
         @if($rule->is_active)
-            <span class="badge bg-success">Active</span>
+
+            <span class="badge bg-success">
+                Active
+            </span>
+
         @else
-            <span class="badge bg-danger">Inactive</span>
+
+            <span class="badge bg-danger">
+                Inactive
+            </span>
+
         @endif
+
     </td>
+
 
     {{-- ACTION --}}
     <td>
 
-        {{-- EDIT --}}
-        <a href="{{ route('pricing-rules.edit',$rule->id) }}"
-           class="btn btn-sm btn-primary">
-           <i class="fe fe-edit"></i>
-        </a>
+        <div class="d-flex gap-1">
 
-        {{-- DELETE --}}
-        <form method="POST"
-              action="{{ route('pricing-rules.delete',$rule->id) }}"
-              style="display:inline;">
-            @csrf
-            <button class="btn btn-sm btn-danger"
-                onclick="return confirm('Delete this rule?')">
-                <i class="fe fe-trash"></i>
-            </button>
-        </form>
+            {{-- EDIT --}}
+            <a href="{{ route('pricing-rules.edit',$rule->id) }}"
+               class="btn btn-sm btn-primary">
 
-        {{-- TOGGLE --}}
-        <a href="{{ route('pricing-rules.toggle',$rule->id) }}"
-           class="btn btn-sm {{ $rule->is_active ? 'btn-success' : 'btn-warning' }}">
-           <i class="fe fe-power"></i>
-        </a>
+                <i class="fe fe-edit"></i>
+            </a>
+
+
+            {{-- DELETE --}}
+            <form method="POST"
+                  action="{{ route('pricing-rules.delete',$rule->id) }}"
+                  style="display:inline;">
+
+                @csrf
+
+                <button type="submit"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Delete this pricing rule?')">
+
+                    <i class="fe fe-trash"></i>
+
+                </button>
+            </form>
+
+
+            {{-- TOGGLE --}}
+            <a href="{{ route('pricing-rules.toggle',$rule->id) }}"
+               class="btn btn-sm {{ $rule->is_active ? 'btn-success' : 'btn-warning' }}">
+
+                <i class="fe fe-power"></i>
+
+            </a>
+
+        </div>
 
     </td>
 
 </tr>
-@endforeach
+
+@empty
+
+<tr>
+    <td colspan="6" class="text-center">
+        No pricing rules found
+    </td>
+</tr>
+
+@endforelse
+
 </tbody>
 
 </table>

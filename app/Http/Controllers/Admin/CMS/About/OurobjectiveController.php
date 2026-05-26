@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Common\CommonModel;
 use App\Models\ContactModel;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 
 class OurobjectiveController extends Controller
@@ -48,11 +49,64 @@ class OurobjectiveController extends Controller
             'hadding' => $request->hadding,
             'content' => $request->description,
             'image' => $card_image_name,
+            'short_content' => $request->short_content,
             'create_by' =>'',
         ];
 
         $this->commonModel->insertData('pages_card',$data);
         return redirect()->route('admin.about.our_objective')->with('success', 'our_objective added successfully.');
+    }
+
+    public function edit($id)
+    {
+        $objective = DB::table('pages_card')->where('id', $id)->first();
+
+        return view(
+            'admin.CMS.About.our_objective.edit',
+            compact('objective')
+        );
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'hadding' => 'required',
+            'description' => 'required',
+            'imageposition' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $data = [
+            'hadding' => $request->hadding,
+            'content' => $request->description,
+            'short_content' => $request->short_content,
+            'image_position' => $request->imageposition,
+        ];
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+
+            $image->move(
+                public_path('admin/about/our_objective'),
+                $imageName
+            );
+
+            $data['image'] = $imageName;
+        }
+
+        DB::table('pages_card')
+            ->where('id', $id)
+            ->update($data);
+
+        return redirect()
+            ->route('admin.about.our_objective')
+            ->with('success', 'Objective updated successfully.');
     }
 
     public function destroy($id){

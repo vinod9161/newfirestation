@@ -222,45 +222,6 @@
             </div>
         @endforeach
       </div>
-      <!-- <div class="d-flex">
-    
-        <div class="vertical-nav nav flex-column nav-pills" role="tablist">
-
-          @foreach($circularType as $type)
-              <a 
-                  class="nav-link nav-card {{ $loop->first ? 'active' : '' }}"
-                  id="{{ str_replace(' ','_',strtolower($type)) }}-tab"
-                  data-toggle="pill"
-                  href="#{{ str_replace(' ','_',strtolower($type)) }}"
-                  role="tab">
-                  
-                  {{ ucfirst($type) }}
-              </a>
-          @endforeach
-
-        </div>
-
-        <div class="tab-content flex-grow-1 ml-4">
-          @foreach($circularType as $type)
-              <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ str_replace(' ','_',strtolower($type)) }}" role="tabpanel" aria-labelledby="{{ str_replace(' ','_',strtolower($type)) }}-vertical-tab">
-                @foreach($goCircular as $circular)
-                  @if($circular->type == $type)
-                  <div class="col-md-12 d-flex" style="border-bottom:1px solid #eee;padding:10px 0;">
-                      <div class="col-md-10">
-                        <h5>{{ ucfirst($circular->title) }}</h5>
-                        <p>{{ ucfirst($circular->subject) }}</p>
-                      </div>
-                      <div class="col-md-2">
-                        <a href="{{ asset('/public/'.$circular->file) }}" alt="client" class="btn btn-primary mb-2" title="View File" target="_blank">Download</a>
-                      </div>
-                  </div>
-                  @endif
-                @endforeach
-              </div>
-          @endforeach
-        </div>
-      </div> -->
-      
     </div>
   </div>
 </section>

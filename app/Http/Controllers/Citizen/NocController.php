@@ -1134,7 +1134,7 @@ class NocController extends Controller
         $type = $this->commonModel->getData('types');
         if ($res == 1)
         {
-            return ['status' => '1', 'msg' => 'Application submitted successfully.', 'application_no' => $application[0]->application_no];
+            return ['status' => '1', 'msg' => 'Application submitted successfully.', 'application_no' => $application[0]->application_no, 'application_type' => $application[0]->application_type];
         }
         else if ($res == 2)
         {
@@ -1248,97 +1248,209 @@ class NocController extends Controller
             return "";
         }
     }
+    
     public function filter_noc_data(Request $request)
     {
-        $filterModel = new FilterModel;
-        $startDate = $request->filter_from_date ?? '';
-        $endDate = $request->filter_to_date ?? '';
-        $projects = $request->filter_projects ?? '';
-        $categories = $request->filter_category ?? '';
-        $noc_type = $request->filter_noc_type ?? '';
-        $searchValue = isset($request->search) ? $request->search : '';
-        $length = $request->length ?? '';
-        $start = $request->start ?? '';
+        $filterModel = new FilterModel();
+
+        $startDate     = $request->filter_from_date ?? '';
+        $endDate       = $request->filter_to_date ?? '';
+        $projects      = $request->filter_projects ?? '';
+        $categories    = $request->filter_category ?? '';
+        $filterNocType = $request->filter_noc_type ?? '';
+
+        // URL params
+        $currentStatus = $request->current_status ?? 'all';
+        $currentType   = $request->current_type ?? '';
+
+        $length = $request->length ?? 10;
+        $start  = $request->start ?? 0;
+
         $tbl = 'applications';
-        
+
+        /*
+        |--------------------------------------------------------------------------
+        | Main Fields
+        |--------------------------------------------------------------------------
+        */
+
         $fields = [
             'date' => [
                 'start' => $startDate,
                 'end'   => $endDate
             ],
-            'project_type'  => $projects,
-            'category_id'   => $categories,
-            'noc_type'      => $noc_type,
-            'date_column'   => 'created_at',
-            'desc_column'   => 'id'
+
+            'project_type' => $projects,
+            'category_id'  => $categories,
+
+            'noc_type' => $currentType,
+            'application_type' => $filterNocType,
+
+            'date_column' => 'created_at',
+            'desc_column' => 'id'
         ];
-        if (Auth::user()->type == 0)
-        {
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Status Handling
+        |--------------------------------------------------------------------------
+        */
+
+        if ($currentStatus == 'all') {
+
             $fields['status'] = ['incomplete'];
+
+        } else {
+
+            $fields['status'] = [$currentStatus];
         }
-        elseif(Auth::user()->type == 1)
-        {
-            $fields['status'] = ['incomplete'];
+
+        /*
+        |--------------------------------------------------------------------------
+        | User Type Filters
+        |--------------------------------------------------------------------------
+        */
+
+        if (Auth::user()->type == 1) {
+
             $fields['large_small_category'] = '1';
-            
         }
-        elseif(Auth::user()->type == 2)
-        {
-            $fields['status'] = ['incomplete'];
-            $fields['assigned_cfo'] = '1';
+
+        elseif (Auth::user()->type == 2) {
+
+            $fields['assigned_cfo'] = Auth::user()->id;
             $fields['district_id'] = Auth::user()->district_id;
-            
         }
-        elseif(Auth::user()->type == 3)
-        {
-            $fields['status'] = ['incomplete'];
+
+        elseif (Auth::user()->type == 3) {
+
             $fields['assigned_id'] = Auth::user()->id;
-            
         }
-        elseif(Auth::user()->type == 5)
-        {
-            if(Auth::user()->district_id == '')
-            {
-                $fields['status'] = [ 'pre approval', 'pending', 'approved' ];
+
+        elseif (Auth::user()->type == 5) {
+
+            if (!empty(Auth::user()->district_id)) {
+
+                $fields['district_id'] = Auth::user()->district_id;
             }
-            elseif(Auth::user()->district_id == '')
-            {
-                $fields['status'] = [ 'pre approval', 'pending', 'approved' ];
+
+            // DM allowed statuses
+            if ($currentStatus == 'all') {
+
+                $fields['status'] = [
+                    'pre approval',
+                    'pending',
+                    'approved'
+                ];
             }
-            
         }
-        $countData = $filterModel->countFilterData($tbl, $fields);
-        $totalCount = $countData;
-        $allData = $filterModel->filterAllData($tbl, $fields, $length, $start);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Count & Fetch Data
+        |--------------------------------------------------------------------------
+        */
+
+        $totalCount = $filterModel->countFilterData($tbl, $fields);
+
+        $allData = $filterModel->filterAllData(
+            $tbl,
+            $fields,
+            $length,
+            $start
+        );
+
         $resultData = [];
-        if(!empty($allData))
+
+        if (!empty($allData))
         {
-            $i=1;
-            $thirtyDaysAgo = \Carbon\Carbon::now()->subDays(30);
-            foreach($allData as $key => $row)
+            $i = $start + 1;
+
+            foreach ($allData as $row)
             {
-                $category = $this->commonModel->getDataByOneCondition('categories', array('id' => $row->category_id));
-                $district = $this->commonModel->getDataByOneCondition('districts', array('id' => $row->district_id));
-                $building_height = json_decode($row->max_height_building, true);
-                
-                // Determine NOC type
-                $noc_type = match ($row->noc_type) {
+                /*
+                |--------------------------------------------------------------------------
+                | Supporting Data
+                |--------------------------------------------------------------------------
+                */
+
+                $category = DB::table('categories')
+                    ->where('id', $row->category_id)
+                    ->value('name');
+
+                $district = DB::table('districts')
+                    ->where('id', $row->district_id)
+                    ->value('name');
+
+                $station = DB::table('fire_stations')
+                    ->where('id', $row->station_id)
+                    ->value('name');
+
+                /*
+                |--------------------------------------------------------------------------
+                | Building Height
+                |--------------------------------------------------------------------------
+                */
+
+                $building_height = json_decode(
+                    $row->max_height_building,
+                    true
+                );
+
+                $maxHeight = $building_height['max_height_building'] ?? 'NA';
+
+                /*
+                |--------------------------------------------------------------------------
+                | NOC Type Label
+                |--------------------------------------------------------------------------
+                */
+
+                $nocTypeLabel = match ($row->noc_type) {
+
                     'building' => 'Noc For Building',
-                    'cinema_hall_multiplex' => 'Noc For Cinema Hall- Multiplex',
-                    'fire_arms_repair' => 'Noc For Fire Arms Repair',
-                    'fire_arms_selling' => 'Noc For Fire Arms Selling',
-                    'fire_arms_storage' => 'Noc For Fire Arms Storage',
-                    'gas_warehouse' => 'Noc For Gas Warehouse and Agency',
-                    'gas_oil_depot' => 'Noc For Gas-Oil-Depot',
-                    'sale_of_sulphur' => 'Noc For Sale Of Sulphur',
-                    'storage_magazine' => 'Noc For Storage - Magazine',
-                    'petrol_pump_cng_station' => 'Noc For Petrol Pump-CNG Station',
-                    'fire_works' => 'Noc For Fire Works',
+
+                    'cinema_hall_multiplex' =>
+                        'Noc For Cinema Hall- Multiplex',
+
+                    'fire_arms_repair' =>
+                        'Noc For Fire Arms Repair',
+
+                    'fire_arms_selling' =>
+                        'Noc For Fire Arms Selling',
+
+                    'fire_arms_storage' =>
+                        'Noc For Fire Arms Storage',
+
+                    'gas_warehouse' =>
+                        'Noc For Gas Warehouse and Agency',
+
+                    'gas_oil_depot' =>
+                        'Noc For Gas-Oil-Depot',
+
+                    'sale_of_sulphur' =>
+                        'Noc For Sale Of Sulphur',
+
+                    'storage_magazine' =>
+                        'Noc For Storage - Magazine',
+
+                    'petrol_pump_cng_station' =>
+                        'Noc For Petrol Pump-CNG Station',
+
+                    'fire_works' =>
+                        'Noc For Fire Works',
+
                     default => 'NA',
                 };
 
-                // Determine status
+                /*
+                |--------------------------------------------------------------------------
+                | Status Label
+                |--------------------------------------------------------------------------
+                */
+
                 $status = match ($row->status) {
+
                     'pending' => 'New',
                     'processed' => 'Verifier Assign',
                     'for approval' => 'Verified',
@@ -1346,128 +1458,195 @@ class NocController extends Controller
                     'pre approved' => 'Pre Approved',
                     'reverted' => 'Reverted',
                     'approved' => 'Approved',
+
                     default => 'NA',
                 };
 
+                /*
+                |--------------------------------------------------------------------------
+                | Days Since Applied
+                |--------------------------------------------------------------------------
+                */
+
+                $daysDiff = 'NA';
+
+                if (!empty($row->submitted_at))
+                {
+                    $submittedAt = new DateTime($row->submitted_at);
+
+                    $today = new DateTime();
+
+                    $interval = $submittedAt->diff($today);
+
+                    $daysDiff = $interval->days . ' days';
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Expiry Date
+                |--------------------------------------------------------------------------
+                */
+
+                $expDateText = 'NA';
+
+                if (!empty($row->validity))
+                {
+                    $validityDate = strtotime($row->updated_at);
+
+                    if ($row->validity == 3) {
+
+                        $expDate = strtotime('+3 years', $validityDate);
+
+                    } elseif ($row->validity == 5) {
+
+                        $expDate = strtotime('+5 years', $validityDate);
+
+                    } else {
+
+                        $expDate = null;
+                    }
+
+                    if ($expDate)
+                    {
+                        $daysLeft = floor(
+                            ($expDate - time()) / (60 * 60 * 24)
+                        );
+
+                        if ($daysLeft <= 90 && $daysLeft > 0)
+                        {
+                            $expDateText =
+                                date('d-M-Y', $expDate)
+                                . " ({$daysLeft} days left)";
+                        }
+                    }
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Action Buttons
+                |--------------------------------------------------------------------------
+                */
+
                 $action = '';
-                $action .= '<a href="'.route("admin.adminviewNocDetail", $row->id).'" class="btn btn-primary btn-edit" title="View"><i class="fa fa-eye"></i></a>';
+
+                $action .= '
+                    <a href="'.route("admin.adminviewNocDetail", $row->id).'"
+                    class="btn btn-primary btn-sm"
+                    title="View">
+                    <i class="fa fa-eye"></i>
+                    </a>
+                ';
+
                 if ($row->status == 'approved')
                 {
-                    $action .= '<a onclick="return confirm("Are you sure you want to download NOC?")" id="'.route("noc.download", $row->id).'" class="btn btn-dark btn-delete generatePdfBtn" title="Download NOC" target="_blank" data-id="'.$row->application_no.'"><i class="fa fa-download"></i></a>';
+                    $action .= '
+                        <a href="'.route("noc.download", $row->id).'"
+                        class="btn btn-dark btn-sm"
+                        target="_blank"
+                        title="Download">
+                        <i class="fa fa-print"></i>
+                        </a>
+                    ';
                 }
-                $highlightRow= '';
-                if ($row->status == 'pending') {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Highlight Rows
+                |--------------------------------------------------------------------------
+                */
+
+                $highlightRow = '';
+
+                if ($row->status == 'pending')
+                {
                     $createdDate = new DateTime($row->created_at);
+
                     $today = new DateTime();
+
                     $interval = $today->diff($createdDate);
+
                     $daysOld = $interval->days;
+
                     if ($interval->invert === 1)
                     {
-                        if ($daysOld >= 25 && $daysOld <= 30)
-                        {
+                        if ($daysOld >= 25 && $daysOld <= 30) {
+
                             $highlightRow = 'highlight-red';
-                        } 
-                        else if ($daysOld >= 13 && $daysOld <= 15)
-                        {
+
+                        } elseif ($daysOld >= 13 && $daysOld <= 15) {
+
                             $highlightRow = 'highlight-orange';
                         }
                     }
                 }
-                // $output = [];
-                // $output[] = $i;
-                // $output[] = $row->application_no ?? 'NA';
-                // $output[] = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s') ?? 'NA';
-                // $output[] = $noc_type ?? 'NA';
-                // $output[] = $row->application_type ?? 'NA';
-                // $output[] = $row->building_name ?? 'NA';
-                // $output[] = $category[0]->name ?? 'NA';
-                // $output[] = $building_height['max_height_building'] ?? 'NA';
-                // $output[] = $district[0]->name ?? 'NA';
-                // $output[] = $row->fire_station ?? 'NA';
-                // $output[] = $status;
-                // $output[] = $row->declaration_status ?? 'Valid';
-                // $output[] = $action;
-                // $output[] = $highlightRow;
-                // $resultData[] = $output;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Final Output
+                |--------------------------------------------------------------------------
+                */
 
                 $output = [];
 
                 $output[] = $i;
 
-                // Application Number
                 $output[] = $row->application_no ?? 'NA';
 
-                // Old Application Number
                 $output[] = $row->old_application_no ?? '-----';
 
-                // Application Flag
                 $output[] = $row->application_flag ?? '-----';
 
-                // Application Date
-                $output[] = \Carbon\Carbon::parse($row->created_at)->format('d-m-Y H:i:s');
+                $output[] = Carbon::parse(
+                    $row->created_at
+                )->format('d-m-Y H:i:s');
 
-                // Days Since Applied
-                $submittedAt = $row->submitted_at ? new DateTime($row->submitted_at) : null;
-                $daysDiff = 'NA';
-                if ($submittedAt) {
-                    $today = new DateTime();
-                    $interval = $submittedAt->diff($today);
-                    $daysDiff = $interval->days . ' days';
-                }
                 $output[] = $daysDiff;
 
-                // Application For
-                $output[] = $noc_type;
+                $output[] = $nocTypeLabel;
 
-                // Type
-                $output[] = ucwords($row->application_type ?? 'NA');
+                $output[] = ucwords(
+                    $row->application_type ?? 'NA'
+                );
 
-                // Building Name
                 $output[] = $row->building_name ?? 'NA';
 
-                // Building Category
-                $output[] = $category[0]->name ?? 'NA';
+                $output[] = $category ?? 'NA';
 
-                // Building Height
-                $output[] = $building_height['max_height_building'] ?? 'NA';
+                $output[] = $maxHeight;
 
-                // District
-                $output[] = $district[0]->name ?? 'NA';
+                $output[] = $district ?? 'NA';
 
-                // Fire Station
-                $output[] = $row->fire_station ?? 'NA';
+                $output[] = $station ?? 'NA';
 
-                // Expiry Date
-                $output[] = 'NA'; // (add your expiry logic if needed)
+                $output[] = $expDateText;
 
-                // Status
                 $output[] = $status;
 
-                // Declaration Status
                 $output[] = $row->declaration_status ?? 'Valid';
 
-                // Actions
                 $output[] = $action;
 
-                // Highlight row (LAST)
+                // LAST hidden column
                 $output[] = $highlightRow;
 
                 $resultData[] = $output;
 
-                $i++; 
+                $i++;
             }
         }
-        else
-        {
-            $resultData[] = ["No Result Found"];
-        }
-        $outputt = array(
-            "draw"        =>intval($_POST["draw"]),
-            "recordsTotal"    =>$totalCount,
-            "recordsFiltered"   =>$totalCount,
-            "data"          =>$resultData,
-        );
-        echo json_encode($outputt);
+
+        /*
+        |--------------------------------------------------------------------------
+        | DataTable Response
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+            "draw" => intval($request->draw),
+            "recordsTotal" => $totalCount,
+            "recordsFiltered" => $totalCount,
+            "data" => $resultData
+        ]);
     }
 
     public function generateQrCode()

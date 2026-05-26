@@ -37,34 +37,86 @@
         <div class="advanced-search br-3">
             <div class="row align-items-center">
                 <div class="col-md-12">
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <select id="filter_district" class="form-control" {{ Auth::user()->type == 2 ? 'disabled' : '' }}>
-                                <option value="">All District</option>
-                                @foreach($districts as $district)
-                                    <option value="{{ $district->id }}"
-                                        {{ request('district', Auth::user()->district_id) == $district->id ? 'selected' : '' }}>
-                                        {{ $district->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+                    <form method="GET"
+                        action="{{ url()->current() }}"
+                        id="filterForm">
+
+                        <div class="row mb-3">
+
+                            <div class="col-md-3">
+
+                                <select name="district"
+                                        id="filter_district"
+                                        class="form-control"
+                                        {{ Auth::user()->type == 2 ? 'disabled' : '' }}>
+
+                                    <option value="">All District</option>
+
+                                    @foreach($districts as $district)
+
+                                        <option value="{{ $district->id }}"
+                                            {{ request('district', Auth::user()->district_id) == $district->id ? 'selected' : '' }}>
+
+                                            {{ $district->name }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+
+                                @if(Auth::user()->type == 2)
+                                    <input type="hidden"
+                                        name="district"
+                                        value="{{ Auth::user()->district_id }}">
+                                @endif
+
+                            </div>
+
+                            <!-- Station -->
+                            <div class="col-md-3">
+
+                                <select name="station"
+                                        id="filter_station"
+                                        class="form-control">
+
+                                    <option value="">All Station</option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- Designation -->
+                            <div class="col-md-3">
+
+                                <input type="text"
+                                    name="designation"
+                                    id="filter_designation"
+                                    class="form-control"
+                                    placeholder="Designation"
+                                    value="{{ request('designation') }}">
+
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="col-md-3">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+                                    Apply
+                                </button>
+
+                                <a href="{{ url()->current() }}"
+                                class="btn btn-secondary">
+                                Reset
+                                </a>
+
+                            </div>
+
                         </div>
 
-                        <div class="col-md-3">
-                            <select id="filter_station" class="form-control">
-                                <option value="">All Station</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <input type="text" id="filter_designation" class="form-control" placeholder="Designation">
-                        </div>
-
-                        <div class="col-md-3">
-                            <button class="btn btn-primary" onclick="applyFilter()">Apply</button>
-                            <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <!-- <hr>
@@ -294,13 +346,31 @@ $(function(e) {
 
     });
 
-    function applyFilter() {
-        let district = $('#filter_district').val();
-        let station = $('#filter_station').val();
-        let designation = $('#filter_designation').val();
+    // function applyFilter() {
+    //     let district = $('#filter_district').val();
+    //     let station = $('#filter_station').val();
+    //     let designation = $('#filter_designation').val();
 
-        window.location.href =
-            `?district=${district}&station=${station}&designation=${designation}`;
-    }
+    //     window.location.href =
+    //         `?district=${district}&station=${station}&designation=${designation}`;
+    // }
+</script>
+<script>
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
 </script>
 @stop

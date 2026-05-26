@@ -1,61 +1,166 @@
 <?php
 
 namespace App\Http\Controllers\Admin\CMS\Services;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Common\CommonModel;
-use App\Models\ContactModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
 
 class StandbyController extends Controller
 {
-    protected $commonModel;
-    public function __construct(){
-        $this->commonModel = new CommonModel;
+    public function index()
+    {
+        $data['standby'] = DB::table('pages_card')
+            ->where('page_name', 'standby')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view(
+            'admin.CMS.Services.standby.index',
+            $data
+        );
     }
 
-    public function index(){
-        $tbl = "pages_card";
-        $where = array('page_name' => 'dg_message');
-        $data['history'] = $this->commonModel->getDataByOneCondition($tbl,$where);
-        return view('admin.CMS.About.dg_massage.index',$data);
+
+
+    public function add()
+    {
+        return view('admin.CMS.Services.standby.add');
     }
 
-    public function add(){
-        return view('admin.CMS.About.dg_massage.add');
-    }
-    public function Save(Request $request){
-        // echo "trea"; die;
+
+
+    public function save(Request $request)
+    {
         $validator = Validator::make($request->all(), [
+
+            'hadding' => 'required',
+
             'description' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        $card_image = $request->file('image');
-        $card_image_name = time().'.'.$card_image->getClientOriginalExtension();
-        $card_image->move(public_path('admin/about/dg_massage'), $card_image_name);
+        $image = '';
 
+        if ($request->hasFile('image')) {
+
+            $file = $request->file('image');
+
+            $image = time().'.'.$file->getClientOriginalExtension();
+
+            $file->move(
+                public_path('admin/services/standby'),
+                $image
+            );
+        }
 
         $data = [
-            'page_name' => "dg_message",
-            'hadding' => '',
+
+            'page_name' => 'standby',
+
+            'hadding' => $request->hadding,
+
             'content' => $request->description,
-            'image' => $card_image_name,
-            'create_by' =>'',
+
+            'image' => $image,
+
+            'status' => 'Active',
+
+            'create_by' => '',
+
         ];
-        // echo "<pre>";print_r($data); die;
-        $this->commonModel->insertData('pages_card',$data);
-        return redirect()->route('admin.about.dg_message')->with('success', 'dg_message added successfully.');
+
+        DB::table('pages_card')->insert($data);
+
+        return redirect()
+            ->route('admin.services.standby')
+            ->with('success', 'Standby content added successfully.');
     }
 
-    public function destroy($id){
-        $this->commonModel->deleteDataByOneCondition('pages_card', array('id'=>$id));
-        return redirect()->route('admin.about.dg_message')->with('success', 'dg_message deleted successfully.');
+
+
+    public function edit($id)
+    {
+        $data['standby'] = DB::table('pages_card')
+            ->where('id', $id)
+            ->first();
+
+        return view(
+            'admin.CMS.Services.standby.edit',
+            $data
+        );
     }
 
+
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+
+            'hadding' => 'required',
+
+            'description' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = [
+
+            'hadding' => $request->hadding,
+
+            'content' => $request->description,
+
+        ];
+
+        if ($request->hasFile('image')) {
+
+            $file = $request->file('image');
+
+            $image = time().'.'.$file->getClientOriginalExtension();
+
+            $file->move(
+                public_path('admin/services/standby'),
+                $image
+            );
+
+            $data['image'] = $image;
+        }
+
+        DB::table('pages_card')
+            ->where('id', $id)
+            ->update($data);
+
+        return redirect()
+            ->route('admin.services.standby')
+            ->with('success', 'Standby content updated successfully.');
+    }
+
+
+
+    public function destroy($id)
+    {
+        DB::table('pages_card')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect()
+            ->route('admin.services.standby')
+            ->with('success', 'Standby content deleted successfully.');
+    }
 }

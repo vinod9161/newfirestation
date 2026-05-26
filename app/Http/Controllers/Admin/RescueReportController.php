@@ -26,37 +26,107 @@ class RescueReportController extends Controller
     {
         $query = DB::table('fs_rescue_report');
 
-        if (Auth::user()->type == 3) {
-            $query->where('assigned_to', Auth::user()->id);
-        }
-        elseif (Auth::user()->type != 0 && Auth::user()->type != 1) {
-            $query->where('district_id', Auth::user()->district_id);
-        }
-
-        if ($request->filled('from_date')) {
+        if (Auth::user()->type == 3)
+        {
             $query->where(
-                'created_at',
-                '>=',
-                $request->from_date . ' 00:00:00'
+                'assigned_to',
+                Auth::user()->id
+            );
+        }
+        elseif (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        )
+        {
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
             );
         }
 
-        if ($request->filled('to_date')) {
+        if ($request->filled('rescue_report_no'))
+        {
             $query->where(
+                'rescue_report_no',
+                'LIKE',
+                '%' . $request->rescue_report_no . '%'
+            );
+        }
+
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('station_id'))
+        {
+            $query->where(
+                'station_id',
+                $request->station_id
+            );
+        }
+
+        if ($request->filled('rescue_area'))
+        {
+            $query->where(
+                'rescue_area',
+                $request->rescue_area
+            );
+        }
+
+        if ($request->filled('rescue_area_type'))
+        {
+            $query->where(
+                'rescue_area_type',
+                $request->rescue_area_type
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
                 'created_at',
                 '<=',
-                $request->to_date . ' 23:59:59'
+                $request->to_date
             );
         }
 
         $rescue = $query
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         $district = $this->commonModel->getData('districts');
-        $station  = $this->commonModel->getData('fire_stations');
 
-        return view('admin.Rescue.index', compact('rescue', 'district', 'station'));
+        $station = $this->commonModel->getData('fire_stations');
+
+        return view(
+            'admin.Rescue.index',
+            compact(
+                'rescue',
+                'district',
+                'station'
+            )
+        );
     }
 
     public function deleteRescueReport($id)

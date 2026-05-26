@@ -18,7 +18,7 @@ class EquipmentController extends Controller
         $this->commonModel = new CommonModel;
     }
 
-    public function equipmentlist()
+    public function equipmentlist(Request $request)
     {
         $query = DB::table('equipment')
             ->select(
@@ -28,21 +28,111 @@ class EquipmentController extends Controller
                 'districts.name as district_name',
                 'equipment_name.name as equipment_name'
             )
-            ->leftJoin('equipment_category', 'equipment.category_id', '=', 'equipment_category.id')
-            ->leftJoin('fire_stations', 'equipment.station_id', '=', 'fire_stations.id')
-            ->leftJoin('districts', 'equipment.district_id', '=', 'districts.id')
-            ->leftJoin('equipment_name', 'equipment.equipment_name', '=', 'equipment_name.id')
+            ->leftJoin(
+                'equipment_category',
+                'equipment.category_id',
+                '=',
+                'equipment_category.id'
+            )
+            ->leftJoin(
+                'fire_stations',
+                'equipment.station_id',
+                '=',
+                'fire_stations.id'
+            )
+            ->leftJoin(
+                'districts',
+                'equipment.district_id',
+                '=',
+                'districts.id'
+            )
+            ->leftJoin(
+                'equipment_name',
+                'equipment.equipment_name',
+                '=',
+                'equipment_name.id'
+            )
             ->where('equipment.status', '1');
 
-        if (Auth::user()->type == 3) {
-            $query->where('equipment.district_id', Auth::user()->district_id);
+        if (Auth::user()->type == 3)
+        {
+            $query->where(
+                'equipment.district_id',
+                Auth::user()->district_id
+            );
         }
 
-        $getData = $query->orderBy('equipment.id', 'desc')
-                        ->get()
-                        ->toArray();
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'equipment.district_id',
+                $request->district_id
+            );
+        }
 
-        return view('admin.equipments.index', compact('getData'));
+        if ($request->filled('station_id'))
+        {
+            $query->where(
+                'equipment.station_id',
+                $request->station_id
+            );
+        }
+
+        if ($request->filled('category_id'))
+        {
+            $query->where(
+                'equipment.category_id',
+                $request->category_id
+            );
+        }
+
+        if ($request->filled('equipment_name'))
+        {
+            $query->where(
+                'equipment.equipment_name',
+                $request->equipment_name
+            );
+        }
+
+        if ($request->filled('added_date'))
+        {
+            $query->whereDate(
+                'equipment.added_date',
+                $request->added_date
+            );
+        }
+
+        $getData = $query
+            ->orderBy('equipment.id', 'DESC')
+            ->get()
+            ->toArray();
+
+        $districts = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        $stations = DB::table('fire_stations')
+            ->orderBy('name')
+            ->get();
+
+        $categories = DB::table('equipment_category')
+            ->orderBy('name')
+            ->get();
+
+        $equipmentNames = DB::table('equipment_name')
+            ->orderBy('name')
+            ->get();
+
+        return view(
+            'admin.equipments.index',
+            compact(
+                'getData',
+                'districts',
+                'stations',
+                'categories',
+                'equipmentNames'
+            )
+        );
     }
 
     public function addequipment()

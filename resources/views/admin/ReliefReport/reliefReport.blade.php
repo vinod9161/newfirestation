@@ -41,83 +41,203 @@
         <div class="advanced-search br-3">
             <div class="row align-items-center">
                 <div class="col-md-12">
-                    <!-- <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Page :</label>
-                                <input type="text" class="form-control" id="filter_page" placeholder=" Enter Page">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Title :</label>
-                                <input type="text" class="form-control" id="filter_title" placeholder=" Enter Title">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Type :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Status :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_status">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
-                    <form method="GET" action="{{ route('admin.reliefReport') }}">
+                    <form method="GET"
+                            action="{{ route('admin.reliefReport') }}"
+                            id="filterForm">
+
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>From Date</label>
-                                    <input type="date"
+
+                            <!-- Relief Report Number -->
+                            <div class="col-md-3 mb-3">
+                                <label>Relief Report No</label>
+
+                                <input type="text"
+                                        class="form-control"
+                                        name="relief_report_no"
+                                        value="{{ request('relief_report_no') }}">
+                            </div>
+
+                            <!-- District -->
+                            <div class="col-md-3 mb-3">
+                                <label>District</label>
+
+                                <select class="form-control" name="district_id" id="filter_district">
+
+                                    <option value="">Select District</option>
+
+                                    @foreach($districts as $district)
+
+                                        <option value="{{ $district->id }}"
+                                            {{ request('district_id') == $district->id ? 'selected' : '' }}>
+
+                                            {{ $district->name }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            <!-- Fire Station -->
+                            <div class="col-md-3 mb-3">
+                                <label>Fire Station</label>
+
+                                <select class="form-control" name="station_id" id="filter_station">
+
+                                    <option value="">Select Fire Station</option>
+
+                                    @foreach($stations as $station)
+
+                                        <option value="{{ $station->id }}"
+                                            {{ request('station_id') == $station->id ? 'selected' : '' }}>
+
+                                            {{ $station->name }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            <!-- Relief Work Type -->
+                            <div class="col-md-3 mb-3">
+                                <label>Relief Work Type</label>
+
+                                <select class="form-control" name="relief_work_type">
+
+                                    <option value="">Select Relief Work Type</option>
+
+                                    <option value="1"
+                                        {{ request('relief_work_type') == '1' ? 'selected' : '' }}>
+                                        Disaster Dewatering
+                                    </option>
+
+                                    <option value="2"
+                                        {{ request('relief_work_type') == '2' ? 'selected' : '' }}>
+                                        Removing Fallen Tree
+                                    </option>
+
+                                    <option value="3"
+                                        {{ request('relief_work_type') == '3' ? 'selected' : '' }}>
+                                        Clear the Passage
+                                    </option>
+
+                                    <option value="4"
+                                        {{ request('relief_work_type') == '4' ? 'selected' : '' }}>
+                                        Distribution of Relief Goods
+                                    </option>
+
+                                    <option value="5"
+                                        {{ request('relief_work_type') == '5' ? 'selected' : '' }}>
+                                        Organising Public Kitchen
+                                    </option>
+
+                                    <option value="6"
+                                        {{ request('relief_work_type') == '6' ? 'selected' : '' }}>
+                                        Distribution of Medicine
+                                    </option>
+
+                                    <option value="7"
+                                        {{ request('relief_work_type') == '7' ? 'selected' : '' }}>
+                                        Counseling of Victims
+                                    </option>
+
+                                    <option value="8"
+                                        {{ request('relief_work_type') == '8' ? 'selected' : '' }}>
+                                        Safely Evacuation
+                                    </option>
+
+                                    <option value="9"
+                                        {{ request('relief_work_type') == '9' ? 'selected' : '' }}>
+                                        Other
+                                    </option>
+
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <!-- Status -->
+                            <div class="col-md-3 mb-3">
+                                <label>Status</label>
+
+                                <select class="form-control" name="status">
+
+                                    <option value="">Select Status</option>
+
+                                    <option value="0"
+                                        {{ request('status') == '0' ? 'selected' : '' }}>
+                                        Fresh Entry
+                                    </option>
+
+                                    <option value="1"
+                                        {{ request('status') == '1' ? 'selected' : '' }}>
+                                        Sent for Approval
+                                    </option>
+
+                                    <option value="2"
+                                        {{ request('status') == '2' ? 'selected' : '' }}>
+                                        Sent for Review
+                                    </option>
+
+                                    <option value="3"
+                                        {{ request('status') == '3' ? 'selected' : '' }}>
+                                        Approved
+                                    </option>
+
+                                    <option value="4"
+                                        {{ request('status') == '4' ? 'selected' : '' }}>
+                                        Rejected
+                                    </option>
+
+                                </select>
+                            </div>
+
+                            <!-- From Date -->
+                            <div class="col-md-3 mb-3">
+                                <label>From Date</label>
+
+                                <input type="date"
                                         class="form-control"
                                         name="from_date"
                                         value="{{ request('from_date') }}">
-                                </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>To Date</label>
-                                    <input type="date"
+                            <!-- To Date -->
+                            <div class="col-md-3 mb-3">
+                                <label>To Date</label>
+
+                                <input type="date"
                                         class="form-control"
                                         name="to_date"
                                         value="{{ request('to_date') }}">
-                                </div>
                             </div>
 
-                            <div class="col-md-3 align-self-end">
-                                <button type="submit" class="btn btn-primary">
+                            <!-- Buttons -->
+                            <div class="col-md-3 mb-3 d-flex align-items-end">
+
+                                <button type="submit"
+                                        class="btn btn-primary me-2">
                                     Filter
                                 </button>
 
                                 <a href="{{ route('admin.reliefReport') }}"
-                                class="btn btn-secondary">
+                                    class="btn btn-secondary">
                                     Reset
                                 </a>
+
                             </div>
+
                         </div>
+
                     </form>
+
                 </div>
             </div>
-            <!-- <hr>
-            <div class="text-end">
-                <a href="javascript:void(0);" onclick="filter_slider();" class="btn btn-primary">Apply</a>
-                <a href="javascript:void(0);" class="btn btn-secondary">Reset</a>
-            </div> -->
         </div>
     </div>
 </div>
@@ -233,6 +353,17 @@
                                         @if($relief->status =='3')
                                          <a style="cursor:pointer" id="{{route('admin.reliefReport.download', $relief->id)}}" data-id="{{ $relief->relief_report_no }}" class="btn btn-sm btn-light btn-view generatePdfBtn" title="Download" target="_blank"><i class="fa fa-download"></i> &nbsp;</a>
                                         @endif
+
+                                        @if(Auth::user()->type == 3)
+
+                                            <a href="{{ route('service-bills.report.create',['service_type'=>'relief_report','request_id'=>$relief->relief_report_no]) }}"
+                                            class="btn btn-warning btn-sm">
+
+                                            Generate Bill
+
+                                            </a>
+
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -322,5 +453,67 @@ $(function(e) {
             })
             .catch(error => console.error('Error fetching Fire Report:', error));
     });
+</script>
+<script>
+
+   $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
 </script>
 @stop

@@ -116,3 +116,312 @@ CREATE TABLE payments (
     INDEX idx_payment_txn (transaction_id)
 ) ENGINE=InnoDB;
 
+ALTER TABLE pages_card ADD short_content VARCHAR(255) NULL;
+
+# 15 May 2027
+
+ALTER TABLE pricing_rules
+ADD COLUMN calculation_type ENUM(
+    'fixed',
+    'per_sq_ft',
+    'per_person',
+    'per_hour',
+    'per_extinguisher'
+) DEFAULT 'fixed' AFTER rate_type,
+
+ADD COLUMN processing_fee DECIMAL(10,2) DEFAULT 0 AFTER calculation_type,
+ADD COLUMN cgst_percent DECIMAL(5,2) DEFAULT 9.00 AFTER processing_fee,
+ADD COLUMN sgst_percent DECIMAL(5,2) DEFAULT 9.00 AFTER cgst_percent;
+
+ALTER TABLE pricing_rules
+CHANGE min_sq_ft min_sq_meter DECIMAL(12,2) NULL;
+ALTER TABLE pricing_rules
+CHANGE max_sq_ft max_sq_meter DECIMAL(12,2) NULL;
+
+ALTER TABLE pricing_rules
+MODIFY rate_type ENUM(
+    'fixed',
+    'per_sq_meter',
+    'per_person',
+    'per_hour',
+    'per_extinguisher'
+) NOT NULL;
+
+
+CREATE TABLE payments (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT UNSIGNED NULL,
+service_type VARCHAR(100) NOT NULL,
+service_id BIGINT UNSIGNED NOT NULL,
+amount DECIMAL(10,2) NOT NULL,
+status ENUM('pending','success','failed') DEFAULT 'pending',
+transaction_id VARCHAR(150) NULL,
+order_id VARCHAR(150) NULL,
+receipt_no VARCHAR(100) NULL,
+payment_gateway VARCHAR(50) NULL,
+payment_method VARCHAR(50) NULL,
+response JSON NULL,
+failed_reason TEXT NULL,
+paid_at TIMESTAMP NULL,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL,
+UNIQUE KEY uk_transaction_id (transaction_id),
+UNIQUE KEY uk_order_id (order_id),
+INDEX idx_user_id (user_id),
+INDEX idx_service (service_type,service_id),
+INDEX idx_status (status),
+INDEX idx_transaction_id (transaction_id),
+INDEX idx_order_id (order_id),
+INDEX idx_receipt_no (receipt_no),
+INDEX idx_paid_at (paid_at),
+INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE applications
+ADD payment_status ENUM('pending','paid','failed')
+DEFAULT 'pending',
+
+ADD payment_amount DECIMAL(10,2)
+DEFAULT 0,
+
+ADD payment_date TIMESTAMP NULL,
+
+ADD transaction_id VARCHAR(150) NULL;
+
+*---- 21 May----*
+
+ALTER TABLE vehicle_types
+ADD mileage_value DECIMAL(10,2) DEFAULT 0,
+ADD mileage_type ENUM('per_km','per_hour')
+DEFAULT 'per_km';
+
+ALTER TABLE equipment_category
+MODIFY updated_date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE equipment_category
+ADD mileage_value DECIMAL(10,2) DEFAULT 0,
+ADD mileage_type ENUM('per_km','per_hour')
+DEFAULT 'per_hour';
+
+CREATE TABLE personnel_expense_register(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    designation_id BIGINT UNSIGNED NULL,
+    monthly_basic_expense DECIMAL(10,2) DEFAULT 0,
+    da_percent DECIMAL(5,2) DEFAULT 0,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_designation(designation_id)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE standby_duty_bills(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    application_id BIGINT UNSIGNED NULL,
+    bill_no VARCHAR(100) NULL,
+    fire_station_id BIGINT UNSIGNED NULL,
+    fuel_expense DECIMAL(10,2) DEFAULT 0,
+    depreciation_expense DECIMAL(10,2) DEFAULT 0,
+    personnel_expense DECIMAL(10,2) DEFAULT 0,
+    cgst_amount DECIMAL(10,2) DEFAULT 0,
+    sgst_amount DECIMAL(10,2) DEFAULT 0,
+    total_amount DECIMAL(10,2) DEFAULT 0,
+    payment_status ENUM('pending','paid')
+    DEFAULT 'pending',
+    payment_id BIGINT UNSIGNED NULL,
+    created_by BIGINT UNSIGNED NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_application(application_id),
+    INDEX idx_payment(payment_id),
+    INDEX idx_status(payment_status)
+) ENGINE=InnoDB;
+
+
+
+CREATE TABLE standby_bill_personnels(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    bill_id BIGINT UNSIGNED NOT NULL,
+    designation_id BIGINT UNSIGNED NULL,
+    no_of_person INT DEFAULT 0,
+    per_person_expense DECIMAL(10,2) DEFAULT 0,
+    da_amount DECIMAL(10,2) DEFAULT 0,
+    total_amount DECIMAL(10,2) DEFAULT 0,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_bill(bill_id)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE standby_bill_vehicles(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    bill_id BIGINT UNSIGNED NOT NULL,
+    vehicle_category_id BIGINT UNSIGNED NULL,
+    equipment_category_id BIGINT UNSIGNED NULL,
+    diesel_rate DECIMAL(10,2) DEFAULT 0,
+    mileage_value DECIMAL(10,2) DEFAULT 0,
+    mileage_type ENUM('per_km','per_hour')
+    DEFAULT 'per_km',
+    running_value DECIMAL(10,2) DEFAULT 0,
+    total_diesel_expense DECIMAL(10,2) DEFAULT 0,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_bill(bill_id)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE designation_master(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    designation_name VARCHAR(150) NOT NULL UNIQUE,
+    is_active TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_designation_active(is_active)
+) ENGINE=InnoDB;
+
+ALTER TABLE fs_employee
+ADD designation_id BIGINT UNSIGNED NULL AFTER designation;
+
+INSERT INTO designation_master(designation_name)
+SELECT DISTINCT designation
+FROM fs_employee
+WHERE designation IS NOT NULL
+AND designation != '';
+
+UPDATE fs_employee e
+JOIN designation_master d
+ON d.designation_name = e.designation
+SET e.designation_id = d.id;
+
+CREATE TABLE service_bills(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    service_type ENUM(
+        'standby_duty',
+        'pumping_work'
+    ) NOT NULL,
+
+    service_request_id BIGINT UNSIGNED NULL,
+
+    bill_no VARCHAR(100) NULL,
+
+    fire_station_id BIGINT UNSIGNED NULL,
+
+    recipient_name VARCHAR(255) NULL,
+
+    event_type VARCHAR(255) NULL,
+
+    diesel_rate DECIMAL(10,2) DEFAULT 0,
+
+    fuel_expense DECIMAL(10,2) DEFAULT 0,
+
+    depreciation_expense DECIMAL(10,2) DEFAULT 0,
+
+    personnel_expense DECIMAL(10,2) DEFAULT 0,
+
+    equipment_expense DECIMAL(10,2) DEFAULT 0,
+
+    cgst_amount DECIMAL(10,2) DEFAULT 0,
+
+    sgst_amount DECIMAL(10,2) DEFAULT 0,
+
+    total_amount DECIMAL(10,2) DEFAULT 0,
+
+    payment_status ENUM(
+        'pending',
+        'paid'
+    ) DEFAULT 'pending',
+
+    payment_id BIGINT UNSIGNED NULL,
+
+    qr_code VARCHAR(255) NULL,
+
+    created_by BIGINT UNSIGNED NULL,
+
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+
+) ENGINE=InnoDB;
+
+CREATE TABLE service_bill_personnels(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    bill_id BIGINT UNSIGNED NOT NULL,
+
+    designation_id BIGINT UNSIGNED NULL,
+
+    no_of_person INT DEFAULT 0,
+
+    per_person_expense DECIMAL(10,2) DEFAULT 0,
+
+    da_amount DECIMAL(10,2) DEFAULT 0,
+
+    total_amount DECIMAL(10,2) DEFAULT 0,
+
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+
+) ENGINE=InnoDB;
+
+CREATE TABLE service_bill_vehicles(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    bill_id BIGINT UNSIGNED NOT NULL,
+
+    vehicle_type_id BIGINT UNSIGNED NULL,
+
+    diesel_rate DECIMAL(10,2) DEFAULT 0,
+
+    mileage_value DECIMAL(10,2) DEFAULT 0,
+
+    mileage_type ENUM(
+        'per_km',
+        'per_hour'
+    ) DEFAULT 'per_km',
+
+    running_value DECIMAL(10,2) DEFAULT 0,
+
+    total_expense DECIMAL(10,2) DEFAULT 0,
+
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+
+) ENGINE=InnoDB;
+
+CREATE TABLE service_bill_equipments(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    bill_id BIGINT UNSIGNED NOT NULL,
+
+    equipment_category_id BIGINT UNSIGNED NULL,
+
+    mileage_value DECIMAL(10,2) DEFAULT 0,
+
+    mileage_type ENUM(
+        'per_km',
+        'per_hour'
+    ) DEFAULT 'per_hour',
+
+    running_value DECIMAL(10,2) DEFAULT 0,
+
+    total_expense DECIMAL(10,2) DEFAULT 0,
+
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL
+
+) ENGINE=InnoDB;
+
+CREATE TABLE report_fee_masters(
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+report_type ENUM(
+'fire_report',
+'rescue_report',
+'relief_report'
+),
+processing_fee DECIMAL(10,2) DEFAULT 0,
+cgst_percent DECIMAL(5,2) DEFAULT 9,
+sgst_percent DECIMAL(5,2) DEFAULT 9,
+created_at TIMESTAMP NULL,
+updated_at TIMESTAMP NULL
+) ENGINE=InnoDB;

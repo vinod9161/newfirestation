@@ -58,20 +58,6 @@
     </div>
 </div>
 
-    <!-- <script>
-    $(document).ready(function () {
-        $('#fireStationsTable').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
-        });
-    });
-</script> -->
-
-
-
 </div>
 
 @endsection

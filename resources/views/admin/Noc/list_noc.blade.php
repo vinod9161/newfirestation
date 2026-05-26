@@ -108,7 +108,7 @@
                                         <option value="" disabled selected>-- Select An Option --</option>
                                         <option value="pre establishment noc">Pre Establishment NOC</option>
                                         <option value="pre operational noc">Pre Operational NOC</option>
-                                        <option value="renewal">Renewal NOC</option>
+                                        <option value="renewal noc">Renewal NOC</option>
                                     </select>
                                 </div>
                             </div>
@@ -122,6 +122,8 @@
                     </div>
                 </div>
                 <span id="filtererror" class="error mt-3"></span>
+                <input type="hidden" id="current_status" value="{{ request()->status }}">
+                <input type="hidden" id="current_type" value="{{ request()->type }}">
                 
             </form>
 
@@ -543,6 +545,9 @@
                         d.filter_projects = $('#filter_projects').val();
                         d.filter_category = $('#filter_category').val();
                         d.filter_noc_type = $('#filter_noc_type').val();
+
+                        d.current_status = $('#current_status').val();
+                        d.current_type = $('#current_type').val();
                     }
                 },
 

@@ -7,6 +7,7 @@ use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class IncidentController extends Controller
 {
@@ -15,23 +16,128 @@ class IncidentController extends Controller
     {
         $this->commonModel = new CommonModel;
     }
-    public function index()
+
+    public function index(Request $request)
     {
-        if(Auth::user()->type == 3)
+        $query = DB::table('fs_incident_report_request');
+
+        if (Auth::user()->type == 3)
         {
-            $incident = $this->commonModel->getDataByOneCondition('fs_incident_report_request', array('district_id' => Auth::user()->district_id));
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
+            )->where(
+                'station_id',
+                Auth::user()->station_id
+            );
         }
-        elseif(Auth::user()->type == 0 || Auth::user()->type == 1)
+        elseif (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        )
         {
-            $incident = $this->commonModel->getData('fs_incident_report_request');
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
+            );
+        }
+
+        if ($request->filled('report_type'))
+        {
+            $query->where(
+                'report_type',
+                'LIKE',
+                '%' . $request->report_type . '%'
+            );
+        }
+
+        if ($request->filled('name'))
+        {
+            $query->where(
+                'name',
+                'LIKE',
+                '%' . $request->name . '%'
+            );
+        }
+
+        if ($request->filled('mobile_no'))
+        {
+            $query->where(
+                'mobile_no',
+                'LIKE',
+                '%' . $request->mobile_no . '%'
+            );
+        }
+
+        if ($request->filled('district'))
+        {
+            $query->where(
+                'district_id',
+                $request->district
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('assignee_response'))
+        {
+            $query->where(
+                'assignee_response',
+                $request->assignee_response
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'date',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
+                'date',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $incident = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        if (
+            Auth::user()->type == 0
+            || Auth::user()->type == 1
+        ) {
+            $district = DB::table('districts')
+                ->orderBy('name')
+                ->get();
         }
         else
         {
-            $incident = $this->commonModel->getDataByOneCondition('fs_incident_report_request', array('district_id' => Auth::user()->district_id));
+            $district = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->orderBy('name')
+                ->get();
         }
-        
-        $district = $this->commonModel->getData('districts');
-        return view('admin.incident.incident',compact('incident','district'));
+
+        return view(
+            'admin.incident.incident',
+            compact(
+                'incident',
+                'district'
+            )
+        );
     }
 
     public function addIncident()

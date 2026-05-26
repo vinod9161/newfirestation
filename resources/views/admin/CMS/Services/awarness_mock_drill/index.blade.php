@@ -66,8 +66,8 @@
                                 <td>{{ $value->content }}</td>
                                 <td>{{ $value->status }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-primary btn-sm"><i class="fe fe-eye"></i></a>
-                                    <a href="{{ route('admin.services.awarness_mock_drill.destroy', $value->id) }}" class="btn btn-danger {{ route('admin.about.our_objective.destroy', $value->id) }}btn-sm" onclick="return confirm('Are you sure you want to delete this special risk area?');"><i class="fe fe-trash"></i></a>
+                                    <a href="{{ route('admin.services.awarness_mock_drill.edit', $value->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a>
+                                    <a href="{{ route('admin.services.awarness_mock_drill.destroy', $value->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this special risk area?');"><i class="fe fe-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach

@@ -7,6 +7,7 @@ use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class AwarenessController extends Controller
 {
@@ -15,31 +16,127 @@ class AwarenessController extends Controller
     {
         $this->commonModel = new CommonModel;
     }
-    public function index()
+
+    public function index(Request $request)
     {
-        if(Auth::user()->type == 3)
+        $query = DB::table('fs_awareness_program_request');
+
+        if (Auth::user()->type == 3)
         {
-            // $awareness = $this->commonModel->getDataByOneCondition('fs_awareness_program_request', array('district_id' => Auth::user()->district_id));
-            $awareness = $this->commonModel->getDataByOneCondition(
-                'fs_awareness_program_request',
-                [
-                    'district_id' => Auth::user()->district_id,
-                    'station_id'  => Auth::user()->station_id  // ADD THIS
-                ]
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
+            )->where(
+                'station_id',
+                Auth::user()->station_id
+            );
+        }
+        elseif (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        )
+        {
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
             );
         }
 
-        elseif(Auth::user()->type == 0 || Auth::user()->type == 1)
+        if ($request->filled('application_id'))
         {
-            $awareness = $this->commonModel->getData('fs_awareness_program_request');
+            $query->where(
+                'application_id',
+                'LIKE',
+                '%' . $request->application_id . '%'
+            );
+        }
+
+        if ($request->filled('district'))
+        {
+            $query->where(
+                'district_id',
+                $request->district
+            );
+        }
+
+        if ($request->filled('station'))
+        {
+            $query->where(
+                'station_id',
+                $request->station
+            );
+        }
+
+        if ($request->filled('program_type'))
+        {
+            $query->where(
+                'program_type',
+                'LIKE',
+                '%' . $request->program_type . '%'
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('assignee_response'))
+        {
+            $query->where(
+                'assignee_response',
+                $request->assignee_response
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'program_datetime',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
+                'program_datetime',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $awareness = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        if (
+            Auth::user()->type == 0
+            || Auth::user()->type == 1
+        ) {
+            $district = DB::table('districts')
+                ->orderBy('name')
+                ->get();
         }
         else
         {
-            $awareness = $this->commonModel->getDataByOneCondition('fs_awareness_program_request', array('district_id' => Auth::user()->district_id));
+            $district = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->orderBy('name')
+                ->get();
         }
-        
-        $district = $this->commonModel->getData('districts');
-        return view('admin.awareness.awareness',compact('awareness','district'));
+
+        return view(
+            'admin.awareness.awareness',
+            compact(
+                'awareness',
+                'district'
+            )
+        );
     }
 
     public function addAwareness()

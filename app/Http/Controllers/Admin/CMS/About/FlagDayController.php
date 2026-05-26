@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Common\CommonModel;
 use App\Models\ContactModel;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 
 class FlagDayController extends Controller
@@ -57,6 +58,75 @@ class FlagDayController extends Controller
         // echo "<pre>";print_r($data); die;
         $this->commonModel->insertData('pages_card',$data);
         return redirect()->route('admin.about.flag_day')->with('success', 'flag_day added successfully.');
+    }
+
+    public function editflag_day($id)
+    {
+        $data['flag_day'] = DB::table('pages_card')
+            ->where('id', $id)
+            ->first();
+
+        return view(
+            'admin.CMS.About.flag_day.edit',
+            $data
+        );
+    }
+
+
+    public function updateflag_day(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'hadding' => 'required',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = [
+            'hadding' => $request->hadding,
+            'content' => $request->description,
+        ];
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+
+            $imageName = time().'_1.'.$image->getClientOriginalExtension();
+
+            $image->move(
+                public_path('admin/about/flag_day'),
+                $imageName
+            );
+
+            $data['image'] = $imageName;
+        }
+
+        if ($request->hasFile('image1')) {
+
+            $image1 = $request->file('image1');
+
+            $imageName1 = time().'_2.'.$image1->getClientOriginalExtension();
+
+            $image1->move(
+                public_path('admin/about/flag_day'),
+                $imageName1
+            );
+
+            $data['image1'] = $imageName1;
+        }
+
+        DB::table('pages_card')
+            ->where('id', $id)
+            ->update($data);
+
+        return redirect()
+            ->route('admin.about.flag_day')
+            ->with('success', 'Flag Day updated successfully.');
     }
 
     public function destroyflag_day($id){

@@ -78,7 +78,6 @@
                 <select class="form-control js-example-basic-single" name="subcategory_id" id="subcategory_id" @if(!empty($application) && !empty($application->subcategory_id)) disabled @endif>
                     <option value="" style="display:none;">Select Sub Category</option>
                     @foreach ($subCategoryByProject as $sub_cat)
-                    <!-- <option value="{{ $sub_cat->id }}" >{{ ucfirst($sub_cat->name) }}</option> -->
                     <option value="{{ $sub_cat->id }}"
                         @selected(data_get($application, 'subcategory_id' )==$sub_cat->id)>
                         {{ ucfirst($sub_cat->name).$sub_cat->id }}
@@ -176,7 +175,7 @@
                     @foreach ($district as $dist)
                         <option
                             value="{{ $dist->id }}"
-                            @selected(optional($lockedAddress)->district_id == $dist->id)
+                            @selected(($lockedAddress->district_id ?? $application->district_id ?? '') == $dist->id)
                         >
                             {{ ucfirst($dist->name) }}
                         </option>
@@ -195,14 +194,15 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="form-group">
                 <label class="form-label">Urban नगर / Rural ग्रामीण<span class="span_required">*</span></label>
-
+                @php
+                $ruralUrban=$lockedAddress->rural_urban
+                    ?? $application->rural_urban
+                    ?? 'rural';
+                @endphp
                 <div class="radio-toolbar {{ $lockAddress ? 'readonly-radio' : '' }}">
-
-                    <input type="radio" id="urban" name="rural_urban" value="urban" onclick="chooseRularUrban(this);" >
+                    <input type="radio" id="urban" name="rural_urban" value="urban" onclick="chooseRularUrban(this);" @checked(($lockedAddress->rural_urban ?? $application->rural_urban ?? 'rural') == 'urban')>
                     <label for="urban">Urban नगर</label>
-
-                    <input type="radio" id="rular" name="rural_urban" value="rural" onclick="chooseRularUrban(this);" checked>
-                    <label for="rular">Rulal ग्रामीण</label>
+                    <input type="radio" id="rular" name="rural_urban" value="rural" onclick="chooseRularUrban(this);" @checked(($lockedAddress->rural_urban ?? $application->rural_urban ?? 'rural') == 'rural')>                    <label for="rular">Rulal ग्रामीण</label>
 
                 </div>
                 <span class="error" id="error11"></span>
@@ -281,7 +281,7 @@
         <div class="col-lg-4 col-sm-6 col-xs-12">
             <div class="form-group">
                 <label class="form-label">Village ग्राम <span class="span_required">*</span></label>
-                <input type="text" class="form-control" name="village" id="village" placeholder="Village" value="{{ $application->village ?? ''}}" @if(!empty($application) && !empty($application->village)) readonly @endif>
+                <input type="text" class="form-control" name="village" id="village" placeholder="Village" value="{{ $lockedAddress->village ?? $application->village ?? '' }}" @if(!empty($application) && !empty($application->village)) readonly @endif>
                 <span class="error" id="error17"></span>
             </div>
         </div>

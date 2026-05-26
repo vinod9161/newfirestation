@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\Models\Application;
 
 
 class CitizenController extends Controller
@@ -88,27 +89,106 @@ class CitizenController extends Controller
 
 
     
-    public function indexNoc()
+    public function indexNoc(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $district = $this->commonModel->getData('districts');
-        $projects = $this->commonModel->getData('projects');
-        $categories = $this->commonModel->getData('categories');
-        $sub_categories = $this->commonModel->getData('sub_categories');
-        $application = $this->commonModel->getDataByOneCondition('applications', array('user_id' => $user_id));
+        $user_id=Auth::user()->id;
 
-        $count = 0;
-        foreach ($application as $app) {
-            if ($app->status === 'pending' || $app->status === 'processed') {
+        $district=$this->commonModel->getData('districts');
+
+        $projects=$this->commonModel->getData('projects');
+
+        $categories=$this->commonModel->getData('categories');
+
+        $sub_categories=$this->commonModel->getData('sub_categories');
+
+        $query=Application::where(
+            'user_id',
+            $user_id
+        );
+
+        if($request->application_for){
+
+            $query->where(
+                'noc_type',
+                $request->application_for
+            );
+        }
+
+        if($request->type){
+
+            $query->where(
+                'application_type',
+                $request->type
+            );
+        }
+
+        if($request->building_name){
+
+            $query->where(
+                'building_name',
+                'LIKE',
+                '%'.$request->building_name.'%'
+            );
+        }
+
+        if($request->district){
+
+            $query->where(
+                'district_id',
+                $request->district
+            );
+        }
+
+        if($request->status){
+
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        if($request->payment_status){
+
+            $query->where(
+                'payment_status',
+                $request->payment_status
+            );
+        }
+
+        $application=$query
+            ->latest()
+            ->get();
+
+        $count=0;
+
+        foreach ($application as $app){
+
+            if(
+                $app->status==='pending' ||
+                $app->status==='processed'
+            ){
                 $count++;
             }
         }
-        $countStatus = 'N';
-        if($count > 0)
-        {
-            $countStatus = 'Y';
+
+        $countStatus='N';
+
+        if($count>0){
+
+            $countStatus='Y';
         }
-        return view('citizen.noc.index', compact('application','district','projects','categories','sub_categories', 'countStatus'));
+
+        return view(
+            'citizen.noc.index',
+            compact(
+                'application',
+                'district',
+                'projects',
+                'categories',
+                'sub_categories',
+                'countStatus'
+            )
+        );
     }
     public function indexTemporaryNoc()
     {

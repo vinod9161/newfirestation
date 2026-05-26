@@ -20,11 +20,38 @@ class VehicleTypesController extends Controller
     {
         $this->commonModel = new CommonModel;
     }
-    public function index()
+    
+    public function index(Request $request)
     {
-        $vehicletypes = $this->commonModel->getData('vehicle_types');
-        return view('admin.vehicle_types.index', compact('vehicletypes'));
+        $query = DB::table('vehicle_types');
+
+        if ($request->filled('type')) {
+
+            $query->where(
+                'type',
+                'LIKE',
+                '%' . $request->type . '%'
+            );
+        }
+
+        if ($request->filled('status')) {
+
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        $vehicletypes = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view(
+            'admin.vehicle_types.index',
+            compact('vehicletypes')
+        );
     }
+
     public function addVehicleTypesForm()
     {
         return view('admin.vehicle_types.add');

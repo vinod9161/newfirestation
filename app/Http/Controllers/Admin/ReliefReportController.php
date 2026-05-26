@@ -23,47 +23,128 @@ class ReliefReportController extends Controller{
     {
         $this->commonModel = new CommonModel;
     }
+
     public function index(Request $request)
     {
         $query = DB::table('fs_relief_work_report')
-            ->join('fire_stations', 'fs_relief_work_report.station_id', '=', 'fire_stations.id')
-            ->join('districts', 'fs_relief_work_report.district_id', '=', 'districts.id')
+            ->join(
+                'fire_stations',
+                'fs_relief_work_report.station_id',
+                '=',
+                'fire_stations.id'
+            )
+            ->join(
+                'districts',
+                'fs_relief_work_report.district_id',
+                '=',
+                'districts.id'
+            )
             ->select(
                 'fs_relief_work_report.*',
                 'fire_stations.name as fire_station_name',
                 'districts.name as district_name'
             );
 
-        if (Auth::user()->type == 3) {
-            $query->where('fs_relief_work_report.assigned_to', Auth::user()->id);
+
+        if (Auth::user()->type == 3)
+        {
+            $query->where(
+                'fs_relief_work_report.assigned_to',
+                Auth::user()->id
+            );
         }
-        elseif (Auth::user()->type != 0 && Auth::user()->type != 1) {
-            $query->where('fs_relief_work_report.district_id', Auth::user()->district_id);
+        elseif (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        )
+        {
+            $query->where(
+                'fs_relief_work_report.district_id',
+                Auth::user()->district_id
+            );
         }
 
-        if ($request->filled('from_date')) {
+        if ($request->filled('relief_report_no'))
+        {
             $query->where(
+                'fs_relief_work_report.relief_report_no',
+                'LIKE',
+                '%' . $request->relief_report_no . '%'
+            );
+        }
+
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'fs_relief_work_report.district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('station_id'))
+        {
+            $query->where(
+                'fs_relief_work_report.station_id',
+                $request->station_id
+            );
+        }
+
+        if ($request->filled('relief_work_type'))
+        {
+            $query->where(
+                'fs_relief_work_report.relief_work_type',
+                $request->relief_work_type
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'fs_relief_work_report.status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
                 'fs_relief_work_report.created_at',
                 '>=',
-                $request->from_date . ' 00:00:00'
+                $request->from_date
             );
         }
 
-        if ($request->filled('to_date')) {
-            $query->where(
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
                 'fs_relief_work_report.created_at',
                 '<=',
-                $request->to_date . ' 23:59:59'
+                $request->to_date
             );
         }
 
+        $data['districts'] = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        $data['stations'] = DB::table('fire_stations')
+            ->orderBy('name')
+            ->get();
+
         $data['fs_relief_report'] = $query
-            ->orderBy('fs_relief_work_report.created_at', 'desc')
+            ->orderBy(
+                'fs_relief_work_report.created_at',
+                'DESC'
+            )
             ->get()
             ->toArray();
 
-        return view('admin.ReliefReport.reliefReport', $data);
+        return view(
+            'admin.ReliefReport.reliefReport',
+            $data
+        );
     }
+
     public function deleteReliefReport($id)
     {
         $record = ReliefReportModel::findOrFail($id);

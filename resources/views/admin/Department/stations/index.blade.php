@@ -34,51 +34,126 @@
 <?php // echo "<pre>"; print_r($station); die; ?>
 <!--Navbar-->
 <div class="responsive-background">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="{{ route('admin.stationsfilter') }}" method="GET" class="advanced-search br-3">
-            <div class="advanced-search br-3">
-                <div class="row align-items-center">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>Name :</label>
-                                    <input type="text" class="form-control" name="filter_name"
-                                        value="{{ request('filter_name') }}" id="filter_name" placeholder=" Enter Name">
-                                </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>District :</label>
-                                    <input type="text" class="form-control" name="district_name" id="district_name"
-                                        placeholder=" Enter District">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>Status :</label>
-                                    <select class="form-control" name="status">
-                                        <option value="" disabled selected>-- Select An Option --</option>
-                                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Inactive
-                                        </option>
-                                        <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+    <div class="collapse navbar-collapse"
+         id="navbarSupportedContent">
+
+        <form action="{{ route('admin.stations') }}"
+              method="GET"
+              class="advanced-search br-3"
+              id="filterForm">
+
+            <div class="advanced-search br-3">
+
+                <div class="row align-items-center">
+
+                    <!-- Station Name -->
+                    <div class="col-md-3">
+
+                        <div class="form-group mb-lg-0">
+
+                            <label>Name :</label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   name="filter_name"
+                                   value="{{ request('filter_name') }}"
+                                   placeholder="Enter Name">
+
                         </div>
+
                     </div>
+
+                    <!-- District -->
+                    <div class="col-md-3">
+
+                        <div class="form-group mb-lg-0">
+
+                            <label>District :</label>
+
+                            <select class="form-control"
+                                    name="district_id">
+
+                                <option value="">
+                                    -- Select District --
+                                </option>
+
+                                @foreach($districts as $district)
+
+                                    <option value="{{ $district->id }}"
+                                        {{ request('district_id') == $district->id ? 'selected' : '' }}>
+
+                                        {{ $district->name }}
+
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-3">
+
+                        <div class="form-group mb-lg-0">
+
+                            <label>Status :</label>
+
+                            <select class="form-control"
+                                    name="status">
+
+                                <option value="">
+                                    -- Select Status --
+                                </option>
+
+                                <option value="0"
+                                    {{ request('status') == '0' ? 'selected' : '' }}>
+                                    Inactive
+                                </option>
+
+                                <option value="1"
+                                    {{ request('status') == '1' ? 'selected' : '' }}>
+                                    Active
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-md-3 d-flex align-items-end">
+
+                        <div class="form-group mb-lg-0 w-100">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Apply
+                            </button>
+
+                            <a href="{{ route('admin.stations') }}"
+                               class="btn btn-secondary">
+                                Reset
+                            </a>
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <hr>
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Apply</button>
-                    <a href="{{ route('admin.stations') }}" class="btn btn-secondary">Reset</a>
-                </div>
+
             </div>
+
         </form>
+
     </div>
+
 </div>
+
 <!--End Navbar -->
 
 <!-- Start::row-2 -->
@@ -236,5 +311,23 @@ $(function(e) {
         },
     });
 });
+</script>
+<script>
+
+$('#filterForm').on('submit', function () {
+
+    $(this).find(':input').each(function () {
+
+        if (
+            !$(this).val()
+            && $(this).attr('type') != 'submit'
+        ) {
+            $(this).prop('disabled', true);
+        }
+
+    });
+
+});
+
 </script>
 @stop

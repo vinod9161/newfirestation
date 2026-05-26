@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Common\CommonModel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class StandbyController extends Controller
@@ -14,26 +15,112 @@ class StandbyController extends Controller
     {
         $this->commonModel = new CommonModel;
     }
-    public function index()
+    public function index(Request $request)
     {
-        if(Auth::user()->type == 3)
+        $query = DB::table('fs_standby_duty_request');
+
+        if (Auth::user()->type == 3)
         {
-            $standby = $this->commonModel->getDataByOneCondition(
-                'fs_standby_duty_request', 
-                array('district_id' => Auth::user()->district_id, 'station_id'  => Auth::user()->station_id)
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
+            )->where(
+                'station_id',
+                Auth::user()->station_id
             );
         }
-        elseif(Auth::user()->type == 0 || Auth::user()->type == 1)
+        elseif (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        )
         {
-            $standby = $this->commonModel->getData('fs_standby_duty_request');
-        }
-        else
-        {
-            $standby = $this->commonModel->getDataByOneCondition('fs_standby_duty_request', array('district_id' => Auth::user()->district_id));
+            $query->where(
+                'district_id',
+                Auth::user()->district_id
+            );
         }
 
+        if ($request->filled('application_id'))
+        {
+            $query->where(
+                'application_id',
+                'LIKE',
+                '%' . $request->application_id . '%'
+            );
+        }
+
+        if ($request->filled('district'))
+        {
+            $query->where(
+                'district_id',
+                $request->district
+            );
+        }
+
+        if ($request->filled('station'))
+        {
+            $query->where(
+                'station_id',
+                $request->station
+            );
+        }
+
+        if ($request->filled('program_type'))
+        {
+            $query->where(
+                'program_type',
+                'LIKE',
+                '%' . $request->program_type . '%'
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('assignee_response'))
+        {
+            $query->where(
+                'assignee_response',
+                $request->assignee_response
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'program_datetime',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
+                'program_datetime',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $standby = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $district = $this->commonModel->getData('districts');
-        return view('admin.standby.standby',compact('standby','district'));
+
+        return view(
+            'admin.standby.standby',
+            compact(
+                'standby',
+                'district'
+            )
+        );
     }
 
     public function addStandby()

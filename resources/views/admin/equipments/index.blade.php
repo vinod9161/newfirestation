@@ -13,7 +13,21 @@
         <h5 class="main-content-title text-default  fs-24  mg-b-4 mb-0">Manage Equipment</h5>
     </div>
     <div class="d-flex app-header-btn">
-       
+        <div class="me-2">
+            <a href="javascript:void(0);"
+            class="btn ripple btn-wave btn-secondary navresponsive-toggler mb-0"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+                <i class="fe fe-filter me-1"></i>
+                Filter
+                <i class="fa fa-caret-down ms-1 fs-10"></i>
+
+            </a>
+        </div>
         <div>
             <a href="<?php echo route('admin.add-equipment');?>" class="btn ripple btn-wave  btn-success mb-0">
                 <i class="fe fe-plus me-1"></i> Add Equipment
@@ -24,6 +38,149 @@
     </div>
 </div>
 
+<div class="responsive-background mb-3">
+
+    <div class="collapse navbar-collapse"
+         id="navbarSupportedContent">
+
+        <div class="advanced-search br-3 p-3">
+
+            <form method="GET"
+                  action="{{ url()->current() }}"
+                  id="filterForm">
+
+                <div class="row">
+
+                    <!-- District -->
+                    <div class="col-md-2 mb-3">
+
+                        <select name="district_id"
+                                class="form-control" id="filter_district">
+
+                            <option value="">District</option>
+
+                            @foreach($districts as $district)
+
+                                <option value="{{ $district->id }}"
+                                    {{ request('district_id') == $district->id ? 'selected' : '' }}>
+
+                                    {{ $district->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- Station -->
+                    <div class="col-md-2 mb-3">
+
+                        <select name="station_id"
+                                class="form-control" id="filter_station">
+
+                            <option value="">Station</option>
+
+                            @foreach($stations as $station)
+
+                                <option value="{{ $station->id }}"
+                                    {{ request('station_id') == $station->id ? 'selected' : '' }}>
+
+                                    {{ $station->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-md-2 mb-3">
+
+                        <select name="category_id"
+                                class="form-control" id="filter_category">
+
+                            <option value="">Category</option>
+
+                            @foreach($categories as $category)
+
+                                <option value="{{ $category->id }}"
+                                    {{ request('category_id') == $category->id ? 'selected' : '' }}>
+
+                                    {{ $category->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- Equipment Name -->
+                    <div class="col-md-3 mb-3">
+
+                        <select name="equipment_name"
+                                class="form-control" id="filter_equipment_name">
+
+                            <option value="">Equipment Name</option>
+
+                            @foreach($equipmentNames as $equipment)
+
+                                <option value="{{ $equipment->id }}"
+                                    {{ request('equipment_name') == $equipment->id ? 'selected' : '' }}>
+
+                                    {{ $equipment->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- Added Date -->
+                    <div class="col-md-3 mb-3">
+
+                        <input type="date"
+                               name="added_date"
+                               class="form-control"
+                               id="filter_added_date"
+                               value="{{ request('added_date') }}">
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12 text-end">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Apply
+                        </button>
+
+                        <a href="{{ url()->current() }}"
+                           class="btn btn-secondary">
+                           Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 <!-- Start::row-2 -->
 
 <div class="row">
@@ -175,5 +332,66 @@ $(function(e) {
         
     });
 </script>
+<script>
 
+   $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
+</script>
 @stop

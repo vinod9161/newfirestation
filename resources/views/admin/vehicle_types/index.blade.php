@@ -35,48 +35,68 @@
         <div class="advanced-search br-3">
             <div class="row align-items-center">
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Page :</label>
-                                <input type="text" class="form-control" id="filter_page" placeholder=" Enter Page">
+                    <form method="GET"
+                        action="{{ route('admin.vehicletypes') }}"
+                        id="filterForm">
+
+                        <div class="row">
+
+                            <!-- Vehicle Type -->
+                            <div class="col-md-4 mb-3">
+
+                                <label>Vehicle Type</label>
+
+                                <input type="text"
+                                    class="form-control"
+                                    name="type"
+                                    placeholder="Enter Vehicle Type"
+                                    value="{{ request('type') }}">
+
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Title :</label>
-                                <input type="text" class="form-control" id="filter_title" placeholder=" Enter Title">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Type :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
+
+                            <!-- Status -->
+                            <div class="col-md-4 mb-3">
+
+                                <label>Status</label>
+
+                                <select class="form-control" name="status">
+
+                                    <option value="">Select Status</option>
+
+                                    <option value="1"
+                                        {{ request('status') == '1' ? 'selected' : '' }}>
+                                        Active
+                                    </option>
+
+                                    <option value="0"
+                                        {{ request('status') == '0' ? 'selected' : '' }}>
+                                        Inactive
+                                    </option>
+
                                 </select>
+
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Status :</label>
-                                <select class="form-control" data-trigger name="choices-single-default"
-                                    id="filter_status">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
+
+                            <!-- Buttons -->
+                            <div class="col-md-4 mb-3 d-flex align-items-end">
+
+                                <button type="submit"
+                                        class="btn btn-primary me-2">
+                                    Filter
+                                </button>
+
+                                <a href="{{ route('admin.vehicletypes') }}"
+                                class="btn btn-secondary">
+                                Reset
+                                </a>
+
                             </div>
+
                         </div>
-                    </div>
+
+                    </form>
+
                 </div>
-            </div>
-            <hr>
-            <div class="text-end">
-                <a href="javascript:void(0);" onclick="filter_slider();" class="btn btn-primary">Apply</a>
-                <a href="javascript:void(0);" class="btn btn-secondary">Reset</a>
             </div>
         </div>
     </div>
@@ -171,5 +191,68 @@ $(function(e) {
         },
     });
 });
+</script>
+
+<script>
+
+   $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
 </script>
 @stop

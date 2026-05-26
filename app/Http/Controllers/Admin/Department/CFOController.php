@@ -13,11 +13,59 @@ use Illuminate\Support\Facades\Validator;
 
 class CFOController extends Controller
 {
-	public function index()
-	{
-		$data['cfos'] = User::with('district')->where('type', '=', '2')->orderBy('id', 'DESC')->get();
-		return view('admin.Department.cfo.index',$data);
-	}
+
+    public function index(Request $request)
+    {
+        $query = User::with('district')
+            ->where('type', '2');
+
+        if ($request->filled('filter_name'))
+        {
+            $query->where(
+                'name',
+                'LIKE',
+                '%' . $request->filter_name . '%'
+            );
+        }
+
+        if ($request->filled('filter_email'))
+        {
+            $query->where(
+                'email',
+                'LIKE',
+                '%' . $request->filter_email . '%'
+            );
+        }
+
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'status',
+                $request->status
+            );
+        }
+
+        $data['cfos'] = $query
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $data['districts'] = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        return view(
+            'admin.Department.cfo.index',
+            $data
+        );
+    }
 
 	public function add()
 	{

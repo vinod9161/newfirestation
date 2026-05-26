@@ -18,17 +18,112 @@ class HydrantController extends Controller
     {
         $this->commonModel = new CommonModel;
     }
-    public function index(){
-        $data['hydrantData'] = DB::table('fs_hydrant')
-                        ->select('fs_hydrant.*', 'fire_stations.name as fire_station_name', 'districts.name as district_name','hydrant_type.hydrant_type', 'hydrant_condition.hydrant_condition as condition')
-                        ->join('fire_stations', 'fs_hydrant.station_id', '=', 'fire_stations.id')
-                        ->join('districts', 'fs_hydrant.district_id', '=', 'districts.id')
-                        ->join('hydrant_type', 'hydrant_type.id', '=', 'fs_hydrant.type')
-                        ->join('hydrant_condition', 'hydrant_condition.id', '=', 'fs_hydrant.hydrant_condition')
-                        ->orderBy('fs_hydrant.id','DESC')
-                        ->get()
-                        ->toArray();              
-        return view('admin.Hydrant.index',$data);
+    public function index(Request $request)
+    {
+        $query = DB::table('fs_hydrant')
+            ->select(
+                'fs_hydrant.*',
+                'fire_stations.name as fire_station_name',
+                'districts.name as district_name',
+                'hydrant_type.hydrant_type',
+                'hydrant_condition.hydrant_condition as condition'
+            )
+            ->join(
+                'fire_stations',
+                'fs_hydrant.station_id',
+                '=',
+                'fire_stations.id'
+            )
+            ->join(
+                'districts',
+                'fs_hydrant.district_id',
+                '=',
+                'districts.id'
+            )
+            ->join(
+                'hydrant_type',
+                'hydrant_type.id',
+                '=',
+                'fs_hydrant.type'
+            )
+            ->join(
+                'hydrant_condition',
+                'hydrant_condition.id',
+                '=',
+                'fs_hydrant.hydrant_condition'
+            );
+
+        if (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        ) {
+            $query->where(
+                'fs_hydrant.district_id',
+                Auth::user()->district_id
+            );
+        }
+
+        if ($request->filled('district_id')) {
+            $query->where(
+                'fs_hydrant.district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('station_id')) {
+            $query->where(
+                'fs_hydrant.station_id',
+                $request->station_id
+            );
+        }
+
+        if ($request->filled('type')) {
+            $query->where(
+                'fs_hydrant.type',
+                $request->type
+            );
+        }
+
+        if ($request->filled('hydrant_condition')) {
+            $query->where(
+                'fs_hydrant.hydrant_condition',
+                $request->hydrant_condition
+            );
+        }
+
+        if ($request->filled('address')) {
+            $query->where(
+                'fs_hydrant.address_of_water_sources',
+                'LIKE',
+                '%' . $request->address . '%'
+            );
+        }
+
+        $data['districts'] = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        $data['stations'] = DB::table('fire_stations')
+            ->orderBy('name')
+            ->get();
+
+        $data['hydrantTypes'] = DB::table('hydrant_type')
+            ->orderBy('hydrant_type')
+            ->get();
+
+        $data['hydrantConditions'] = DB::table('hydrant_condition')
+            ->orderBy('hydrant_condition')
+            ->get();
+
+        $data['hydrantData'] = $query
+            ->orderBy('fs_hydrant.id', 'DESC')
+            ->get()
+            ->toArray();
+
+        return view(
+            'admin.Hydrant.index',
+            $data
+        );
     }
     
 

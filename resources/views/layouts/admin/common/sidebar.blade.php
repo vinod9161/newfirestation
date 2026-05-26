@@ -73,7 +73,22 @@
                             <a href="{{ route('pricing-rules.index') }}" class="side-menu__item"
                                 style="padding-left: 35px;">Pricing Rules</a>
                         </li>
-                        
+
+                        <li class="slide">
+                            <a href="{{ route('personnel-expense.index') }}"
+                                class="side-menu__item"
+                                style="padding-left:35px;">
+                                Personnel Expense
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('report-fee-master.index') }}"
+                                class="side-menu__item"
+                                style="padding-left:35px;">
+                                Report Fee Master
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
                 <!-- End::slide -->
@@ -148,6 +163,25 @@
                     </a>
                 </li>
                 <!-- End Equipment -->
+
+                @if(Auth::user()->type == 3)
+
+                <li class="slide">
+
+                    <a href="{{ route('service-bills.index') }}"
+                        class="side-menu__item">
+
+                        <i class="bx bx-file side-menu__icon"></i>
+
+                        <span class="side-menu__label">
+                            Service Bills
+                        </span>
+
+                    </a>
+
+                </li>
+
+                @endif
 
                 <!-- Start::Fire NOC -->
                 <li class="slide has-sub">
@@ -294,7 +328,7 @@
                                 <li class="slide">
                                     <a href="{{ route('admin.getwelfareamenity') }}" class="side-menu__item">Welfare and Amenity</a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <li class="slide has-sub">
@@ -310,7 +344,7 @@
                                 </li>
                                 <li class="slide">
                                     <a href="{{ route('admin.leadershipSectionList') }}" class="side-menu__item">Leadership Section</a>
-                                </li>   
+                                </li>
                             </ul>
                         </li>
 
@@ -344,6 +378,9 @@
                                 <li class="slide">
                                     <a href="{{ route('admin.about.faq') }}" class="side-menu__item">FAQ's</a>
                                 </li>
+                                <li class="slide">
+                                    <a href="{{ route('admin.about.tutorial') }}" class="side-menu__item">Tutorials</a>
+                                </li>
                                 <!-- <li class="slide">
                                     <a href="#" class="side-menu__item">Logs</a>
                                 </li> -->
@@ -356,7 +393,20 @@
                             </a>
                             <ul class="slide-menu child2" style="display: block; box-sizing: border-box;">
                                 <li class="slide">
+                                    <a href="{{route('admin.Service.RTI')}}" class="side-menu__item">RTI </a>
+                                </li>
+
+                                <li class="slide">
+                                    <a href="{{route('admin.Service.rtiservices')}}" class="side-menu__item">Right To Service </a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{route('admin.services.fire-operation')}}" class="side-menu__item">Fire Fighting</a>
+                                </li>
+                                <li class="slide">
                                     <a href="{{route('admin.services.standby')}}" class="side-menu__item">Stand By</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="{{route('admin.services.pumping_work')}}" class="side-menu__item">Pumping Work</a>
                                 </li>
                                 <li class="slide">
                                     <a href="{{route('admin.services.rendered_paid')}}" class="side-menu__item">Service
@@ -372,20 +422,6 @@
                                     <a href="{{route('admin.services.awarness_mock_drill')}}" class="side-menu__item">Awareness/Mock drill
                                     </a>
                                 </li>
-
-                                <li class="slide">
-                                    <a href="{{route('admin.services.pumping_work')}}" class="side-menu__item">Pumping Work</a>
-                                </li>
-
-
-                                <li class="slide">
-                                    <a href="{{route('admin.Service.RTI')}}" class="side-menu__item">RTI </a>
-                                </li>
-
-                                <li class="slide">
-                                    <a href="{{route('admin.Service.rtiservices')}}" class="side-menu__item">Right To Service </a>
-                                </li>
-
                             </ul>
                         </li>
 
@@ -405,7 +441,7 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                         <li class="slide has-sub">
                             <a href="javascript:void(0);" class="side-menu__item">Activities <i
                                     class="fe fe-chevron-right side-menu__angle"></i>
@@ -453,7 +489,7 @@
                                 </li>
                                 <li class="slide">
                                     <a href="{{route('admin.getcourse')}}" class="side-menu__item">Course</a>
-                                </li>   
+                                </li>
 
                             </ul>
                         </li>

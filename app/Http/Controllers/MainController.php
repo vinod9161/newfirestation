@@ -280,9 +280,19 @@ class MainController extends Controller{
     
     public function actionTutorials()
     {
-        $tbl = "faq";
-        $faq = $this->commonModel->getData($tbl);
-        return view('fire.tutorials',compact('faq'));
+        $tbl = "pages_card";
+
+        $where = [
+            'page_name' => 'tutorial'
+        ];
+
+        $tutorials = $this->commonModel
+            ->getDataByOneCondition($tbl, $where);
+
+        return view(
+            'fire.tutorials',
+            compact('tutorials')
+        );
     }
 
     /////////////////////////////////////////////////
@@ -345,23 +355,6 @@ class MainController extends Controller{
 
     /////////////////////////////////////////////////
 
-
-
-
-    // public function actionFireServiceWeek()
-    // {
-    //     // Get the start and end of the current week
-    //     $startOfWeek = Carbon::now()->startOfWeek()->toDateString();
-    //     $endOfWeek = Carbon::now()->endOfWeek()->toDateString();
-
-    //     // Fetch events within the current week
-    //     $fireEvents = FireServiceWeekModel::whereBetween('date', [$startOfWeek, $endOfWeek])->get();
-    //     echo "<pre>"; print_r($fireEvents);die;
-    //     $commonModel = new CommonModel();
-    //     $category = $commonModel->getData('fire_events_category');
-    //     return view('fire.fire_service_week', compact('fireEvents', 'startOfWeek', 'endOfWeek', 'category'));
-    // }
-
     public function actionFireServiceWeek()
     {
         // Fetch events in descending order of ID
@@ -400,7 +393,30 @@ class MainController extends Controller{
 
     public function actionFireFighting()
     {
-        return view('fire.firefighting');
+        $operations = DB::table('pages_card')
+            ->where('page_name', 'fire_operation')
+            ->where('status', 'Active')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $topSection = $operations
+            ->where('image_position', 'Top Section')
+            ->first();
+
+        $fireFighting = $operations
+            ->where('image_position', 'Fire Fighting');
+
+        $rescue = $operations
+            ->where('image_position', 'Rescue');
+
+        return view(
+            'fire.firefighting',
+            compact(
+                'topSection',
+                'fireFighting',
+                'rescue'
+            )
+        );
     }
 
     public function actionEmergencyContact()
@@ -456,9 +472,18 @@ class MainController extends Controller{
     public function actionHistory()
     {
         $tbl = "pages_card";
-        $where = array('page_name' => 'history');
-        $history = $this->commonModel->getDataByOneCondition($tbl,$where);
-        return view('fire.history',compact('history'));
+
+        $where = [
+            'page_name' => 'history',
+            'status' => 'Active'
+        ];
+
+        $history = $this->commonModel->getDataByOneCondition($tbl, $where);
+
+        // get first row
+        $history = $history[0] ?? null;
+
+        return view('fire.history', compact('history'));
     }
 
     /////////////////////////////////////////////////
@@ -552,10 +577,26 @@ class MainController extends Controller{
 
     public function actionMissionVision()
     {
-        $tbl = "pages_card";
-        $where = array('page_name' => 'mission_vision');
-        $mission_vision = $this->commonModel->getDataByOneCondition($tbl,$where);
-        return view('fire.mission_vision',compact('mission_vision'));
+        $mission_vision = DB::table('pages_card')
+            ->where('page_name', 'mission_vision')
+            ->where('status', 'Active')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $missionCards = $mission_vision
+            ->where('image_position', 'mission');
+
+        $visionSection = $mission_vision
+            ->where('image_position', 'vision')
+            ->first();
+
+        return view(
+            'fire.mission_vision',
+            compact(
+                'missionCards',
+                'visionSection'
+            )
+        );
     }
 
 
@@ -568,12 +609,48 @@ class MainController extends Controller{
 
     /////////////////////////////////////////////////
 
+    // public function actionObjective()
+    // {
+    //     $tbl = "pages_card";
+    //     $where = array('page_name' => 'our_objective');
+    //     $objective = $this->commonModel->getDataByOneCondition($tbl,$where);
+    //     return view('fire.objective',compact('objective'));
+    // }
+
     public function actionObjective()
     {
         $tbl = "pages_card";
-        $where = array('page_name' => 'our_objective');
-        $objective = $this->commonModel->getDataByOneCondition($tbl,$where);
-        return view('fire.objective',compact('objective'));
+
+        $where = [
+            'page_name' => 'our_objective',
+            'status' => 'Active'
+        ];
+
+        $objective = $this->commonModel->getDataByOneCondition($tbl, $where);
+
+        $topSection = null;
+        $cards = [];
+        $bottomSection = null;
+
+        foreach ($objective as $row) {
+
+            if ($row->image_position == 'top') {
+                $topSection = $row;
+            }
+
+            if ($row->image_position == 'card') {
+                $cards[] = $row;
+            }
+
+            if ($row->image_position == 'bottom') {
+                $bottomSection = $row;
+            }
+        }
+
+        return view(
+            'fire.objective',
+            compact('topSection', 'cards', 'bottomSection')
+        );
     }
 
     public function actionObjective2()
@@ -591,9 +668,6 @@ class MainController extends Controller{
         $headquater  = Organisational::where('status', '=', '1')->where('type', '=', '1')->orderBy('rank', 'asc')->get();
         $district  = Organisational::where('status', '=', '1')->where('type', '=', '2')->orderBy('rank', 'asc')->get();
         $firestation  = Organisational::where('status', '=', '1')->where('type', '=', '3')->orderBy('rank', 'asc')->get();
-        // echo "<pre>"; print_r($headquater);
-        // echo "<pre>"; print_r($district); die;
-        // echo "<pre>"; print_r($firestation);die;
         return view('fire.organisation_structure')->with('headquater',$headquater)->with('district',$district)->with('firestation',$firestation);
     }
 
@@ -631,12 +705,18 @@ class MainController extends Controller{
 
     public function actionPublicAwareness()
     {
+        $awarness_program = DB::table('pages_card')
+            ->where('page_name', 'awarness_mock_drill')
+            ->where('status', 'Active')
+            ->first();
+
         $unique_no =  Carbon::now()->timestamp; // Produces something like 1552296328
 
         return view('fire.public_awareness', [
             'districts' => District::with('tehsil','block.panchayat')->take(13)->get(),
             'categories' => Category::all(),
             'unique_no' =>$unique_no,
+            'awarness_program' => $awarness_program
         ]);
     }
 
@@ -947,10 +1027,24 @@ class MainController extends Controller{
 
 
     /////////////////////////////////////////////////
-
     public function actionPumpingWork()
     {
-        return view('fire.pumping_work');
+        $pumping_work = DB::table('pages_card')
+            ->where('page_name', 'pumping_work')
+            ->where('status', 'Active')
+            ->first();
+
+        return view('fire.pumping_work', [
+
+            'districts' => District::with('tehsil','block.panchayat')
+                ->take(13)
+                ->get(),
+
+            'categories' => Category::all(),
+
+            'pumping_work' => $pumping_work,
+
+        ]);
     }
 
     /////////////////////////////////////////////////
@@ -1034,11 +1128,23 @@ class MainController extends Controller{
     /////////////////////////////////////////////////
 
 
-    public function actionStandby(){
-        // return redirect()->route('actionSuccess');
+    public function actionStandby()
+    {
+        $standby = DB::table('pages_card')
+            ->where('page_name', 'standby')
+            ->where('status', 'Active')
+            ->first();
+
         return view('fire.standby', [
-            'districts' => District::with('tehsil','block.panchayat')->take(13)->get(),
+
+            'districts' => District::with('tehsil','block.panchayat')
+                ->take(13)
+                ->get(),
+
             'categories' => Category::all(),
+
+            'standby' => $standby,
+
         ]);
     }
 

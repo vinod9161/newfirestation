@@ -27,44 +27,6 @@ class FireReportController extends Controller
         $this->commonModel = new CommonModel();
     }
 
-    // public function index()
-    // {
-    //     if(Auth::user()->type == '3')
-    //     {
-    //         $data['fs_fire_report'] = DB::table('fs_fire_report')
-    //         ->join('fire_stations', 'fs_fire_report.station_id', '=', 'fire_stations.id')
-    //         ->join('categories', 'fs_fire_report.category', '=', 'categories.id')
-    //         ->join('districts', 'fs_fire_report.district_id', '=', 'districts.id')
-    //         ->select('fs_fire_report.*', 'fire_stations.name as fire_station_name', 'categories.name as categories_name', 'districts.name as districts_name')
-    //         ->where('fs_fire_report.assigned_to', Auth::user()->id)
-    //         ->get()
-    //         ->toArray();
-    //     }
-    //     elseif(Auth::user()->type == '0' || Auth::user()->type == '1')
-    //     {
-    //         $data['fs_fire_report'] = DB::table('fs_fire_report')
-    //         ->join('fire_stations', 'fs_fire_report.station_id', '=', 'fire_stations.id')
-    //         ->join('categories', 'fs_fire_report.category', '=', 'categories.id')
-    //         ->join('districts', 'fs_fire_report.district_id', '=', 'districts.id')
-    //         ->select('fs_fire_report.*', 'fire_stations.name as fire_station_name', 'categories.name as categories_name', 'districts.name as districts_name')
-    //         ->get()
-    //         ->toArray();
-    //     }
-    //     else
-    //     {
-    //         $data['fs_fire_report'] = DB::table('fs_fire_report')
-    //         ->join('fire_stations', 'fs_fire_report.station_id', '=', 'fire_stations.id')
-    //         ->join('categories', 'fs_fire_report.category', '=', 'categories.id')
-    //         ->join('districts', 'fs_fire_report.district_id', '=', 'districts.id')
-    //         ->select('fs_fire_report.*', 'fire_stations.name as fire_station_name', 'categories.name as categories_name', 'districts.name as districts_name')
-    //         ->where('fs_fire_report.district_id', Auth::user()->district_id)
-    //         ->get()
-    //         ->toArray();
-    //     }
-    //     // echo "<pre>"; print_r($data); die;
-    //     return view('admin.fireReport.fireReport', $data);
-    // }
-
     public function index(Request $request)
     {
         $query = DB::table('fs_fire_report')
@@ -78,28 +40,120 @@ class FireReportController extends Controller
                 'districts.name as districts_name'
             );
 
-        if (Auth::user()->type == '3') {
-            $query->where('fs_fire_report.assigned_to', Auth::user()->id);
+
+        if (Auth::user()->type == '3')
+        {
+            $query->where(
+                'fs_fire_report.assigned_to',
+                Auth::user()->id
+            );
         }
-        elseif (Auth::user()->type != '0' && Auth::user()->type != '1') {
-            $query->where('fs_fire_report.district_id', Auth::user()->district_id);
+        elseif (
+            Auth::user()->type != '0'
+            && Auth::user()->type != '1'
+        )
+        {
+            $query->where(
+                'fs_fire_report.district_id',
+                Auth::user()->district_id
+            );
         }
 
-        if ($request->filled('from_date')) {
-            $from = $request->from_date . ' 00:00:00';
-            $query->where('fs_fire_report.created_at', '>=', $from);
+        if ($request->filled('fire_report_no'))
+        {
+            $query->where(
+                'fs_fire_report.fire_report_no',
+                'LIKE',
+                '%' . $request->fire_report_no . '%'
+            );
         }
 
-        if ($request->filled('to_date')) {
-            $to = $request->to_date . ' 23:59:59';
-            $query->where('fs_fire_report.created_at', '<=', $to);
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'fs_fire_report.district_id',
+                $request->district_id
+            );
         }
 
-        $data['fs_fire_report'] = $query->orderBy('fs_fire_report.created_at', 'desc')
-                                        ->get()
-                                        ->toArray();
+        if ($request->filled('station_id'))
+        {
+            $query->where(
+                'fs_fire_report.station_id',
+                $request->station_id
+            );
+        }
 
-        return view('admin.fireReport.fireReport', $data);
+        if ($request->filled('category'))
+        {
+            $query->where(
+                'fs_fire_report.category',
+                $request->category
+            );
+        }
+
+        if ($request->filled('fire_area_type'))
+        {
+            $query->where(
+                'fs_fire_report.fire_area_type',
+                $request->fire_area_type
+            );
+        }
+
+        if ($request->filled('fire_area'))
+        {
+            $query->where(
+                'fs_fire_report.fire_area',
+                $request->fire_area
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'fs_fire_report.status',
+                $request->status
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'fs_fire_report.created_at',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
+                'fs_fire_report.created_at',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $data['districts'] = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        $data['stations'] = DB::table('fire_stations')
+            ->orderBy('name')
+            ->get();
+
+        $data['categories'] = DB::table('categories')
+            ->orderBy('name')
+            ->get();
+
+        $data['fs_fire_report'] = $query
+            ->orderBy('fs_fire_report.created_at', 'DESC')
+            ->get();
+
+        return view(
+            'admin.fireReport.fireReport',
+            $data
+        );
     }
 
 
@@ -442,6 +496,7 @@ class FireReportController extends Controller
         if($result)
         {
             return redirect()->back()->with('success', 'Fire report saved successfully');
+            // return redirect()->route('service-bills.report.create',['service_type'=>'fire_report','request_id'=>$result])->with('success', 'Fire report saved successfully');
         }
         else{
             return redirect()->back()->with('failed', 'Something went wrong. Please try later!');

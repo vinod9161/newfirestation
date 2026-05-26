@@ -1,6 +1,6 @@
 @extends('layouts.admin.template')
 @section('title')
-<title>Mission & Vision Card | Admin Dashboard</title>
+<title>Awarness Mock Drill | Admin Dashboard</title>
 @endsection
 
 @section('style')

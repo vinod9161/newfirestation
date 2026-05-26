@@ -41,74 +41,225 @@
         <div class="advanced-search br-3">
             <div class="row align-items-center">
                 <div class="col-md-12">
-                    <!-- <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Page :</label>
-                                <input type="text" class="form-control" id="filter_page" placeholder=" Enter Page">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Title :</label>
-                                <input type="text" class="form-control" id="filter_title" placeholder=" Enter Title">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Type :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Status :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_status">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
-                    <form method="GET" action="{{ route('admin.rescueReport') }}">
+                    <form method="GET"
+                        action="{{ route('admin.rescueReport') }}"
+                        id="filterForm">
+
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>From Date</label>
-                                    <input type="date"
-                                        class="form-control"
-                                        name="from_date"
-                                        value="{{ request('from_date') }}">
-                                </div>
+
+                            <!-- Rescue Report Number -->
+                            <div class="col-md-3 mb-3">
+                                <label>Rescue Report No</label>
+
+                                <input type="text"
+                                    class="form-control"
+                                    name="rescue_report_no"
+                                    value="{{ request('rescue_report_no') }}">
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-lg-0">
-                                    <label>To Date</label>
-                                    <input type="date"
-                                        class="form-control"
-                                        name="to_date"
-                                        value="{{ request('to_date') }}">
-                                </div>
+                            <!-- District -->
+                            <div class="col-md-3 mb-3">
+                                <label>District</label>
+
+                                <select class="form-control" name="district_id" id="filter_district">
+
+                                    <option value="">Select District</option>
+
+                                    @foreach($district as $dist)
+
+                                        <option value="{{ $dist->id }}"
+                                            {{ request('district_id') == $dist->id ? 'selected' : '' }}>
+
+                                            {{ $dist->name }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
                             </div>
 
-                            <div class="col-md-3 align-self-end">
-                                <button type="submit" class="btn btn-primary">
+                            <!-- Station -->
+                            <div class="col-md-3 mb-3">
+                                <label>Fire Station</label>
+
+                                <select class="form-control" name="station_id" id="filter_station">
+
+                                    <option value="">Select Fire Station</option>
+
+                                    @foreach($station as $st)
+
+                                        <option value="{{ $st->id }}"
+                                            {{ request('station_id') == $st->id ? 'selected' : '' }}>
+
+                                            {{ $st->name }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-3 mb-3">
+                                <label>Status</label>
+
+                                <select class="form-control" name="status">
+
+                                    <option value="">Select Status</option>
+
+                                    <option value="0"
+                                        {{ request('status') == '0' ? 'selected' : '' }}>
+                                        Fresh Entry
+                                    </option>
+
+                                    <option value="1"
+                                        {{ request('status') == '1' ? 'selected' : '' }}>
+                                        Sent for Approval
+                                    </option>
+
+                                    <option value="2"
+                                        {{ request('status') == '2' ? 'selected' : '' }}>
+                                        Sent for Review
+                                    </option>
+
+                                    <option value="3"
+                                        {{ request('status') == '3' ? 'selected' : '' }}>
+                                        Approved
+                                    </option>
+
+                                    <option value="4"
+                                        {{ request('status') == '4' ? 'selected' : '' }}>
+                                        Rejected
+                                    </option>
+
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <!-- Rescue Area -->
+                            <div class="col-md-3 mb-3">
+                                <label>Area of Rescue</label>
+
+                                <select class="form-control" name="rescue_area">
+
+                                    <option value="">Select Area</option>
+
+                                    <option value="1"
+                                        {{ request('rescue_area') == '1' ? 'selected' : '' }}>
+                                        Rural
+                                    </option>
+
+                                    <option value="2"
+                                        {{ request('rescue_area') == '2' ? 'selected' : '' }}>
+                                        City
+                                    </option>
+
+                                </select>
+                            </div>
+
+                            <!-- Rescue Type -->
+                            <div class="col-md-3 mb-3">
+                                <label>Type of Rescue</label>
+
+                                <select class="form-control" name="rescue_area_type">
+
+                                    <option value="">Select Rescue Type</option>
+
+                                    <option value="1"
+                                        {{ request('rescue_area_type') == '1' ? 'selected' : '' }}>
+                                        Disaster
+                                    </option>
+
+                                    <option value="2"
+                                        {{ request('rescue_area_type') == '2' ? 'selected' : '' }}>
+                                        Earth Quick
+                                    </option>
+
+                                    <option value="3"
+                                        {{ request('rescue_area_type') == '3' ? 'selected' : '' }}>
+                                        Land Slide
+                                    </option>
+
+                                    <option value="4"
+                                        {{ request('rescue_area_type') == '4' ? 'selected' : '' }}>
+                                        Flood
+                                    </option>
+
+                                    <option value="5"
+                                        {{ request('rescue_area_type') == '5' ? 'selected' : '' }}>
+                                        Road Accident
+                                    </option>
+
+                                    <option value="6"
+                                        {{ request('rescue_area_type') == '6' ? 'selected' : '' }}>
+                                        Building Collapse
+                                    </option>
+
+                                    <option value="7"
+                                        {{ request('rescue_area_type') == '7' ? 'selected' : '' }}>
+                                        Gas Leak
+                                    </option>
+
+                                    <option value="8"
+                                        {{ request('rescue_area_type') == '8' ? 'selected' : '' }}>
+                                        Patient
+                                    </option>
+
+                                    <option value="9"
+                                        {{ request('rescue_area_type') == '9' ? 'selected' : '' }}>
+                                        Other
+                                    </option>
+
+                                </select>
+                            </div>
+
+                            <!-- From Date -->
+                            <div class="col-md-3 mb-3">
+                                <label>From Date</label>
+
+                                <input type="date"
+                                    class="form-control"
+                                    name="from_date"
+                                    value="{{ request('from_date') }}">
+                            </div>
+
+                            <!-- To Date -->
+                            <div class="col-md-3 mb-3">
+                                <label>To Date</label>
+
+                                <input type="date"
+                                    class="form-control"
+                                    name="to_date"
+                                    value="{{ request('to_date') }}">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12 text-end">
+
+                                <button type="submit"
+                                        class="btn btn-primary">
                                     Filter
                                 </button>
 
                                 <a href="{{ route('admin.rescueReport') }}"
                                 class="btn btn-secondary">
-                                    Reset
+                                Reset
                                 </a>
+
                             </div>
+
                         </div>
+
                     </form>
+
                 </div>
             </div>
         </div>
@@ -305,5 +456,67 @@
             })
             .catch(error => console.error('Error fetching Fire Report:', error));
     });
+</script>
+<script>
+
+   $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
 </script>
 @stop

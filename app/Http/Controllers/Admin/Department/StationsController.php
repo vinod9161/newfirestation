@@ -18,64 +18,122 @@ class StationsController extends Controller
     {
         $this->stationModel = new Station();
     }
-    public function index()
+
+    public function index(Request $request)
     {
-		if(Auth::user()->type == 2)
-		{
-			$stations = Station::with('district.state')->where('district_id', Auth::user()->district_id)->get();
-		}
-		else if(Auth::user()->type == 3)
-		{
-			$stations = Station::with('district.state')->where('id', Auth::user()->station_id)->get();
-		}
-		else if(Auth::user()->type == 1)
-		{
-			$stations = Station::with('district.state')->get();
-		}
-		else
-		{
-			$stations = Station::with('district.state')->get();
-		}
+        $query = DB::table('fire_stations')
+            ->leftJoin(
+                'districts',
+                'fire_stations.district_id',
+                '=',
+                'districts.id'
+            )
+            ->select(
+                'fire_stations.*',
+                'districts.name as district_name'
+            );
 
-        $commonModel = new CommonModel();
-        $district_id = Auth::user()->district_id;
-        if(Auth::user()->type == 2)
+        if (Auth::user()->type == 2)
         {
-            $getAlldata = $commonModel->getDataByOneCondition('fire_stations', array('district_id' => $district_id));
+            $query->where(
+                'fire_stations.district_id',
+                Auth::user()->district_id
+            );
         }
-        else if(Auth::user()->type == 3)
-		{
-			$getAlldata = $commonModel->getDataByOneCondition('fire_stations', array('district_id' => $district_id));
-		}
-		else if(Auth::user()->type == 1)
-		{
-			$getAlldata = $commonModel->getData('fire_stations');
-		}
-		else
-		{
-			$getAlldata = $commonModel->getData('fire_stations');
-		}
-        $stations = [];
-        foreach($getAlldata as $key => $row)
+        elseif (Auth::user()->type == 3)
         {
-            $count_strength = $row->fire_station_officer + $row->fire_station_second_officer + $row->leading_fireman + $row->fire_service_driver + $row->fireman + $row->cook_peon_followers + $row->sweeper;
+            $query->where(
+                'fire_stations.id',
+                Auth::user()->station_id
+            );
+        }
 
-            $count_avail = $row->fire_station_officer_avail + $row->fire_station_second_officer_avail + $row->leading_fireman_avail + $row->fire_service_driver_avail + $row->fireman_avail + $row->cook_peon_followers_avail + $row->sweeper_avail;
-            $districts = $commonModel->getDataByOneCondition('districts', array('id' => $row->district_id));
-            $resultArray = [
+        if ($request->filled('filter_name'))
+        {
+            $query->where(
+                'fire_stations.name',
+                'LIKE',
+                '%' . $request->filter_name . '%'
+            );
+        }
+
+        if ($request->filled('district_id'))
+        {
+            $query->where(
+                'fire_stations.district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('status'))
+        {
+            $query->where(
+                'fire_stations.status',
+                $request->status
+            );
+        }
+
+        $getAlldata = $query
+            ->orderBy('fire_stations.id', 'DESC')
+            ->get();
+
+        $stations = [];
+
+        foreach ($getAlldata as $row)
+        {
+            $count_strength =
+                $row->fire_station_officer +
+                $row->fire_station_second_officer +
+                $row->leading_fireman +
+                $row->fire_service_driver +
+                $row->fireman +
+                $row->cook_peon_followers +
+                $row->sweeper;
+
+            $count_avail =
+                $row->fire_station_officer_avail +
+                $row->fire_station_second_officer_avail +
+                $row->leading_fireman_avail +
+                $row->fire_service_driver_avail +
+                $row->fireman_avail +
+                $row->cook_peon_followers_avail +
+                $row->sweeper_avail;
+
+            $stations[] = [
                 'id' => $row->id,
                 'name' => $row->name,
-                'dname' => $districts[0]->name,
+                'dname' => $row->district_name,
                 'land' => $row->land,
                 'building' => $row->building,
                 'count_strength' => $count_strength,
                 'count_avail' => $count_avail,
                 'status' => $row->status
             ];
-            array_push($stations,$resultArray);
         }
- 		$data['stations'] = $stations;
-        return view('admin.Department.stations.index',$data);
+
+        if (
+            Auth::user()->type == 0
+            || Auth::user()->type == 1
+        ) {
+            $districts = DB::table('districts')
+                ->orderBy('name')
+                ->get();
+        }
+        else
+        {
+            $districts = DB::table('districts')
+                ->where('id', Auth::user()->district_id)
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view(
+            'admin.Department.stations.index',
+            compact(
+                'stations',
+                'districts'
+            )
+        );
     }
 
     public function add()

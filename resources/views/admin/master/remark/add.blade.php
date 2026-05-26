@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="pl-lg-4 text-center mb-3" style="margin-right:85%;">
-          <a href="" class="save-btn hover-btn btn btn-secondary">Back</a>
+          <a href="{{ route('admin.remark') }}" class="save-btn hover-btn btn btn-secondary">Back</a>
           <button class="save-btn hover-btn btn btn-primary" type="submit">Save</button>
        </div>
    </div>

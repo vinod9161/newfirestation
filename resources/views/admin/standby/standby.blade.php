@@ -15,7 +15,13 @@
       <h5 class="main-content-title text-default  fs-24  mg-b-4 mb-0">Manage Standby Duty Request</h5>
    </div>
    <div class="d-flex app-header-btn">
-
+      <div class="me-2">
+            <a href="javascript:void(0);" class="btn ripple btn-wave  btn-secondary navresponsive-toggler mb-0"
+                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fe fe-filter me-1"></i> Filter <i class="fa fa-caret-down ms-1 fs-10"></i>
+            </a>
+        </div>
       <div>
          <a href="<?php echo route('admin.addStandby'); ?>" class="btn ripple btn-wave  btn-success mb-0">
             <i class="fe fe-plus me-1"></i> Add Standby Duty
@@ -25,7 +31,203 @@
 </div>
 
 
+<!--Navbar-->
+<div class="responsive-background mb-3">
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="advanced-search br-3 p-3">
 
+        <form method="GET"
+              action="{{ url()->current() }}"
+              id="filterForm">
+
+            <div class="row">
+
+                <!-- Application ID -->
+                <div class="col-md-2 mb-3">
+
+                    <input type="text"
+                           name="application_id"
+                           class="form-control"
+                           placeholder="Application ID"
+                           value="{{ request('application_id') }}">
+
+                </div>
+
+                <!-- District -->
+                <div class="col-md-2 mb-3">
+
+                    <select name="district"
+                            id="filter_district"
+                            class="form-control">
+
+                        <option value="">All District</option>
+
+                        @foreach($district as $dist)
+
+                            <option value="{{ $dist->id }}"
+                                {{ request('district') == $dist->id ? 'selected' : '' }}>
+
+                                {{ $dist->name }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                <!-- Station -->
+                <div class="col-md-2 mb-3">
+
+                    <select name="station"
+                            id="filter_station"
+                            class="form-control">
+
+                        <option value="">All Station</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Program Type -->
+                <div class="col-md-2 mb-3">
+
+                    <input type="text"
+                           name="program_type"
+                           class="form-control"
+                           placeholder="Program Type"
+                           value="{{ request('program_type') }}">
+
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-2 mb-3">
+
+                    <select name="status"
+                            class="form-control">
+
+                        <option value="">Status</option>
+
+                        <option value="0"
+                            {{ request('status') == '0' ? 'selected' : '' }}>
+                            Not Assigned
+                        </option>
+
+                        <option value="1"
+                            {{ request('status') == '1' ? 'selected' : '' }}>
+                            Approved
+                        </option>
+
+                        <option value="2"
+                            {{ request('status') == '2' ? 'selected' : '' }}>
+                            Rejected
+                        </option>
+
+                        <option value="3"
+                            {{ request('status') == '3' ? 'selected' : '' }}>
+                            Need Reassignment
+                        </option>
+
+                        <option value="4"
+                            {{ request('status') == '4' ? 'selected' : '' }}>
+                            Complete
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Assignee Response -->
+                <div class="col-md-2 mb-3">
+
+                    <select name="assignee_response"
+                            class="form-control">
+
+                        <option value="">Assignee Response</option>
+
+                        <option value="0"
+                            {{ request('assignee_response') == '0' ? 'selected' : '' }}>
+                            No Response
+                        </option>
+
+                        <option value="1"
+                            {{ request('assignee_response') == '1' ? 'selected' : '' }}>
+                            Reschedule
+                        </option>
+
+                        <option value="2"
+                            {{ request('assignee_response') == '2' ? 'selected' : '' }}>
+                            Not Available
+                        </option>
+
+                        <option value="3"
+                            {{ request('assignee_response') == '3' ? 'selected' : '' }}>
+                            Accepted on Bill
+                        </option>
+
+                        <option value="4"
+                            {{ request('assignee_response') == '4' ? 'selected' : '' }}>
+                            Accepted
+                        </option>
+
+                        <option value="5"
+                            {{ request('assignee_response') == '5' ? 'selected' : '' }}>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <!-- From Date -->
+                <div class="col-md-3 mb-3">
+
+                    <input type="date"
+                           name="from_date"
+                           class="form-control"
+                           value="{{ request('from_date') }}">
+
+                </div>
+
+                <!-- To Date -->
+                <div class="col-md-3 mb-3">
+
+                    <input type="date"
+                           name="to_date"
+                           class="form-control"
+                           value="{{ request('to_date') }}">
+
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-6 mb-3 text-end">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Apply
+                    </button>
+
+                    <a href="{{ url()->current() }}"
+                       class="btn btn-secondary">
+                       Reset
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+   </div>
+
+</div>
+<!--End Navbar -->
 <!-- Start::row-2 -->
 
 <div class="row">
@@ -127,6 +329,11 @@
                            @if($row->event_program_status == 1 && $row->assignee_response != 0)
                               <a onclick="return confirm('Are you sure you want to download Standby Program Report?')" id="{{ route('standby.download', $row->id) }}" class="btn btn-dark btn-sm btn-delete generatePdfBtn" title="Download Standby Program Report" target="_blank" data-id="{{ $row->id ?? 'NA' }}"><i class="fa fa-download"></i></a>
                            @endif
+                           @if(Auth::user()->type == 3)
+                                <a href="{{ route('service-bills.create',['service_type'=>'standby_duty','request_id'=>$row->application_id]) }}" class="btn btn-warning btn-sm" title="Generate Bill" target="_blank">
+                                Generate Bill
+                                </a>
+                            @endif
                         </td>
                      </tr>
                      @endforeach
@@ -220,6 +427,69 @@
                 .catch(error => console.error('Error fetching Fire Report:', error));
         });
    });
+</script>
+
+<script>
+
+   $(document).ready(function () {
+
+        function loadStations(districtId, selectedStation = '') {
+            if (!districtId) return;
+
+            $.ajax({
+                url: '{{ route("admin.getfirestation") }}',
+                type: 'POST',
+                data: {
+                    districts: districtId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (resp) {
+                    let station = '<option value="">All Station</option>';
+
+                    if (resp.status === 0) {
+                        station += '<option value="">No station found</option>';
+                    } else {
+                        $.each(resp.data, function (key, value) {
+                            let selected = (value.id == selectedStation) ? 'selected' : '';
+                            station += `<option value="${value.id}" ${selected}>${value.name}</option>`;
+                        });
+                    }
+
+                    $('#filter_station').html(station);
+                }
+            });
+        }
+
+        // 🔥 AUTO LOAD for CFO / page reload
+        let districtId = $('#filter_district').val();
+        let selectedStation = "{{ request('station') }}";
+
+        if (districtId) {
+            loadStations(districtId, selectedStation);
+        }
+
+        // 🔁 On change
+        $(document).on('change', '#filter_district', function () {
+            loadStations($(this).val());
+        });
+
+    });
+
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            if (
+                !$(this).val()
+                && $(this).attr('type') != 'submit'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+
 </script>
 
 @stop

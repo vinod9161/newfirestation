@@ -1,6 +1,9 @@
 @extends('layouts.citizen.template')
 @section('content')
 <style>
+    .span_required {
+        color: red;
+    }
     .error {
         color: red;
     }
@@ -219,6 +222,38 @@
             });
         });
 
+        let selectedSubcategory = "{{ $application->subcategory_id ?? '' }}";
+        let selectedCategory = "{{ $application->category_id ?? '' }}";
+
+        if (selectedSubcategory) {
+
+            $.post("{{ route('getCategoriesBySubCategory') }}", {
+                subcategory_id: selectedSubcategory,
+                _token: "{{ csrf_token() }}"
+            }, function(response) {
+
+                let html = '<option value="">Select Category</option>';
+
+                response.forEach(cat => {
+
+                    let selected = (cat.id == selectedCategory) ? 'selected' : '';
+
+                    html += `
+                        <option value="${cat.id}" ${selected}>
+                            ${cat.name}
+                        </option>
+                    `;
+                });
+
+                $('#category_id').html(html);
+
+                if (selectedCategory) {
+                    $('#category_id').trigger('change');
+                }
+
+            });
+
+        }
 
         $(document).on('change', '#category_id', function() {
 
@@ -1309,7 +1344,8 @@
                         $("#finalTab").addClass('show active');
                         const origin = window.location.origin;
                         const application_no = $('#application_no').val();
-                        const url = origin + '/preview-noc/' + application_no;
+                        // const url = origin + '/preview-noc/' + application_no;
+                        const url = "{{ url('preview-noc') }}/" + application_no;
                         fetch(url)
                             .then(response => {
                                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1386,6 +1422,17 @@
                         bar_text.css('width', `${newValue}%`);
                         bar_text.text(`${newValue}%`);
                         $('#successBlock').html(response.msg).show();
+                        $('#final_application_no').html(response.application_no);
+                        let applicationNo=response.application_no;
+                        let applicationType=response.application_type;
+                        let paymentType='pre-establishment';
+                        if(applicationType=='pre operational noc'){
+                            paymentType='pre-operational';
+                        }
+                        if(applicationType=='renewal noc'){
+                            paymentType='periodic-renewal';
+                        }
+                        $('#proceedToPaymentBtn').attr('href', "{{ url('payment') }}/"+paymentType+"/"+applicationNo);
                         $('#final_result').css("display", "block");
                         $('#step_submit_form').css("display", "none");
                     } else {
@@ -1577,37 +1624,71 @@ $lng = '78.053192';
         }
     });
 
-</script>
-<script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        const tabMap = {
-            basicTabLink: 'basicTab',
-            proprietaryTabLink: 'proprietaryTab',
-            areaTabLink: 'areaTab',
-            essentialTabLink: 'essentialTab',
-            attachmentsTabLink: 'attachmentsTab',
-            finalTabLink: 'finalTab'
-        };
+        let districtId = "{{ $lockedAddress->district_id ?? $application->district_id ?? '' }}";
 
-        $('.nav-link').on('click', function(e) {
-            e.preventDefault();
+        let blockId = "{{ $lockedAddress->block_id ?? $application->block_id ?? '' }}";
 
-            let clickedLinkId = $(this).attr('id');
-            let targetTab = tabMap[clickedLinkId];
+        let panchayatId = "{{ $lockedAddress->panchayat_id ?? $application->panchayat_id ?? '' }}";
 
-            if (!targetTab) return;
+        if (districtId) {
 
-            // Remove active from all
-            $('.nav-link').removeClass('active');
-            $('.tab-pane').removeClass('show active');
+            $('#district_id').val(districtId).trigger('change');
 
-            // Activate clicked tab
-            $('#' + clickedLinkId).addClass('active');
-            $('#' + targetTab).addClass('show active');
-        });
+            $.post("getBlockByDistrict", {
+                district_id: districtId
+            }, function(response) {
+
+                $('#block_id').html(response);
+                $('#block_id').val(blockId);
+
+                $.post("getPanchayatByBlock", {
+                    block_id: blockId
+                }, function(response) {
+
+                    $('#panchayat_id').html(response);
+                    $('#panchayat_id').val(panchayatId);
+
+                });
+
+            });
+
+        }
 
     });
+
+</script>
+<script>
+    // $(document).ready(function() {
+
+    //     const tabMap = {
+    //         basicTabLink: 'basicTab',
+    //         proprietaryTabLink: 'proprietaryTab',
+    //         areaTabLink: 'areaTab',
+    //         essentialTabLink: 'essentialTab',
+    //         attachmentsTabLink: 'attachmentsTab',
+    //         finalTabLink: 'finalTab'
+    //     };
+
+    //     $('.nav-link').on('click', function(e) {
+    //         e.preventDefault();
+
+    //         let clickedLinkId = $(this).attr('id');
+    //         let targetTab = tabMap[clickedLinkId];
+
+    //         if (!targetTab) return;
+
+    //         // Remove active from all
+    //         $('.nav-link').removeClass('active');
+    //         $('.tab-pane').removeClass('show active');
+
+    //         // Activate clicked tab
+    //         $('#' + clickedLinkId).addClass('active');
+    //         $('#' + targetTab).addClass('show active');
+    //     });
+
+    // });
 
 
 </script>

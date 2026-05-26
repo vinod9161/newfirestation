@@ -64,15 +64,15 @@
 {{-- SQ FT --}}
 <div class="col-md-4">
     <div class="form-group">
-        <label>Min Sq Ft</label>
-        <input type="number" name="min_sq_ft" class="form-control">
+        <label>Min Square Meter</label>
+        <input type="number" name="min_sq_meter" class="form-control">
     </div>
 </div>
 
 <div class="col-md-4">
     <div class="form-group">
-        <label>Max Sq Ft</label>
-        <input type="number" name="max_sq_ft" class="form-control">
+        <label>Max Square Meter</label>
+        <input type="number" name="max_sq_meter" class="form-control">
     </div>
 </div>
 
@@ -120,9 +120,10 @@
         <label>Rate Type</label>
         <select name="rate_type" class="form-control">
             <option value="fixed">Fixed</option>
-            <option value="per_person">Per Person</option>
-            <option value="per_sq_ft">Per Sq Ft</option>
-            <option value="per_hour">Per Hour</option>
+            <option value="per_person"> Per Person </option>
+            <option value="per_sq_meter"> Per Square Meter </option>
+            <option value="per_hour"> Per Hour </option>
+            <option value="per_extinguisher"> Per Extinguisher </option>
         </select>
     </div>
 </div>
@@ -132,6 +133,37 @@
     <div class="form-group">
         <label>Priority</label>
         <input type="number" name="priority" value="1" class="form-control">
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label>Processing Fee</label>
+        <input type="number" step="0.01"
+               name="processing_fee"
+               class="form-control">
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label>CGST %</label>
+        <input type="number"
+               step="0.01"
+               name="cgst_percent"
+               value="9"
+               class="form-control">
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="form-group">
+        <label>SGST %</label>
+        <input type="number"
+               step="0.01"
+               name="sgst_percent"
+               value="9"
+               class="form-control">
     </div>
 </div>
 

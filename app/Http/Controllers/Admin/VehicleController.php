@@ -15,16 +15,115 @@ use Illuminate\Validation\Rule;
 
 class VehicleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['fs_vehicles'] = DB::table('fs_vehicles')
-                        ->join('fire_stations', 'fs_vehicles.station_id', '=', 'fire_stations.id')
-                        ->join('districts', 'fs_vehicles.district_id', '=', 'districts.id')
-                        ->join('vehicle_types', 'fs_vehicles.vehicle_type', '=', 'vehicle_types.id')
-                        ->select('fs_vehicles.*', 'fire_stations.name as fire_station_name', 'districts.name as district_name','vehicle_types.type')
-                        ->get()
-                        ->toArray();    
-        return view('admin.vehicle.index',$data);
+        $query = DB::table('fs_vehicles')
+            ->join(
+                'fire_stations',
+                'fs_vehicles.station_id',
+                '=',
+                'fire_stations.id'
+            )
+            ->join(
+                'districts',
+                'fs_vehicles.district_id',
+                '=',
+                'districts.id'
+            )
+            ->join(
+                'vehicle_types',
+                'fs_vehicles.vehicle_type',
+                '=',
+                'vehicle_types.id'
+            )
+            ->select(
+                'fs_vehicles.*',
+                'fire_stations.name as fire_station_name',
+                'districts.name as district_name',
+                'vehicle_types.type'
+            );
+
+        if (
+            Auth::user()->type != 0
+            && Auth::user()->type != 1
+        ) {
+            $query->where(
+                'fs_vehicles.district_id',
+                Auth::user()->district_id
+            );
+        }
+
+        if ($request->filled('reg_number')) {
+
+            $query->where(
+                'fs_vehicles.reg_number',
+                'LIKE',
+                '%' . $request->reg_number . '%'
+            );
+        }
+
+        if ($request->filled('district_id')) {
+
+            $query->where(
+                'fs_vehicles.district_id',
+                $request->district_id
+            );
+        }
+
+        if ($request->filled('station_id')) {
+
+            $query->where(
+                'fs_vehicles.station_id',
+                $request->station_id
+            );
+        }
+
+        if ($request->filled('vehicle_type')) {
+
+            $query->where(
+                'fs_vehicles.vehicle_type',
+                $request->vehicle_type
+            );
+        }
+
+        if ($request->filled('make_year')) {
+
+            $query->where(
+                'fs_vehicles.make_year',
+                $request->make_year
+            );
+        }
+
+        if ($request->filled('vehicle_remark')) {
+
+            $query->where(
+                'fs_vehicles.vehicle_remark',
+                'LIKE',
+                '%' . $request->vehicle_remark . '%'
+            );
+        }
+
+        $data['districts'] = DB::table('districts')
+            ->orderBy('name')
+            ->get();
+
+        $data['stations'] = DB::table('fire_stations')
+            ->orderBy('name')
+            ->get();
+
+        $data['vehicleTypes'] = DB::table('vehicle_types')
+            ->orderBy('type')
+            ->get();
+
+        $data['fs_vehicles'] = $query
+            ->orderBy('fs_vehicles.id', 'DESC')
+            ->get()
+            ->toArray();
+
+        return view(
+            'admin.vehicle.index',
+            $data
+        );
     }
     
 

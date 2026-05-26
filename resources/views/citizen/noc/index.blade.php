@@ -30,65 +30,126 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="advanced-search br-3">
             <div class="row align-items-center">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Application For :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
+                <form method="GET" action="">
+                    <div class="responsive-background">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <div class="advanced-search br-3">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>Type</label>
+                                        <input type="text" class="form-control" name="type" value="{{ request('type') }}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Building Name</label>
+                                        <input type="text" class="form-control" name="building_name" value="{{ request('building_name') }}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>District</label>
+                                        <select class="form-control" name="district">
+                                            <option value=""> Select District </option>
+                                            @foreach($district as $dist)
+
+                                                <option
+                                                    value="{{ $dist->id }}"
+                                                    {{ request('district')==$dist->id ? 'selected' : '' }}
+                                                >
+                                                    {{ $dist->name }}
+                                                </option>
+
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+
+                                        <label>Status</label>
+
+                                        <select
+                                            class="form-control"
+                                            name="status"
+                                        >
+
+                                            <option value="">
+                                                Select Status
+                                            </option>
+
+                                            <option
+                                                value="pending"
+                                                {{ request('status')=='pending' ? 'selected' : '' }}
+                                            >
+                                                Pending
+                                            </option>
+
+                                            <option
+                                                value="approved"
+                                                {{ request('status')=='approved' ? 'selected' : '' }}
+                                            >
+                                                Approved
+                                            </option>
+
+                                            <option
+                                                value="reverted"
+                                                {{ request('status')=='reverted' ? 'selected' : '' }}
+                                            >
+                                                Reverted
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-3 mt-3">
+
+                                        <label>Payment Status</label>
+
+                                        <select
+                                            class="form-control"
+                                            name="payment_status"
+                                        >
+
+                                            <option value="">
+                                                Select Payment Status
+                                            </option>
+
+                                            <option
+                                                value="pending"
+                                                {{ request('payment_status')=='pending' ? 'selected' : '' }}
+                                            >
+                                                Pending
+                                            </option>
+
+                                            <option
+                                                value="paid"
+                                                {{ request('payment_status')=='paid' ? 'selected' : '' }}
+                                            >
+                                                Paid
+                                            </option>
+
+                                            <option
+                                                value="failed"
+                                                {{ request('payment_status')=='failed' ? 'selected' : '' }}
+                                            >
+                                                Failed
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+                                    
+                                    <div class="col-md-3" style="margin-top: 45px;">
+                                        <button type="button" class="btn btn-primary" id="applyFilterBtn"> Apply </button>
+                                        <a href="{{ url()->current() }}" class="btn btn-secondary"> Reset </a>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Type :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Building Name :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>District :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_type">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="1">Image</option>
-                                    <option value="2">Video</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-lg-0">
-                                <label>Status :</label>
-                                <select class="form-control" data-trigger name="choices-single-default" id="filter_status">
-                                    <option value="" style="display:none;"> -- Select An Option -- </option>
-                                    <option value="0">Inactive</option>
-                                    <option value="1">Active</option>
-                                </select>
-                            </div>
-                        </div>
+
                     </div>
-                </div>
-            </div>
-            <hr>
-            <div class="text-end">
-                <a href="javascript:void(0);" onclick="filter_slider();" class="btn btn-primary">Apply</a>
-                <a href="javascript:void(0);" class="btn btn-secondary">Reset</a>
+
+                </form>
             </div>
         </div>
     </div>
@@ -122,6 +183,7 @@
                                 <th>Building Name</th>
                                 <th>District</th>
                                 <th>Status</th>
+                                <th>Payment Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -185,6 +247,31 @@
                                         Approved
                                     @endif
                                 </td>
+
+                                <td>
+                                    @if($app->payment_status=='paid')
+                                        <span class="badge bg-success"> Paid </span>
+                                    @elseif($app->payment_status=='failed')
+                                        <span class="badge bg-danger"> Failed </span>
+                                    @else
+                                        <span class="badge bg-warning">  Pending </span>
+                                    @endif
+                                    @if(!empty($app->submitted_at) && $app->payment_status!='paid')
+                                        <a href="{{ url('payment/NOC_PRE_ESTABLISHMENT/'.$app->application_no) }}"
+                                            class="btn btn-success"
+                                            title="Pay Now">Pay Now
+                                        </a>
+                                    @endif
+                                    @if($app->payment_status=='paid')
+                                        <a href="{{ route('invoice.view',$app->application_no) }}"
+                                            class="btn btn-info"
+                                            title="Download Invoice"
+                                            target="_blank">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    @endif
+                                </td>
+
                                 <td>
                                     @if ($countStatus == 'N' && ($app->status == 'reverted' || $app->status == 'incomplete'))
                                         <!-- <a href="{{ route('noc.editNoc', $app->id) }}" class="btn btn-light btn-warning" title="Edit Application">
@@ -265,5 +352,46 @@
             })
         }
     });
+
+    $(document).on('click','#applyFilterBtn',function(){
+        let params=new URLSearchParams();
+
+        let type=$('[name="type"]').val();
+        let building_name=$('[name="building_name"]').val();
+        let district=$('[name="district"]').val();
+        let status=$('[name="status"]').val();
+        let payment_status=$('[name="payment_status"]').val();
+
+        if(type) params.append('type',type);
+
+        if(building_name) params.append(
+            'building_name',
+            building_name
+        );
+
+        if(district) params.append(
+            'district',
+            district
+        );
+
+        if(status) params.append(
+            'status',
+            status
+        );
+
+        if(payment_status) params.append(
+            'payment_status',
+            payment_status
+        );
+
+        let url="{{ url()->current() }}";
+
+        if(params.toString()){
+            url+='?'+params.toString();
+        }
+
+        window.location.href=url;
+
+        });
 </script>
 @stop

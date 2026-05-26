@@ -55,6 +55,79 @@ class AwarnessMockDrillController extends Controller
         return redirect()->route('admin.services.awarness_mock_drill')->with('success', 'awarness_mock_drill added successfully.');
     }
 
+    public function edit($id)
+    {
+        $tbl = "pages_card";
+        $where = array('id' => $id);
+        $awarness = $this->commonModel
+            ->getDataByOneCondition($tbl,$where);
+            $data['awarness_mock_drill'] = $awarness[0];
+
+        return view(
+            'admin.CMS.Services.awarness_mock_drill.edit',
+            $data
+        );
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+
+            'hadding' => 'required',
+
+            'description' => 'required',
+
+            'imageposition' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = [
+
+            'image_position' => $request->imageposition,
+
+            'hadding' => $request->hadding,
+
+            'content' => $request->description,
+
+        ];
+
+        if ($request->hasFile('image')) {
+
+            $card_image = $request->file('image');
+
+            $card_image_name = time().'.'.$card_image->getClientOriginalExtension();
+
+            $card_image->move(
+                public_path('admin/services/awarness_mock_drill'),
+                $card_image_name
+            );
+
+            $data['image'] = $card_image_name;
+        }
+
+        $this->commonModel->updateData(
+            'pages_card',
+            ['id' => $id],
+            $data
+        );
+
+        return redirect()
+            ->route('admin.services.awarness_mock_drill')
+            ->with(
+                'success',
+                'Awarness Mock Drill updated successfully.'
+            );
+    }
+
+
+
     public function destroy($id){
         $this->commonModel->deleteDataByOneCondition('pages_card', array('id'=>$id));
         return redirect()->route('admin.services.awarness_mock_drill')->with('success', 'awarness_mock_drill deleted successfully.');

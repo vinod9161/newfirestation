@@ -6,8 +6,8 @@ use App\Http\Controllers\Admin\Location\{DistrictController,TehsilController,Pan
 use App\Http\Controllers\Admin\Category\{CategoryController,ProjectController,SubcategoryController,TypeController};
 use App\Http\Controllers\Admin\Department\{DeputyController,ReviewOfficerController,CFOController,FSOController,StationsController} ;
 use App\Http\Controllers\Admin\CMS\{OrganisationalController,SpecialRiskAreaController,RecentUpdatesController,ContactController,RecentFireIncidentsController};
-use App\Http\Controllers\Admin\CMS\About\{AboutController,HistoryController,FireserviceController,FlagDayController,OurobjectiveController,DGMassageController,FAQController};
-use App\Http\Controllers\Admin\CMS\Services\{RenderedPaidController,RenderedUnpaidController,AwarnessMockDrillController,PumpingWorkDrillController,RTIController,RTIServicesController};
+use App\Http\Controllers\Admin\CMS\About\{AboutController,HistoryController,FireserviceController,FlagDayController,OurobjectiveController,DGMassageController,FAQController,TutorialController};
+use App\Http\Controllers\Admin\CMS\Services\{RenderedPaidController,RenderedUnpaidController,AwarnessMockDrillController,PumpingWorkDrillController,RTIController,RTIServicesController,FireOperationController};
 use App\Http\Controllers\Admin\CMS\Activities\{GalaryController,FireServiceWeekController};
 use App\Http\Controllers\Admin\CMS\Achivements\{MedalWinnersController};
 use App\Http\Controllers\Admin\CMS\Achivements\{AchievementController};
@@ -27,6 +27,8 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Admin\CMS\LeadershipSectionController;
 use App\Http\Controllers\Admin\PricingRuleController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\CMS\Services\StandbyController as CmsStandbyController;
+use App\Http\Controllers\PaymentController;
 
 
 Route::get('/', function () {
@@ -147,6 +149,8 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('admin/about/mission-vision/add', [AboutController::class, 'AddMissionVision'])->name('admin.about.missionvision.add');
     Route::post('admin/about/mission-vision/save', [AboutController::class, 'SaveMissionVision'])->name('admin.about.missionvision.save');
     Route::get('/admin/mission-vision/delete/{id}', [AboutController::class, 'destroyMissionVision'])->name('admin.about.mission_vision.destroy');
+    Route::get('admin/about/mission-vision/edit/{id}', [AboutController::class, 'EditMissionVision'])->name('admin.about.missionvision.edit');
+    Route::post('admin/about/mission-vision/update/{id}', [AboutController::class, 'UpdateMissionVision'])->name('admin.about.missionvision.update');
 
     Route::get('admin/hydrant',[HydrantController::class, 'index'])->name('admin.hydrant');
     Route::delete('admin/hydrant/delete/{id}',[HydrantController::class, 'destroy'])->name('admin.deletehydrant');
@@ -648,18 +652,40 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('admin/about/Fire_Service_Day/add', [FireserviceController::class, 'addFire_Service_Day'])->name('admin.about.Fire_Service_Day.add');
     Route::post('admin/about/Fire_Service_Day/save', [FireserviceController::class, 'SaveFire_Service_Day'])->name('admin.about.Fire_Service_Day.save');
     Route::get('/admin/Fire_Service_Day/delete/{id}', [FireserviceController::class, 'destroyFire_Service_Day'])->name('admin.about.Fire_Service_Day.destroy');
+    Route::get('admin/about/Fire_Service_Day/edit/{id}', [FireserviceController::class, 'editFire_Service_Day'])->name('admin.about.Fire_Service_Day.edit');
+    Route::post('admin/about/Fire_Service_Day/update/{id}', [FireserviceController::class, 'updateFire_Service_Day'])->name('admin.about.Fire_Service_Day.update');
 
     //Admin cms About  Flag Day
     Route::get('admin/about/flag_day', [FlagDayController::class, 'index'])->name('admin.about.flag_day');
     Route::get('admin/about/flag_day/add', [FlagDayController::class, 'addflag_day'])->name('admin.about.flag_day.add');
     Route::post('admin/about/flag_day/save', [FlagDayController::class, 'Saveflag_day'])->name('admin.about.flag_day.save');
     Route::get('/admin/flag_day/delete/{id}', [FlagDayController::class, 'destroyflag_day'])->name('admin.about.flag_day.destroy');
+    Route::get('admin/about/flag_day/edit/{id}', [FlagDayController::class, 'editflag_day'])->name('admin.about.flag_day.edit');
+    Route::post('admin/about/flag_day/update/{id}', [FlagDayController::class, 'updateflag_day'])->name('admin.about.flag_day.update');
+
+    // Admin cms About  Tutorial
+    Route::get('admin/about/tutorial', [TutorialController::class, 'tutorialIndex'])->name('admin.about.tutorial');
+    Route::get('admin/about/tutorial/add', [TutorialController::class, 'addTutorial'])->name('admin.about.tutorial.add');
+    Route::post('admin/about/tutorial/save', [TutorialController::class, 'saveTutorial'])->name('admin.about.tutorial.save');
+    Route::get('admin/about/tutorial/edit/{id}', [TutorialController::class, 'editTutorial'])->name('admin.about.tutorial.edit');
+    Route::post('admin/about/tutorial/update/{id}', [TutorialController::class, 'updateTutorial'])->name('admin.about.tutorial.update');
+    Route::get('admin/about/tutorial/delete/{id}', [TutorialController::class, 'destroyTutorial'])->name('admin.about.tutorial.delete');
+
+    // Fire Fighting and Rescue Operation
+    Route::get('admin/services/fire-operation', [FireOperationController::class, 'adminIndex'])->name('admin.services.fire-operation');
+    Route::get('admin/services/fire-operation/add', [FireOperationController::class, 'add'])->name('admin.services.fire-operation.add');
+    Route::post('admin/services/fire-operation/save', [FireOperationController::class, 'save'])->name('admin.services.fire-operation.save');
+    Route::get('admin/services/fire-operation/edit/{id}', [FireOperationController::class, 'edit'])->name('admin.services.fire-operation.edit');
+    Route::post('admin/services/fire-operation/update/{id}', [FireOperationController::class, 'update'])->name('admin.services.fire-operation.update');
+    Route::get('admin/services/fire-operation/delete/{id}', [FireOperationController::class, 'destroy'])->name('admin.services.fire-operation.delete');
 
     //Admin cms About  Our Objective
     Route::get('admin/about/our_objective', [OurobjectiveController::class, 'index'])->name('admin.about.our_objective');
     Route::get('admin/about/our_objective/add', [OurobjectiveController::class, 'add'])->name('admin.about.our_objective.add');
     Route::post('admin/about/our_objective/save', [OurobjectiveController::class, 'Save'])->name('admin.about.our_objective.save');
     Route::get('/admin/our_objective/delete/{id}', [OurobjectiveController::class, 'destroy'])->name('admin.about.our_objective.destroy');
+    Route::get('/admin/our-objective/edit/{id}', [OurobjectiveController::class, 'edit'])->name('admin.about.our_objective.edit');
+    Route::post('/admin/our-objective/update/{id}', [OurobjectiveController::class, 'update'])->name('admin.about.our_objective.update');
 
     //Admin cms About  DG Message
     Route::get('admin/about/dg_message', [DGMassageController::class, 'index'])->name('admin.about.dg_message');
@@ -676,10 +702,12 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('/admin/faq/delete/{id}', [FAQController::class, 'destroy'])->name('admin.about.faq.destroy');
 
     //Admin cms services
-    Route::get('admin/services/standby', [StandbyController::class, 'index'])->name('admin.services.standby');
-    Route::get('admin/services/standby/add', [StandbyController::class, 'add'])->name('admin.services.standby.add');
-    Route::post('admin/services/standby/save', [StandbyController::class, 'Save'])->name('admin.services.standby.save');
-    Route::get('/admin/standby/delete/{id}', [StandbyController::class, 'destroy'])->name('admin.services.standby.destroy');
+    Route::get('admin/services/standby', [CmsStandbyController::class, 'index'])->name('admin.services.standby');
+    Route::get('admin/services/standby/add', [CmsStandbyController::class, 'add'])->name('admin.services.standby.add');
+    Route::post('admin/services/standby/save', [CmsStandbyController::class, 'save'])->name('admin.services.standby.save');
+    Route::get('admin/services/standby/edit/{id}', [CmsStandbyController::class, 'edit'])->name('admin.services.standby.edit');
+    Route::post('admin/services/standby/update/{id}', [CmsStandbyController::class, 'update'])->name('admin.services.standby.update');
+    Route::get('admin/services/standby/delete/{id}', [CmsStandbyController::class, 'destroy'])->name('admin.services.standby.destroy');
 
     //Admin cms services  Service rendered_paid
     Route::get('admin/services/rendered_paid', [RenderedPaidController::class, 'index'])->name('admin.services.rendered_paid');
@@ -698,7 +726,8 @@ Route::middleware([\App\Http\Middleware\MyMiddleware::class])->group(function ()
     Route::get('admin/services/awarness_mock_drill/add', [AwarnessMockDrillController::class, 'add'])->name('admin.services.awarness_mock_drill.add');
     Route::post('admin/services/awarness_mock_drill/save', [AwarnessMockDrillController::class, 'Save'])->name('admin.services.awarness_mock_drill.save');
     Route::get('/admin/awarness_mock_drill/delete/{id}', [AwarnessMockDrillController::class, 'destroy'])->name('admin.services.awarness_mock_drill.destroy');
-
+    Route::get('admin/services/awarness_mock_drill/edit/{id}', [AwarnessMockDrillController::class, 'edit'])->name('admin.services.awarness_mock_drill.edit');
+    Route::post('admin/services/awarness_mock_drill/update/{id}', [AwarnessMockDrillController::class, 'update'])->name('admin.services.awarness_mock_drill.update');
     //Admin cms Activities   pumping_work
     Route::get('admin/services/pumping_work', [PumpingWorkDrillController::class, 'index'])->name('admin.services.pumping_work');
     Route::get('admin/services/pumping_work/add', [PumpingWorkDrillController::class, 'add'])->name('admin.services.pumping_work.add');
@@ -1202,7 +1231,6 @@ Route::get('/preview-noc/{id}',[NocController::class,'previewNoc'])->name('citiz
 
 Route::get('awarenessPdfDownload',[App\Http\Controllers\MainController::class,'awarenessPdfDownload'])->name('awarenessPdfDownload');
 
-
 Route::get('/awarenessDownload/{id}',[AwarenessController::class, 'awarenessDownload'])->name('awareness.download');
 Route::get('/standbyDownload/{id}',[StandbyController::class, 'standbyDownload'])->name('standby.download');
 
@@ -1230,6 +1258,32 @@ Route::get('admin/leadership-section',[LeadershipSectionController::class,'leade
 Route::get('admin/edit-leadership-section/{id}',[LeadershipSectionController::class,'editLeadershipSectionForm'])->name('admin.editLeadershipSectionForm');
 Route::post('admin/update-leadership-section',[LeadershipSectionController::class,'updateLeadershipSection'])->name('admin.updateLeadershipSection');
 Route::get('admin/delete-leadership-section/{id}',[LeadershipSectionController::class,'deleteLeadershipSection'])->name('admin.deleteLeadershipSection');
+Route::get(
+    '/payment/{service_type}/{application_no}',
+    [PaymentController::class,'index']
+)->name('payment.index');
+
+Route::post(
+    '/payment/create-order',
+    [PaymentController::class,'createOrder']
+)->name('payment.createOrder');
+
+Route::post(
+    '/payment/verify',
+    [PaymentController::class,'verifyPayment']
+)->name('payment.verify');
+Route::get(
+    '/payment-success/{application_no}',
+    [PaymentController::class,'paymentSuccess']
+)->name('payment.success');
+Route::get(
+    '/payment-invoice/{application_no}',
+    [PaymentController::class,'downloadInvoice']
+)->name('payment.invoice');
+Route::get(
+    '/invoice/{application_no}',
+    [PaymentController::class,'invoice']
+)->name('invoice.view');
 
 Route::prefix('admin')->group(function () {
 
@@ -1248,4 +1302,76 @@ Route::prefix('admin')->group(function () {
     Route::post('services/{id}/update', [ServiceController::class,'update'])->name('services.update');
     Route::post('services/{id}/delete', [ServiceController::class,'destroy'])->name('services.delete');
     Route::get('services/{id}/toggle', [ServiceController::class,'toggle'])->name('services.toggle');
+});
+
+
+Route::resource(
+    'personnel-expense',
+    App\Http\Controllers\Admin\PersonnelExpenseController::class
+);
+
+use App\Http\Controllers\Admin\ReportFeeMasterController;
+Route::prefix('admin')
+->group(function(){
+
+Route::get(
+    'report-fee-master',
+    [ReportFeeMasterController::class,'index']
+)->name('report-fee-master.index');
+
+Route::get(
+    'report-fee-master/edit/{id}',
+    [ReportFeeMasterController::class,'edit']
+)->name('report-fee-master.edit');
+
+Route::post(
+    'report-fee-master/update/{id}',
+    [ReportFeeMasterController::class,'update']
+)->name('report-fee-master.update');
+
+});
+use App\Http\Controllers\FSO\ServiceBillController;
+
+Route::middleware(['auth'])->prefix('fso')->group(function(){
+
+    Route::get(
+        '/service-bills',
+        [ServiceBillController::class,'index']
+    )->name('service-bills.index');
+
+    Route::get(
+        '/service-bills/create/{service_type}/{request_id}',
+        [ServiceBillController::class,'create']
+    )->name('service-bills.create');
+
+    Route::post(
+        '/service-bills/store',
+        [ServiceBillController::class,'store']
+    )->name('service-bills.store');
+
+    Route::get(
+        '/service-bills/show/{id}',
+        [ServiceBillController::class,'show']
+    )->name('service-bills.show');
+
+    Route::get(
+        '/service-bills/print/{id}',
+        [ServiceBillController::class,'print']
+    )->name('service-bills.print');
+
+    Route::get(
+        '/service-bills/export/csv',
+        [ServiceBillController::class,'export']
+    )->name('service-bills.export');
+
+    Route::get(
+    'service-bills/report/create/{service_type}/{request_id}',
+    [ServiceBillController::class,'createReportBill']
+    )->name('service-bills.report.create');
+
+    Route::post(
+    'service-bills/report/store',
+    [ServiceBillController::class,'storeReportBill']
+    )->name('service-bills.report.store');
+
 });

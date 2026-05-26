@@ -1,6 +1,6 @@
 @extends('layouts.admin.template')
 @section('title')
-<title>Categories | Admin Dashboard</title>
+<title>Pumping Work | Admin Dashboard</title>
 @endsection
 @section('style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
@@ -68,7 +68,7 @@
                                 <td>{{ $value->content }}</td>
                                 <td>{{ $value->status }}</td>
                                 <td>
-                                    <a href="{{ route('admin.services.pumping_work.edit', $value->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-pencil"></i></a>
+                                    <a href="{{ route('admin.services.pumping_work.edit', $value->id) }}" class="btn btn-primary btn-sm"><i class="fe fe-edit"></i></a>
                                     <a href="{{ route('admin.services.pumping_work.destroy', $value->id) }}" class="btn btn-danger {{ route('admin.about.our_objective.destroy', $value->id) }}btn-sm" onclick="return confirm('Are you sure you want to delete this special risk area?');"><i class="fe fe-trash"></i></a>
                                 </td>
                             </tr>

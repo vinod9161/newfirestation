@@ -36,36 +36,76 @@
 <div class="responsive-background">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="advanced-search br-3">
-        <form action="{{ route('admin.districtfilter') }}" method="GET" class="advanced-search br-3">
-    <div class="row align-items-center">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group mb-lg-0">
-                        <label>Name :</label>
-                        <input type="text" class="form-control" name="page" placeholder="Enter Name" value="{{ request('page') }}">
+            <form action="{{ route('admin.remark') }}" method="GET" class="advanced-search br-3">
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-12">
+
+                        <div class="row">
+
+                            <!-- Title -->
+                            <div class="col-md-3">
+                                <div class="form-group mb-lg-0">
+
+                                    <label>Remark :</label>
+
+                                    <input type="text"
+                                        class="form-control"
+                                        name="title"
+                                        placeholder="Enter Remark"
+                                        value="{{ request('title') }}">
+
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-3">
+                                <div class="form-group mb-lg-0">
+
+                                    <label>Status :</label>
+
+                                    <select class="form-control" name="status">
+
+                                        <option value="">-- Select Status --</option>
+
+                                        <option value="1"
+                                            {{ request('status') == '1' ? 'selected' : '' }}>
+                                            Active
+                                        </option>
+
+                                        <option value="0"
+                                            {{ request('status') == '0' ? 'selected' : '' }}>
+                                            In-active
+                                        </option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
-                
-                <div class="col-md-3">
-                    <div class="form-group mb-lg-0">
-                        <label>Status :</label>
-                        <select class="form-control" name="status">
-                            <option value="" disabled selected>-- Select An Option --</option>
-                            <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>Active</option>
-                            <option value="2" {{ request('type') == '2' ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                    </div>
+
+                <hr>
+
+                <div class="text-end">
+
+                    <button type="submit" class="btn btn-primary">
+                        Apply
+                    </button>
+
+                    <a href="{{ route('admin.remark') }}"
+                    class="btn btn-secondary">
+                    Reset
+                    </a>
+
                 </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="text-end">
-        <button type="submit" class="btn btn-primary">Apply</button>
-        <a href="{{ route('admin.district') }}" class="btn btn-secondary">Reset</a>
-    </div>
-</form>
+
+            </form>
 
         </div>
     </div>

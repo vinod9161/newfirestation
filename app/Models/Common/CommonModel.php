@@ -1301,5 +1301,44 @@ public function getPendingApplicationCounts()
         return $dataArray;
     }
 
+    public function getTableData($table)
+    {
+        return DB::table($table)->get();
+    }
+
+    public function getTableDataByCondition(
+        $table,
+        $conditions = []
+    )
+    {
+        return DB::table($table)
+            ->where($conditions)
+            ->get();
+    }
+
+    public function getTableDataWithOrder(
+        $table,
+        $orderBy = 'id',
+        $direction = 'DESC'
+    )
+    {
+        return DB::table($table)
+            ->orderBy($orderBy, $direction)
+            ->get();
+    }
+
+    public function getTableDataByConditionWithOrder(
+        $table,
+        $conditions = [],
+        $orderBy = 'id',
+        $direction = 'DESC'
+    )
+    {
+        return DB::table($table)
+            ->where($conditions)
+            ->orderBy($orderBy, $direction)
+            ->get();
+    }
+
 
 }

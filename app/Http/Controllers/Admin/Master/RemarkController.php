@@ -21,12 +21,35 @@ class RemarkController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    // public function index()
+    // {
+
+    //     $remarks  = DB::table('remarks')->orderBy('id', 'DESC')->paginate(20);
+
+    //     return view('admin.master.remark.index')->with('remarks',$remarks);
+    // }
+    public function index(Request $request)
     {
+        $query = DB::table('remarks');
 
-        $remarks  = DB::table('remarks')->orderBy('id', 'DESC')->paginate(20);
+        // Filter by title
+        if ($request->filled('title'))
+        {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
 
-        return view('admin.master.remark.index')->with('remarks',$remarks);
+        // Filter by status
+        if ($request->filled('status'))
+        {
+            $query->where('status', $request->status);
+        }
+
+        $remarks = $query
+            ->orderBy('id', 'DESC')
+            ->paginate(20)
+            ->appends($request->all());
+
+        return view('admin.master.remark.index', compact('remarks'));
     }
 
     public function addRemark()
