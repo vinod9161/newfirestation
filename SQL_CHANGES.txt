@@ -425,3 +425,13 @@ sgst_percent DECIMAL(5,2) DEFAULT 9,
 created_at TIMESTAMP NULL,
 updated_at TIMESTAMP NULL
 ) ENGINE=InnoDB;
+
+#29 May 2026
+ALTER TABLE service_bills
+ADD processing_fee DECIMAL(10,2) DEFAULT 0 AFTER equipment_expense;
+
+ALTER TABLE fs_standby_duty_request
+ADD bill_generated TINYINT(1) DEFAULT 0,
+ADD payment_status ENUM('pending','paid') DEFAULT 'pending',
+ADD service_bill_id BIGINT UNSIGNED NULL,
+ADD paid_at DATETIME NULL;

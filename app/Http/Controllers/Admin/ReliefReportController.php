@@ -399,10 +399,11 @@ class ReliefReportController extends Controller{
             'latitude' => $request->input('incident_latitude'),
             'assigned_to'   => Auth::user()->id
         ];
-        $result = $this->commonModel->insertData('fs_relief_work_report', $data);
+        $result = $this->commonModel->insertDataGetId('fs_relief_work_report', $data);
         if($result)
         {
-            return redirect()->back()->with('success', 'Relief report saved successfully');
+            return redirect()->route('service-bills.report.create',['service_type'=>'relief_report','request_id'=>$result])->with('success', 'Relief report saved successfully');
+
         }
         else{
             return redirect()->back()->with('failed', 'Something went wrong. Please try later!');

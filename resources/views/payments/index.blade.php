@@ -193,7 +193,7 @@ $(document).on('click','#payNowBtn',function(){
 
         data:{
             service_type:"{{ $service_type }}",
-            application_no:"{{ $application_no }}",
+            reference_id:"{{ $reference_id }}",
             amount:"{{ $total_amount }}"
         },
 
@@ -238,7 +238,7 @@ $(document).on('click','#payNowBtn',function(){
 
                             if(res.status){
 
-                                window.location.href= "{{ url('payment-success/'.$application_no) }}";
+                                window.location.href= "{{ url('payment-success/'.$reference_id) }}";
 
                             }else{
 
@@ -258,7 +258,7 @@ $(document).on('click','#payNowBtn',function(){
 
                 notes:{
                     service_type:"{{ $service_type }}",
-                    application_no:"{{ $application_no }}"
+                    reference_id:"{{ $reference_id }}"
                 },
 
                 theme:{

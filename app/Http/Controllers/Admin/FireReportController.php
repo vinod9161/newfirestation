@@ -492,11 +492,10 @@ class FireReportController extends Controller
             'assigned_to'   => Auth::user()->id
 
         ];
-        $result = $this->commonModel->insertData('fs_fire_report', $data);
+        $result = $this->commonModel->insertDataGetId('fs_fire_report', $data);
         if($result)
         {
-            return redirect()->back()->with('success', 'Fire report saved successfully');
-            // return redirect()->route('service-bills.report.create',['service_type'=>'fire_report','request_id'=>$result])->with('success', 'Fire report saved successfully');
+            return redirect()->route('service-bills.report.create',['service_type'=>'fire_report','request_id'=>$result])->with('success', 'Fire report saved successfully');
         }
         else{
             return redirect()->back()->with('failed', 'Something went wrong. Please try later!');

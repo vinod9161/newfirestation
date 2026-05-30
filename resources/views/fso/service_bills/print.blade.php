@@ -1,630 +1,630 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>
-Service Bill
-</title>
+    <title>
+        Service Bill
+    </title>
 
-<style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            font-size: 12px;
+            color: #000;
+        }
 
-body{
-margin:0;
-padding:0;
-font-family:Arial,sans-serif;
-background:#f2f2f2;
-font-size:12px;
-color:#000;
-}
+        .pdf-wrapper {
+            width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #000;
+        }
 
-.pdf-wrapper{
-width:900px;
-margin:20px auto;
-background:#fff;
-padding:15px;
-border:1px solid #000;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
+        table,
+        th,
+        td {
+            border: 1px solid #cfcfcf;
+        }
 
-table,th,td{
-border:1px solid #cfcfcf;
-}
+        th,
+        td {
+            padding: 6px 10px;
+            font-size: 12px;
+            vertical-align: middle;
+        }
 
-th,td{
-padding:6px 10px;
-font-size:12px;
-vertical-align:middle;
-}
+        th {
+            background: #efefef;
+            text-align: left;
+        }
 
-th{
-background:#efefef;
-text-align:left;
-}
+        .text-center {
+            text-align: center;
+        }
 
-.text-center{
-text-align:center;
-}
+        .border-none {
+            border: none !important;
+        }
 
-.border-none{
-border:none !important;
-}
+        .heading {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 30px;
+        }
 
-.heading{
-font-size:22px;
-font-weight:bold;
-line-height:30px;
-}
+        .sub-heading {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
 
-.sub-heading{
-font-size:16px;
-font-weight:bold;
-margin-top:10px;
-}
+        .section-title {
+            background: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+            font-size: 13px;
+        }
 
-.section-title{
-background:#d9d9d9;
-font-weight:bold;
-text-align:center;
-font-size:13px;
-}
+        .footer-text {
+            font-size: 11px;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 18px;
+        }
 
-.footer-text{
-font-size:11px;
-text-align:center;
-margin-top:20px;
-line-height:18px;
-}
+        .signature-box {
+            width: 33%;
+            text-align: center;
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 30px;
+        }
 
-.signature-box{
-width:33%;
-text-align:center;
-display:inline-block;
-vertical-align:top;
-margin-top:30px;
-}
+        .print-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.print-btn{
-text-align:center;
-margin-top:20px;
-}
-
-.print-btn button{
-padding:8px 20px;
-background:#000;
-color:#fff;
-border:none;
-cursor:pointer;
-}
-
-</style>
+        .print-btn button {
+            padding: 8px 20px;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div class="pdf-wrapper" id="printArea">
+    <div class="pdf-wrapper" id="printArea">
 
-<table class="border-none">
+        <table class="border-none">
 
-<tr>
+            <tr>
 
-<td class="border-none" width="20%">
+                <td class="border-none" width="20%">
 
-<img src="{{ asset('/public/admin/images/fire-logo.png') }}"
-style="width:120px;">
+                    <img src="{{ asset('/public/admin/images/fire-logo.png') }}"
+                        style="width:120px;">
 
-</td>
+                </td>
 
-<td class="border-none text-center" width="60%">
+                <td class="border-none text-center" width="60%">
 
-<div class="heading">
-उत्तराखण्ड अग्निशमन एवं आपात सेवा
-</div>
+                    <div class="heading">
+                        उत्तराखण्ड अग्निशमन एवं आपात सेवा
+                    </div>
 
-<div class="heading">
-Uttarakhand Fire & Emergency Service
-</div>
+                    <div class="heading">
+                        Uttarakhand Fire & Emergency Service
+                    </div>
 
-<div style="line-height:20px;margin-top:8px;">
+                    <div style="line-height:20px;margin-top:8px;">
 
-मुख्यालय - चतुर्थ तल, सरदार पटेल भवन<br>
+                        मुख्यालय - चतुर्थ तल, सरदार पटेल भवन<br>
 
-कोर्ट रोड, देहरादून, उत्तराखंड - 248001<br>
+                        कोर्ट रोड, देहरादून, उत्तराखंड - 248001<br>
 
-Headquarter - IV Floor, Sardar Patel Bhavan<br>
+                        Headquarter - IV Floor, Sardar Patel Bhavan<br>
 
-Court Road, Dehradun, Uttarakhand - 248001
+                        Court Road, Dehradun, Uttarakhand - 248001
 
-</div>
+                    </div>
 
-<div class="sub-heading">
-SERVICE BILL
-</div>
+                    <div class="sub-heading">
+                        SERVICE BILL
+                    </div>
 
-</td>
+                </td>
 
-<td class="border-none text-center" width="20%">
+                <td class="border-none text-center" width="20%">
 
-@if($bill->payment_status=='pending')
+                    @if($bill->payment_status=='pending')
 
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=test@upi&pn=FireService&am={{ $bill->total_amount }}">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=test@upi&pn=FireService&am={{ $bill->total_amount }}">
 
-@endif
+                    @endif
 
-</td>
+                </td>
 
-</tr>
+            </tr>
 
-</table>
+        </table>
 
-<table>
+        <table>
 
-<tr>
+            <tr>
 
-<th width="25%">
-Bill No
-</th>
+                <th width="25%">
+                    Bill No
+                </th>
 
-<td width="25%">
-{{ $bill->bill_no }}
-</td>
+                <td width="25%">
+                    {{ $bill->bill_no }}
+                </td>
 
-<th width="25%">
-Service Type
-</th>
+                <th width="25%">
+                    Service Type
+                </th>
 
-<td width="25%">
-{{ ucwords(str_replace('_',' ',$bill->service_type)) }}
-</td>
+                <td width="25%">
+                    {{ ucwords(str_replace('_',' ',$bill->service_type)) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Request ID
-</th>
+                <th>
+                    Request ID
+                </th>
 
-<td>
-{{ $bill->service_request_id }}
-</td>
+                <td>
+                    {{ $bill->service_request_id }}
+                </td>
 
-<th>
-Generated Date
-</th>
+                <th>
+                    Generated Date
+                </th>
 
-<td>
-{{ date('d-m-Y h:i A',strtotime($bill->created_at)) }}
-</td>
+                <td>
+                    {{ date('d-m-Y h:i A',strtotime($bill->created_at)) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Payment Status
-</th>
+                <th>
+                    Payment Status
+                </th>
 
-<td colspan="3">
+                <td colspan="3">
 
-@if($bill->payment_status=='paid')
+                    @if($bill->payment_status=='paid')
 
-<span style="color:green;font-weight:bold;">
-PAID
-</span>
+                    <span style="color:green;font-weight:bold;">
+                        PAID
+                    </span>
 
-@else
+                    @else
 
-<span style="color:red;font-weight:bold;">
-PENDING
-</span>
+                    <span style="color:red;font-weight:bold;">
+                        PENDING
+                    </span>
 
-@endif
+                    @endif
 
-</td>
+                </td>
 
-</tr>
+            </tr>
 
-</table>
+        </table>
 
-@if(
-in_array($bill->service_type,[
-'standby_duty',
-'pumping_work'
-])
-)
+        @if(
+        in_array($bill->service_type,[
+        'standby_duty',
+        'pumping_work'
+        ])
+        )
 
-<table>
+        <table>
 
-<tr>
+            <tr>
 
-<th colspan="5" class="section-title">
-Personnel Expense Details
-</th>
+                <th colspan="5" class="section-title">
+                    Personnel Expense Details
+                </th>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Designation
-</th>
+                <th>
+                    Designation
+                </th>
 
-<th>
-No Of Person
-</th>
+                <th>
+                    No Of Person
+                </th>
 
-<th>
-Expense
-</th>
+                <th>
+                    Expense
+                </th>
 
-<th>
-DA %
-</th>
+                <th>
+                    DA %
+                </th>
 
-<th>
-Total
-</th>
+                <th>
+                    Total
+                </th>
 
-</tr>
+            </tr>
 
-@foreach($personnels as $person)
+            @foreach($personnels as $person)
 
-<tr>
+            <tr>
 
-<td>
-{{ $person->designation->designation_name ?? '' }}
-</td>
+                <td>
+                    {{ $person->designation->designation_name ?? '' }}
+                </td>
 
-<td>
-{{ $person->no_of_person }}
-</td>
+                <td>
+                    {{ $person->no_of_person }}
+                </td>
 
-<td>
-₹ {{ number_format($person->per_person_expense,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($person->per_person_expense,2) }}
+                </td>
 
-<td>
-{{ number_format($person->da_amount,2) }} %
-</td>
+                <td>
+                    {{ number_format($person->da_amount,2) }} %
+                </td>
 
-<td>
-₹ {{ number_format($person->total_amount,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($person->total_amount,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-@endforeach
+            @endforeach
 
-</table>
+        </table>
 
-<table>
+        <table>
 
-<tr>
+            <tr>
 
-<th colspan="5" class="section-title">
-Vehicle Expense Details
-</th>
+                <th colspan="5" class="section-title">
+                    Vehicle Expense Details
+                </th>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Vehicle
-</th>
+                <th>
+                    Vehicle
+                </th>
 
-<th>
-Mileage Type
-</th>
+                <th>
+                    Mileage Type
+                </th>
 
-<th>
-Mileage
-</th>
+                <th>
+                    Mileage
+                </th>
 
-<th>
-Running Value
-</th>
+                <th>
+                    Running Value
+                </th>
 
-<th>
-Total
-</th>
+                <th>
+                    Total
+                </th>
 
-</tr>
+            </tr>
 
-@foreach($vehicles as $vehicle)
+            @foreach($vehicles as $vehicle)
 
-<tr>
+            <tr>
 
-<td>
-{{ $vehicle->vehicle->type ?? '' }}
-</td>
+                <td>
+                    {{ $vehicle->vehicle->type ?? '' }}
+                </td>
 
-<td>
-{{ $vehicle->mileage_type }}
-</td>
+                <td>
+                    {{ $vehicle->mileage_type }}
+                </td>
 
-<td>
-{{ $vehicle->mileage_value }}
-</td>
+                <td>
+                    {{ $vehicle->mileage_value }}
+                </td>
 
-<td>
-{{ $vehicle->running_value }}
-</td>
+                <td>
+                    {{ $vehicle->running_value }}
+                </td>
 
-<td>
-₹ {{ number_format($vehicle->total_expense,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($vehicle->total_expense,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-@endforeach
+            @endforeach
 
-</table>
+        </table>
 
-<table>
+        <table>
 
-<tr>
+            <tr>
 
-<th colspan="5" class="section-title">
-Equipment Expense Details
-</th>
+                <th colspan="5" class="section-title">
+                    Equipment Expense Details
+                </th>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Equipment
-</th>
+                <th>
+                    Equipment
+                </th>
 
-<th>
-Mileage Type
-</th>
+                <th>
+                    Mileage Type
+                </th>
 
-<th>
-Mileage
-</th>
+                <th>
+                    Mileage
+                </th>
 
-<th>
-Running Value
-</th>
+                <th>
+                    Running Value
+                </th>
 
-<th>
-Total
-</th>
+                <th>
+                    Total
+                </th>
 
-</tr>
+            </tr>
 
-@foreach($equipments as $equipment)
+            @foreach($equipments as $equipment)
 
-<tr>
+            <tr>
 
-<td>
-{{ $equipment->equipment->name ?? '' }}
-</td>
+                <td>
+                    {{ $equipment->equipment->name ?? '' }}
+                </td>
 
-<td>
-{{ $equipment->mileage_type }}
-</td>
+                <td>
+                    {{ $equipment->mileage_type }}
+                </td>
 
-<td>
-{{ $equipment->mileage_value }}
-</td>
+                <td>
+                    {{ $equipment->mileage_value }}
+                </td>
 
-<td>
-{{ $equipment->running_value }}
-</td>
+                <td>
+                    {{ $equipment->running_value }}
+                </td>
 
-<td>
-₹ {{ number_format($equipment->total_expense,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($equipment->total_expense,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-@endforeach
+            @endforeach
 
-</table>
+        </table>
 
-@endif
+        @endif
 
-<table>
+        <table>
 
-<tr>
+            <tr>
 
-<th colspan="2" class="section-title">
-Billing Summary
-</th>
+                <th colspan="2" class="section-title">
+                    Billing Summary
+                </th>
 
-</tr>
+            </tr>
 
-@if(
-in_array($bill->service_type,[
-'standby_duty',
-'pumping_work'
-])
-)
+            @if(
+            in_array($bill->service_type,[
+            'standby_duty',
+            'pumping_work'
+            ])
+            )
 
-<tr>
+            <tr>
 
-<th width="70%">
-Fuel expense for movement of Fire Vehicles & Equipments
-</th>
+                <th width="70%">
+                    Fuel expense for movement of Fire Vehicles & Equipments
+                </th>
 
-<td width="30%">
-₹ {{ number_format($bill->fuel_expense,2) }}
-</td>
+                <td width="30%">
+                    ₹ {{ number_format($bill->fuel_expense,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Depreciation expenses of vehicle 25% of fuel expenses
-</th>
+                <th>
+                    Depreciation expenses of vehicle 25% of fuel expenses
+                </th>
 
-<td>
-₹ {{ number_format($bill->depreciation_expense,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($bill->depreciation_expense,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Salary / Allowances for Personnel etc.
-</th>
+                <th>
+                    Salary / Allowances for Personnel etc.
+                </th>
 
-<td>
-₹ {{ number_format($bill->personnel_expense,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($bill->personnel_expense,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-@else
+            @else
 
-<tr>
+            <tr>
 
-<th width="70%">
-Processing Fee
-</th>
+                <th width="70%">
+                    Processing Fee
+                </th>
 
-<td width="30%">
-₹ {{ number_format($bill->processing_fee,2) }}
-</td>
+                <td width="30%">
+                    ₹ {{ number_format($bill->processing_fee,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-@endif
+            @endif
 
-<tr>
+            <tr>
 
-<th>
-CGST @9%
-</th>
+                <th>
+                    CGST @9%
+                </th>
 
-<td>
-₹ {{ number_format($bill->cgst_amount,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($bill->cgst_amount,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-SGST @9%
-</th>
+                <th>
+                    SGST @9%
+                </th>
 
-<td>
-₹ {{ number_format($bill->sgst_amount,2) }}
-</td>
+                <td>
+                    ₹ {{ number_format($bill->sgst_amount,2) }}
+                </td>
 
-</tr>
+            </tr>
 
-<tr>
+            <tr>
 
-<th>
-Total Amount
-</th>
+                <th>
+                    Total Amount
+                </th>
 
-<th>
-₹ {{ number_format($bill->total_amount,2) }}
-</th>
+                <th>
+                    ₹ {{ number_format($bill->total_amount,2) }}
+                </th>
 
-</tr>
+            </tr>
 
-</table>
+        </table>
 
-<div style="margin-top:20px;">
+        <div style="margin-top:20px;">
 
-<div class="signature-box">
+            <div class="signature-box">
 
-<strong>
-Prepared By
-</strong>
+                <strong>
+                    Prepared By
+                </strong>
 
-<br><br>
+                <br><br>
 
-__________________
+                __________________
 
-</div>
+            </div>
 
-<div class="signature-box">
+            <div class="signature-box">
 
-<strong>
-Verified By
-</strong>
+                <strong>
+                    Verified By
+                </strong>
 
-<br><br>
+                <br><br>
 
-__________________
+                __________________
 
-</div>
+            </div>
 
-<div class="signature-box">
+            <div class="signature-box">
 
-<strong>
-Approved By
-</strong>
+                <strong>
+                    Approved By
+                </strong>
 
-<br><br>
+                <br><br>
 
-__________________
+                __________________
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="footer-text">
+        <div class="footer-text">
 
-Bill No : {{ $bill->bill_no }}
+            Bill No : {{ $bill->bill_no }}
 
-<br>
+            <br>
 
-Printed Date Time : {{ date('Y-m-d H:i:s') }}
+            Printed Date Time : {{ date('Y-m-d H:i:s') }}
 
-<br>
+            <br>
 
-This is computer generated service bill.
+            This is computer generated service bill.
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="print-btn">
+    <div class="print-btn">
 
-<button onclick="printDiv()">
-Print
-</button>
+        <button onclick="printDiv()">
+            Print
+        </button>
 
-</div>
+    </div>
 
-<script>
+    <script>
+        function printDiv() {
 
-function printDiv(){
+            var printContents = document.getElementById('printArea').innerHTML;
 
-var printContents=document.getElementById('printArea').innerHTML;
+            var originalContents = document.body.innerHTML;
 
-var originalContents=document.body.innerHTML;
+            document.body.innerHTML = printContents;
 
-document.body.innerHTML=printContents;
+            window.print();
 
-window.print();
+            document.body.innerHTML = originalContents;
 
-document.body.innerHTML=originalContents;
+            location.reload();
 
-location.reload();
-
-}
-
-</script>
+        }
+    </script>
 
 </body>
 

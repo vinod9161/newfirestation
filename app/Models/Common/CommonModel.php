@@ -177,6 +177,11 @@ public function getPendingApplicationCounts()
         return $this->db->table($tbl)->insert($data);
     }
 
+    public function insertDataGetId($tbl,$data)
+    {
+        return $this->db->table($tbl)->insertGetId($data);
+    }
+
 
 
     public function updateData($tbl, $where, $data)

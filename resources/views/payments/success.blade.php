@@ -63,27 +63,11 @@
                         </span>
                     </td>
                 </tr>
-
             </table>
-
-            <a
-                href="{{ url('/') }}"
-                class="btn btn-primary mt-3"
-            >
-                Go To Dashboard
-            </a>
-
-            <a
-                href="{{ route('payment.invoice',$application->application_no) }}"
-                class="btn btn-success mt-3"
-            >
-                Download Invoice
-            </a>
-
+            <!-- <a href="{{ url('/') }}" class="btn btn-primary mt-3" > Go To Dashboard </a> -->
+            <a href="{{ route('invoice.view',$application->application_no) }}" class="btn btn-success mt-3" target="_blank"> Download Invoice </a>
         </div>
-
     </div>
-
 </div>
 
 @endsection

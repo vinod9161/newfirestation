@@ -384,10 +384,10 @@ class RescueReportController extends Controller
             'life_lost_animal' => $request->input('life_lost_animal'),
             'life_saved_animal' => $request->input('life_saved_animal'),
         ];
-        $result = $this->commonModel->insertData('fs_rescue_report', $data);
+        $result = $this->commonModel->insertDataGetId('fs_rescue_report', $data);
         if($result)
         {
-            return redirect()->back()->with('success', 'Rescue report saved successfully');
+            return redirect()->route('service-bills.report.create',['service_type'=>'rescue_report','request_id'=>$result])->with('success', 'Rescue report saved successfully');
         }
         else{
             return redirect()->back()->with('failed', 'Something went wrong. Please try later!');
@@ -583,12 +583,13 @@ class RescueReportController extends Controller
         $result = $this->commonModel->updateDataByOneCondition('fs_rescue_report', array('id' => $id), $data);
         if($result)
         {
-            return redirect()->back()->with('success', 'Rescue deleted approval');
+            return redirect()->back()->with('success', 'Rescue file deleted successfully');
         }
         else{
             return redirect()->back()->with('failed', 'Something went wrong. Please try later!');
         }
     }
+    
     public function rescueApproved($id)
     {
         $rescueReport = $this->commonModel->getDataByOneCondition('fs_rescue_report', array('id' => $id));

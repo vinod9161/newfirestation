@@ -14,6 +14,7 @@ use App\Models\PersonnelExpenseRegister;
 use App\Models\VehicleCategory;
 use App\Models\EquipmentCategory;
 use App\Models\ReportFeeMaster;
+use DB;
 
 
 class ServiceBillController extends Controller
@@ -39,18 +40,11 @@ class ServiceBillController extends Controller
                 ->firstOrFail();
 
         }else{
-
             abort(404);
-
         }
 
-        $designations=PersonnelExpenseRegister::with(
-                'designation'
-            )
-            ->get();
-
+        $designations=PersonnelExpenseRegister::with('designation')->get();
         $vehicles=VehicleCategory::get();
-
         $equipments=EquipmentCategory::get();
 
         return view(
@@ -92,59 +86,47 @@ class ServiceBillController extends Controller
         }
 
         $bill=ServiceBill::create([
-
             'service_type'=>$request->service_type,
-
             'service_request_id'=>$request->request_id,
-
             'bill_no'=>$billNo,
-
             'diesel_rate'=>$request->diesel_rate,
-
             'fuel_expense'=>$request->fuel_expense,
-
             'depreciation_expense'=>$request->depreciation_expense,
-
             'personnel_expense'=>$request->personnel_expense,
-
             'cgst_amount'=>$request->cgst_amount,
-
             'sgst_amount'=>$request->sgst_amount,
-
             'total_amount'=>$request->total_amount,
-
             'payment_status'=>'pending',
-
             'created_by'=>Auth::id()
-
         ]);
 
+        if($request->service_type=='standby_duty'){
+            Standby::where(
+                'application_id',
+                $request->request_id
+            )
+            ->update([
+                'bill_generated'=>1,
+                'payment_status'=>'pending',
+                'service_bill_id'=>$bill->id
+            ]);
+        }
+
         if($request->designation_id){
-
             foreach($request->designation_id as $key=>$designationId){
-
                 if(!$designationId){
                     continue;
                 }
 
                 ServiceBillPersonnel::create([
-
                     'bill_id'=>$bill->id,
-
                     'designation_id'=>$designationId,
-
                     'no_of_person'=>$request->no_of_person[$key] ?? 0,
-
                     'per_person_expense'=>$request->expense[$key] ?? 0,
-
                     'da_amount'=>$request->da[$key] ?? 0,
-
                     'total_amount'=>$request->person_total[$key] ?? 0
-
                 ]);
-
             }
-
         }
 
         if($request->vehicle_id){
@@ -299,12 +281,49 @@ class ServiceBillController extends Controller
         );
     }
 
-    public function createReportBill($service_type, $request_id)
+    public function createReportBill($service_type,$request_id)
     {
-        $reportFee=ReportFeeMaster::where(
-                'report_type',
-                $service_type
-            )
+        if(!in_array($service_type,['fire_report','rescue_report','relief_report'])){
+            abort(404);
+        }
+
+        if($service_type=='fire_report'){
+
+            $report=DB::table('fs_fire_report')
+                ->where('id',$request_id)
+                ->first();
+
+        }elseif($service_type=='rescue_report'){
+
+            $report=DB::table('fs_rescue_report')
+                ->where('id',$request_id)
+                ->first();
+
+        }else{
+
+            $report=DB::table('fs_relief_work_report')
+                ->where('id',$request_id)
+                ->first();
+
+        }
+
+        if(!$report){
+            return redirect()
+                ->back()
+                ->with('failed','Report not found.');
+        }
+
+        $alreadyExists=ServiceBill::where('service_type',$service_type)
+            ->where('service_request_id',$request_id)
+            ->first();
+
+        if($alreadyExists){
+            return redirect()
+                ->route('service-bills.show',$alreadyExists->id)
+                ->with('success','Bill already generated.');
+        }
+
+        $reportFee=ReportFeeMaster::where('report_type',$service_type)
             ->firstOrFail();
 
         return view(
@@ -312,84 +331,140 @@ class ServiceBillController extends Controller
             compact(
                 'service_type',
                 'request_id',
-                'reportFee'
+                'reportFee',
+                'report'
             )
         );
     }
 
     public function storeReportBill(Request $request)
     {
-        $alreadyExists=ServiceBill::where(
-                'service_type',
-                $request->service_type
-            )
-            ->where(
-                'service_request_id',
-                $request->request_id
-            )
+        if(!in_array($request->service_type,[
+            'fire_report',
+            'rescue_report',
+            'relief_report'
+        ])){
+            abort(404);
+        }
+
+        if($request->service_type=='fire_report'){
+            $report=DB::table('fs_fire_report')
+                ->where('id',$request->request_id)
+                ->first();
+
+        }elseif($request->service_type=='rescue_report'){
+            $report=DB::table('fs_rescue_report')
+                ->where('id',$request->request_id)
+                ->first();
+
+        }else{
+
+            $report=DB::table('fs_relief_work_report')
+                ->where('id',$request->request_id)
+                ->first();
+
+        }
+
+        if(!$report){
+
+            return redirect()
+                ->back()
+                ->with('failed','Report not found.');
+
+        }
+
+        $alreadyExists=ServiceBill::where('service_type',$request->service_type)
+            ->where('service_request_id',$request->request_id)
             ->first();
 
         if($alreadyExists){
 
             return redirect()
-                ->route(
-                    'service-bills.show',
-                    $alreadyExists->id
-                )
-                ->with(
-                    'success',
-                    'Bill already generated.'
-                );
+                ->route('service-bills.show',$alreadyExists->id)
+                ->with('success','Bill already generated.');
+
         }
 
-        $processingFee=
-        $request->processing_fee;
+        $processingFee=$request->processing_fee;
 
-        $cgst=
-        ($processingFee *
-        $request->cgst_percent)/100;
+        $cgst=($processingFee * $request->cgst_percent)/100;
 
-        $sgst=
-        ($processingFee *
-        $request->sgst_percent)/100;
+        $sgst=($processingFee * $request->sgst_percent)/100;
 
-        $total=
-        $processingFee +
-        $cgst +
-        $sgst;
+        $total=$processingFee + $cgst + $sgst;
 
         $billNo='SRB'.date('YmdHis');
 
         $bill=ServiceBill::create([
-
             'service_type'=>$request->service_type,
-
             'service_request_id'=>$request->request_id,
-
             'bill_no'=>$billNo,
-
             'processing_fee'=>$processingFee,
-
             'cgst_amount'=>$cgst,
-
             'sgst_amount'=>$sgst,
-
             'total_amount'=>$total,
-
             'payment_status'=>'pending',
-
             'created_by'=>Auth::id()
-
         ]);
 
+        $this->updateReportBillStatus(
+            $request->service_type,
+            $request->request_id,
+            $bill->id,
+            'pending'
+        );
+
         return redirect()
-            ->route(
-                'service-bills.show',
-                $bill->id
+            ->route('service-bills.show',$bill->id)
+            ->with('success','Report bill generated successfully.');
+    }
+
+    private function updateReportBillStatus(
+        $service_type,
+        $request_id,
+        $bill_id,
+        $payment_status='pending'
+    )
+    {
+        if($service_type=='standby_duty'){
+            Standby::where(
+                'application_id',
+                $request_id
             )
-            ->with(
-                'success',
-                'Report bill generated successfully.'
-            );
+            ->update([
+                'bill_generated'=>1,
+                'payment_status'=>$payment_status,
+                'service_bill_id'=>$bill_id
+            ]);
+        }
+        if($service_type=='fire_report'){
+
+            DB::table('fs_fire_report')
+                ->where('id',$request_id)
+                ->update([
+                    'bill_generated'=>1,
+                    'payment_status'=>$payment_status,
+                    'service_bill_id'=>$bill_id
+                ]);
+
+        }elseif($service_type=='rescue_report'){
+
+            DB::table('fs_rescue_report')
+                ->where('id',$request_id)
+                ->update([
+                    'bill_generated'=>1,
+                    'payment_status'=>$payment_status,
+                    'service_bill_id'=>$bill_id
+                ]);
+
+        }elseif($service_type=='relief_report'){
+            DB::table('fs_relief_work_report')
+                ->where('id',$request_id)
+                ->update([
+                    'bill_generated'=>1,
+                    'payment_status'=>$payment_status,
+                    'service_bill_id'=>$bill_id
+                ]);
+        }
     }
 }

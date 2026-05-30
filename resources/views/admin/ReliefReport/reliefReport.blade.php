@@ -354,15 +354,16 @@
                                          <a style="cursor:pointer" id="{{route('admin.reliefReport.download', $relief->id)}}" data-id="{{ $relief->relief_report_no }}" class="btn btn-sm btn-light btn-view generatePdfBtn" title="Download" target="_blank"><i class="fa fa-download"></i> &nbsp;</a>
                                         @endif
 
-                                        @if(Auth::user()->type == 3)
-
-                                            <a href="{{ route('service-bills.report.create',['service_type'=>'relief_report','request_id'=>$relief->relief_report_no]) }}"
-                                            class="btn btn-warning btn-sm">
-
-                                            Generate Bill
-
-                                            </a>
-
+                                        @if(Auth::user()->type==3)
+                                            @if($relief->bill_generated==0)
+                                                <a href="{{ route('service-bills.report.create',['service_type'=>'relief_report','request_id'=>$relief->id]) }}" class="btn btn-warning btn-sm">Generate Bill </a>
+                                            @elseif($relief->payment_status=='pending')
+                                                <a href="{{ route('service-bills.show',$relief->service_bill_id) }}" class="btn btn-info btn-sm" target="_blank"> View Bill & Pay </a>
+                                            @elseif($relief->payment_status=='paid')
+                                                <a href="{{ route('service-bills.show',$relief->service_bill_id) }}" class="btn btn-primary btn-sm" target="_blank"> View Invoice </a>
+                                                <a href="{{ route('service-bills.print',$relief->service_bill_id) }}"
+                                                class="btn btn-success btn-sm" target="_blank"> Download Invoice </a>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

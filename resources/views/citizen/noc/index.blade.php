@@ -257,10 +257,7 @@
                                         <span class="badge bg-warning">  Pending </span>
                                     @endif
                                     @if(!empty($app->submitted_at) && $app->payment_status!='paid')
-                                        <a href="{{ url('payment/NOC_PRE_ESTABLISHMENT/'.$app->application_no) }}"
-                                            class="btn btn-success"
-                                            title="Pay Now">Pay Now
-                                        </a>
+                                        <a href="{{ url('payment/pre-establishment/'.$app->application_no) }}" class="btn btn-success" title="Pay Now" target="_blank"> Pay Now </a>
                                     @endif
                                     @if($app->payment_status=='paid')
                                         <a href="{{ route('invoice.view',$app->application_no) }}"

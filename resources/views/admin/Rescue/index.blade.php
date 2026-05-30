@@ -371,6 +371,18 @@
                                     @if($report->status =='3')
                                         <a style="cursor:pointer" id="{{route('admin.downloadRescueReport', $report->id)}}" data-id="{{ $report->rescue_report_no }}" class="btn btn-light btn-view generatePdfBtn" title="Download" target="_blank"><i class="fa fa-download"></i> &nbsp;</a>
                                     @endif
+
+                                    @if(Auth::user()->type==3)
+                                        @if($report->bill_generated==0)
+                                            <a href="{{ route('service-bills.report.create',['service_type'=>'rescue_report','request_id'=>$report->id]) }}" class="btn btn-warning btn-sm">Generate Bill </a>
+                                        @elseif($report->payment_status=='pending')
+                                            <a href="{{ route('service-bills.show',$report->service_bill_id) }}" class="btn btn-info btn-sm" target="_blank"> View Bill & Pay </a>
+                                        @elseif($report->payment_status=='paid')
+                                            <a href="{{ route('service-bills.show',$report->service_bill_id) }}" class="btn btn-primary btn-sm" target="_blank"> View Invoice </a>
+                                            <a href="{{ route('service-bills.print',$report->service_bill_id) }}"
+                                            class="btn btn-success btn-sm" target="_blank"> Download Invoice </a>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
