@@ -67,17 +67,16 @@
                         <form method="POST" action="{{ route('auth.submit.otp') }}" id="otpForm">
                             @csrf
                             <div class="d-flex justify-content-center mb-3" id="otpContainer">
-                                @for ($i = 1; $i <= 6; $i++) <input type="text" maxlength="1" class="otp-input"
-                                    id="otp{{ $i }}" oninput="moveToNext(this)"
-                                    onkeydown="handleBackspace(event, this)">
-                                    @endfor
+                                @for ($i = 1; $i <= 6; $i++) 
+                                    <input type="text" maxlength="1" class="otp-input" id="otp{{ $i }}" 
+                                        oninput="moveToNext(this)" onkeydown="handleBackspace(event, this)">
+                                @endfor
                             </div>
                             <input type="hidden" name="otp_combined" id="otp_combined">
-                            <input type="hidden" name="user_id" value="{{ session('otp_user_id') }}">
+                            <!-- REMOVED: <input type="hidden" name="user_id" value="{{ session('otp_user_id') }}"> -->
                             <button type="submit" class="btn btn-danger w-100">Verify OTP</button>
                             <div class="text-center mt-2">
-                                <a href="javascript:void(0);" id="resendOtpLink" class="text-danger fw-bold">Resend
-                                    OTP</a>
+                                <a href="javascript:void(0);" id="resendOtpLink" class="text-danger fw-bold">Resend OTP</a>
                                 <span id="resendTimer" class="text-muted ms-2"></span>
                             </div>
                         </form>
@@ -222,16 +221,15 @@
         }
 
         $('#resendOtpLink').click(function() {
-            var userId = $('input[name="user_id"]').val();
-
-            startResendTimer(); // disable immediately
+            // No need to get userId - server will get from session
+            startResendTimer();
 
             $.ajax({
                 url: "{{ route('resend.otp') }}",
                 method: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}',
-                    user_id: userId
+                    _token: '{{ csrf_token() }}'
+                    // user_id removed - server gets from session
                 },
                 success: function(response) {
                     if (response.message) {
@@ -242,8 +240,7 @@
                 },
                 error: function(xhr) {
                     clearInterval(timerInterval);
-                    $('#resendOtpLink').removeClass('disabled').css('pointer-events',
-                        'auto');
+                    $('#resendOtpLink').removeClass('disabled').css('pointer-events', 'auto');
                     $('#resendTimer').text('');
                     alert('Something went wrong. Please try again.');
                 }

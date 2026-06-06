@@ -60,6 +60,13 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'cfo' => \App\Http\Middleware\CFOMiddleware::class,
+        'fso' => \App\Http\Middleware\FSOMiddleware::class,
+        'citizen' => \App\Http\Middleware\CitizenMiddleware::class,
+        'staff' => \App\Http\Middleware\StaffMiddleware::class,
+        'auth.check' => \App\Http\Middleware\MyMiddleware::class,
+        'throttle.otp' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
