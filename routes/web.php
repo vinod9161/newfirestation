@@ -38,58 +38,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/clear', function() {
-    Artisan::call('cache:clear');
-    Artisan::call('route:clear');
-    Artisan::call('view:clear');
-    Artisan::call('config:clear');
-    return 'All caches have been cleared!';
-});
 
-Route::get('/dump-autoload', function() {
-    try {
-        shell_exec('composer dump-autoload');
-        return 'Composer dump-autoload executed successfully!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
-});
-
-Route::get('/composer-update', function() {
-    try {
-        shell_exec('composer update');
-        return 'Composer update executed successfully!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
-});
-
-Route::get('/dompdf-font-cache', function() {
-    try {
-        shell_exec('php vendor/dompdf/dompdf/util/dompdf_font_family_cache.php');
-        return 'DomPDF font cache updated successfully!';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
-});
-
-// Block storage access
-if (str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/storage/logs')) {
-    abort(403);
-}
-
-// Or using route (for Laravel to handle)
 Route::any('storage/{any}', function ($any) {
     if (str_contains($any, 'logs')) {
         abort(403);
     }
-    // Redirect to actual storage
     return redirect()->away('/' . $any);
 })->where('any', '.*');
 
 Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
 Route::post('/resend-otp', [LoginController::class, 'resendOtp'])->name('resend.otp');
-
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('auth.login');
 
@@ -102,14 +60,12 @@ Route::prefix('captcha')->group(function () {
 
 Route::get('citizen-register', [CitizenLoginController::class, 'showCitizenLoginForm'])->name('citizen.register');
 Route::post('citizenRegister', [CitizenLoginController::class, 'register'])->name('citizenRegister');
-
 Route::get('auditor-register', [AuditorController::class, 'showAuditorRegisterForm'])->name('auditor.register');
 Route::post('auditorRegister', [AuditorController::class, 'register'])->name('auditorRegister');
-
 Route::get('agency-register', [AgencyController::class, 'showAgencyRegisterForm'])->name('agency.register');
 Route::post('agencyRegister', [AgencyController::class, 'register'])->name('agencyRegister');
 
-// Forgot Password Routes (Public)
+// Forgot Password Routes
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('auth.forgotpassword');
 Route::get('resetpasswordotp', [ForgotPasswordController::class, 'otpResetPasswordForm'])->name('resetpasswordotp');
 Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('submitForgetPasswordForm');
@@ -217,7 +173,7 @@ Route::get('awarenessPdfDownload',[App\Http\Controllers\MainController::class,'a
 Route::post('/verification/send-otp', [App\Http\Controllers\MainController::class, 'verificationSendOtp'])->name('verification.send.otp');
 Route::post('/verification/verify-otp', [App\Http\Controllers\MainController::class, 'verificationVerifyOtp'])->name('verification.verify.otp');
 
-// Payment Routes (Public access for payment gateway callbacks)
+// Payment Routes
 Route::get('/payment/{service_type}/{application_no}', [PaymentController::class, 'index'])->name('payment.index');
 Route::post('/payment/create-order', [PaymentController::class, 'createOrder'])->name('payment.createOrder');
 Route::post('/payment/verify', [PaymentController::class, 'verifyPayment'])->name('payment.verify');
@@ -225,15 +181,15 @@ Route::get('/payment-success/{application_no}', [PaymentController::class, 'paym
 Route::get('/payment-invoice/{application_no}', [PaymentController::class, 'downloadInvoice'])->name('payment.invoice');
 Route::get('/invoice/{application_no}', [PaymentController::class, 'invoice'])->name('invoice.view');
 
-// ==================== AUTHENTICATED ROUTES (Require Login) ====================
+// ==================== AUTHENTICATED ROUTES ====================
+// OTP Verification Routes
+Route::get('loginotp', [LoginController::class, 'loginotpForm'])->name('loginotp');
+Route::post('submit_otp', [LoginController::class, 'verifyOtp'])
+    ->name('auth.submit.otp')
+    ->middleware('throttle:5,10');
 
 Route::middleware(['auth.check'])->group(function () {
     
-    // OTP Verification Routes
-    Route::get('loginotp', [LoginController::class, 'loginotpForm'])->name('loginotp');
-    Route::post('submit_otp', [LoginController::class, 'verifyOtp'])
-        ->name('auth.submit.otp')
-        ->middleware('throttle:5,10');  // Rate limiting for OTP
     
     // Logout Routes
     Route::get('logout', [LoginController::class, 'logout'])->name('auth.logout');
@@ -621,7 +577,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('admin/fso/uploadSignaturePost', [FSOController::class, 'uploadSignaturePost'])->name('admin.uploadSignaturePost');
         Route::get('admin/fso/filter', [FSOController::class, 'filter'])->name('admin.fsofilter');
         
-        
         // Category Management
         Route::get('admin/category', [CategoryController::class, 'index'])->name('admin.category');
         Route::get('admin/category/addcategory', [CategoryController::class,'addCategoryForm'])->name('admin.addcategory');
@@ -776,7 +731,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('admin/vehicletypes/updateVehicleTypes', [VehicleTypesController::class, 'updateVehicleTypes'])->name('admin.updateVehicleTypes');
         Route::get('admin/vehicletypes/deleteVehicleTypes/{id}', [VehicleTypesController::class, 'deleteVehicleTypes'])->name('admin.deleteVehicleTypes');
         
-        
         // Staff Strength
         Route::get('/admin/staffstrentgh', [CommonController::class, 'staffstrength'])->name('admin.staffstrength');
         Route::get('/admin/add-staffstrength', [CommonController::class, 'addstaffstrength'])->name('admin.add-staffstrength');
@@ -784,7 +738,7 @@ Route::middleware(['auth.check'])->group(function () {
         Route::get('admin/savestaffstrength/edit/{id}', [CommonController::class, 'editstaffstrength'])->name('admin.savestaffstrength.edit');
         Route::post('admin/savestaffstrength/update', [CommonController::class,'updatestaffstrength'])->name('admin.savestaffstrength.update');
         
-        // Pricing Rules (CRITICAL - was exposed!)
+        // Pricing Rules
         Route::get('admin/pricing-rules', [PricingRuleController::class, 'index'])->name('pricing-rules.index');
         Route::get('admin/pricing-rules/create', [PricingRuleController::class, 'create'])->name('pricing-rules.create');
         Route::post('admin/pricing-rules', [PricingRuleController::class, 'store'])->name('pricing-rules.store');
@@ -1036,58 +990,40 @@ Route::middleware(['auth.check'])->group(function () {
         Route::get('/building-map', [CitizenController::class, 'building_map'])->name('citizen.building.map');
         Route::post('/uploadDocument', [CitizenController::class, 'uploadDocument'])->name('citizen.uploadDocument');
         Route::get('/building-map/delete/{any}', [CitizenController::class, 'deleteBuildingMap'])->name('citizen.building.map.delete');
-        
-        // Fire Escape Plan
         Route::get('/fire-escape-plan', [CitizenController::class, 'fire_escape_plan'])->name('citizen.fire.escape.plan');
         Route::post('/save-fire-escape-plan', [CitizenController::class, 'saveFireEscapePlan'])->name('citizen.saveFireEscapePlan');
         Route::get('fire-escape-plan-delete/{id}', [CitizenController::class, 'deleteFireEscapePlan'])->name('fire.escape.plan.delete');
-        
-        // Chemical Use
         Route::get('/chemical-use', [CitizenController::class, 'chemical_use'])->name('citizen.chemical.use');
         Route::post('/save-chemical-use', [CitizenController::class, 'SaveChemicalUse'])->name('citizen.SaveChemicalUse');
         Route::get('chemical-use-delete/{id}', [CitizenController::class, 'chemicalUseDelete'])->name('citizen.chemical.use.delete');
-        
-        // SOP Upload
         Route::get('/list-sop', [CitizenController::class, 'listSop'])->name('citizen.upload.sop');
         Route::get('/upload-sop', [CitizenController::class, 'upload_sop'])->name('citizen.sop');
         Route::get('/upload-sop-delete/{id}', [CitizenController::class, 'uploadSopDelete'])->name('citizen.upload.sop.delete');
-        
-        // Safety Officer
         Route::get('/safety-officer', [CitizenController::class, 'safety_officer'])->name('citizen.safety.officer');
         Route::post('/safety-officer-post', [CitizenController::class, 'saveSafetyOfficer'])->name('citizen.safety.officer.post');
         Route::get('/safety-officer-delete/{id}', [CitizenController::class, 'safetyOfficerDelete'])->name('citizen.safety.officer.delete');
-        
-        // Do's and Don'ts
         Route::get('/do-dont', [CitizenController::class, 'do_dont'])->name('citizen.do.dont');
-        
-        // Declaration Routes
         Route::get('/declaration', [DeclarionController::class, 'indexDeclaration'])->name('citizen.declaration');
         Route::get('/declaration-list', [DeclarionController::class, 'declarationList'])->name('citizen.declarationList');
         Route::post('/addBuildingStatusPost', [DeclarionController::class, 'addBuildingStatusPost'])->name('citizen.addBuildingStatusPost');
         Route::post('/addFireProvissionPost', [DeclarionController::class, 'addFireProvissionPost'])->name('citizen.addFireProvissionPost');
         Route::post('/addSpecialProvissionPost', [DeclarionController::class, 'addSpecialProvissionPost'])->name('citizen.addSpecialProvissionPost');
         Route::post('/addFinalSubmitPost', [DeclarionController::class, 'addFinalSubmitPost'])->name('citizen.addFinalSubmitPost');
-        
-        // Citizen Activities (Standby, Awareness, Incident)
         Route::get('/citizen/standby', [ActivitiesController::class, 'standby'])->name('citizen.standby');
         Route::get('/citizen/standby/add', [ActivitiesController::class, 'addStandby'])->name('citizen.addStandby');
         Route::post('/citizen/standby/save', [ActivitiesController::class, 'saveStandby'])->name('citizen.saveStandby');
         Route::get('/citizen/standby/view/{id}', [ActivitiesController::class, 'viewStandby'])->name('citizen.viewStandby');
         Route::post('/citizen/standByOtpPost', [ActivitiesController::class, 'standByOtpPost'])->name('citizen.standByOtpPost');
-        
         Route::get('/citizen/awareness', [ActivitiesController::class, 'awareness'])->name('citizen.awareness');
         Route::get('/citizen/awareness/add', [ActivitiesController::class, 'addAwareness'])->name('citizen.addAwareness');
         Route::post('/citizen/awareness/save', [ActivitiesController::class, 'saveAwareness'])->name('citizen.saveAwareness');
         Route::get('/citizen/awareness/view/{id}', [ActivitiesController::class, 'viewAwareness'])->name('citizen.viewAwareness');
         Route::post('/citizen/awarenessOtpPost', [ActivitiesController::class, 'awarenessOtpPost'])->name('citizen.awarenessOtpPost');
         Route::post('/citizen/resendOtp', [ActivitiesController::class, 'resendOtp'])->name('citizen.resendOtp');
-        
         Route::get('/citizen/incident', [ActivitiesController::class, 'incident'])->name('citizen.incident');
         Route::get('/citizen/incident/add', [ActivitiesController::class, 'addIncident'])->name('citizen.addIncident');
         Route::post('/citizen/incident/save', [ActivitiesController::class, 'saveIncident'])->name('citizen.saveIncident');
         Route::get('/citizen/incident/view/{id}', [ActivitiesController::class, 'viewIncident'])->name('citizen.viewIncident');
-        
-        // NOC Type Specific Routes
         Route::get('/citizen-noc-pandal/{data?}', [PandalNocController::class, 'index'])->name('citizen.pandal');
         Route::post('noc-pandal-basic-post', [PandalNocController::class, 'addPandalBasicDetails'])->name('noc.pandal.basic.post');
         Route::post('noc-pandal-applicant-post', [PandalNocController::class, 'addPandalApplicantDetails'])->name('noc.pandal.applicant.post');
@@ -1097,7 +1033,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-pandal-coordinator-post', [PandalNocController::class, 'addPandalCoordinatorDetails'])->name('noc.pandal.coordinator.post');
         Route::post('noc-pandal-project-post', [PandalNocController::class, 'addPandalProjectDetails'])->name('noc.pandal.project.post');
         Route::post('noc-pandal-attachments-post', [PandalNocController::class, 'addPandalAttachmentsDetails'])->name('noc.pandal.attachments.post');
-        
         Route::get('/citizen-noc-public-function/{data?}', [PublicFunctionNocController::class, 'index'])->name('citizen.public.function');
         Route::post('noc-public-function-basic-post', [PublicFunctionNocController::class, 'addPublicFunctionBasicDetails'])->name('noc.public.function.basic.post');
         Route::post('noc-public-function-applicant-post', [PublicFunctionNocController::class, 'addPublicFunctionApplicantDetails'])->name('noc.public.function.applicant.post');
@@ -1107,7 +1042,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-public-function-coordinator-post', [PublicFunctionNocController::class, 'addPublicFunctionCoordinatorDetails'])->name('noc.public.function.coordinator.post');
         Route::post('noc-public-function-project-post', [PublicFunctionNocController::class, 'addPublicFunctionProjectDetails'])->name('noc.public.function.project.post');
         Route::post('noc-public-function-attachments-post', [PublicFunctionNocController::class, 'addPublicFunctionAttachmentsDetails'])->name('noc.public.function.attachments.post');
-        
         Route::get('/citizen-noc-entertainment-activity/{data?}', [EntertainmentActivityNocController::class, 'index'])->name('citizen.entertainment.activity');
         Route::post('noc-entertainment-basic-post', [EntertainmentActivityNocController::class, 'addEntertainmentBasicDetails'])->name('noc.entertainment.basic.post');
         Route::post('noc-entertainment-applicant-post', [EntertainmentActivityNocController::class, 'addEntertainmentApplicantDetails'])->name('noc.entertainment.applicant.post');
@@ -1117,7 +1051,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-entertainment-coordinator-post', [EntertainmentActivityNocController::class, 'addEntertainmentCoordinatorDetails'])->name('noc.entertainment.coordinator.post');
         Route::post('noc-entertainment-project-post', [EntertainmentActivityNocController::class, 'addEntertainmentProjectDetails'])->name('noc.entertainment.project.post');
         Route::post('noc-entertainment-attachments-post', [EntertainmentActivityNocController::class, 'addEntertainmentAttachmentsDetails'])->name('noc.entertainment.attachments.post');
-        
         Route::get('/citizen-noc-film-shooting/{data?}', [FilmShootingNocController::class, 'index'])->name('citizen.film.shooting');
         Route::post('noc-film-shooting-basic-post', [FilmShootingNocController::class, 'addFilmShootingBasicDetails'])->name('noc.film.shooting.basic.post');
         Route::post('noc-film-shooting-applicant-post', [FilmShootingNocController::class, 'addFilmShootingApplicantDetails'])->name('noc.film.shooting.applicant.post');
@@ -1127,7 +1060,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-film-shooting-coordinator-post', [FilmShootingNocController::class, 'addFilmShootingCoordinatorDetails'])->name('noc.film.shooting.coordinator.post');
         Route::post('noc-film-shooting-project-post', [FilmShootingNocController::class, 'addFilmShootingProjectDetails'])->name('noc.film.shooting.project.post');
         Route::post('noc-film-shooting-attachments-post', [FilmShootingNocController::class, 'addFilmShootingAttachmentsDetails'])->name('noc.film.shooting.attachments.post');
-        
         Route::get('/citizen-noc-games/{data?}', [GamesNocController::class, 'index'])->name('citizen.games');
         Route::post('noc-games-basic-post', [GamesNocController::class, 'addGamesBasicDetails'])->name('noc.games.basic.post');
         Route::post('noc-games-applicant-post', [GamesNocController::class, 'addGamesApplicantDetails'])->name('noc.games.applicant.post');
@@ -1137,7 +1069,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-games-coordinator-post', [GamesNocController::class, 'addGamesCoordinatorDetails'])->name('noc.games.coordinator.post');
         Route::post('noc-games-project-post', [GamesNocController::class, 'addGamesProjectDetails'])->name('noc.games.project.post');
         Route::post('noc-games-attachments-post', [GamesNocController::class, 'addGamesAttachmentsDetails'])->name('noc.games.attachments.post');
-        
         Route::get('/citizen-noc-helipad/{data?}', [HelipadNocController::class, 'index'])->name('citizen.helipad');
         Route::post('noc-helipad-basic-post', [HelipadNocController::class, 'addHelipadBasicDetails'])->name('noc.helipad.basic.post');
         Route::post('noc-helipad-applicant-post', [HelipadNocController::class, 'addHelipadApplicantDetails'])->name('noc.helipad.applicant.post');
@@ -1147,7 +1078,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-helipad-coordinator-post', [HelipadNocController::class, 'addHelipadCoordinatorDetails'])->name('noc.helipad.coordinator.post');
         Route::post('noc-helipad-project-post', [HelipadNocController::class, 'addHelipadProjectDetails'])->name('noc.helipad.project.post');
         Route::post('noc-helipad-attachments-post', [HelipadNocController::class, 'addHelipadAttachmentsDetails'])->name('noc.helipad.attachments.post');
-        
         Route::get('/citizen-noc-kerosene/{data?}', [KeroseneNocController::class, 'index'])->name('citizen.kerosene');
         Route::post('noc-kerosene-basic-post', [KeroseneNocController::class, 'addKeroseneBasicDetails'])->name('noc.kerosene.basic.post');
         Route::post('noc-kerosene-applicant-post', [KeroseneNocController::class, 'addKeroseneApplicantDetails'])->name('noc.kerosene.applicant.post');
@@ -1157,7 +1087,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-kerosene-coordinator-post', [KeroseneNocController::class, 'addKeroseneCoordinatorDetails'])->name('noc.kerosene.coordinator.post');
         Route::post('noc-kerosene-project-post', [KeroseneNocController::class, 'addKeroseneProjectDetails'])->name('noc.kerosene.project.post');
         Route::post('noc-kerosene-attachments-post', [KeroseneNocController::class, 'addKeroseneAttachmentsDetails'])->name('noc.kerosene.attachments.post');
-        
         Route::get('/citizen-noc-other-services/{data?}', [OtherServicesNocController::class, 'index'])->name('citizen.other.services');
         Route::post('noc-other-services-basic-post', [OtherServicesNocController::class, 'addOtherServicesBasicDetails'])->name('noc.other.services.basic.post');
         Route::post('noc-other-services-applicant-post', [OtherServicesNocController::class, 'addOtherServicesApplicantDetails'])->name('noc.other.services.applicant.post');
@@ -1167,7 +1096,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-other-services-coordinator-post', [OtherServicesNocController::class, 'addOtherServicesCoordinatorDetails'])->name('noc.other.services.coordinator.post');
         Route::post('noc-other-services-project-post', [OtherServicesNocController::class, 'addOtherServicesProjectDetails'])->name('noc.other.services.project.post');
         Route::post('noc-other-services-attachments-post', [OtherServicesNocController::class, 'addOtherServicesAttachmentsDetails'])->name('noc.other.services.attachments.post');
-        
         Route::get('/citizen-noc-fire-crackers/{data?}', [FireCrackersNocController::class, 'index'])->name('citizen.fire.crackers');
         Route::post('noc-fire-crackers-basic-post', [FireCrackersNocController::class, 'addFireCrackersBasicDetails'])->name('noc.fire.crackers.basic.post');
         Route::post('noc-fire-crackers-applicant-post', [FireCrackersNocController::class, 'addFireCrackersApplicantDetails'])->name('noc.fire.crackers.applicant.post');
@@ -1177,7 +1105,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-fire-crackers-coordinator-post', [FireCrackersNocController::class, 'addFireCrackersCoordinatorDetails'])->name('noc.fire.crackers.coordinator.post');
         Route::post('noc-fire-crackers-project-post', [FireCrackersNocController::class, 'addFireCrackersProjectDetails'])->name('noc.fire.crackers.project.post');
         Route::post('noc-fire-crackers-attachments-post', [FireCrackersNocController::class, 'addFireCrackersAttachmentsDetails'])->name('noc.fire.crackers.attachments.post');
-        
         Route::get('/citizen-noc-transportation-material/{data?}', [TransportationNocController::class, 'index'])->name('citizen.transportation');
         Route::post('noc-transportation-basic-post', [TransportationNocController::class, 'addTransportationBasicDetails'])->name('noc.transportation.basic.post');
         Route::post('noc-transportation-applicant-post', [TransportationNocController::class, 'addTransportationApplicantDetails'])->name('noc.transportation.applicant.post');
@@ -1187,22 +1114,15 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('noc-transportation-coordinator-post', [TransportationNocController::class, 'addTransportationCoordinatorDetails'])->name('noc.transportation.coordinator.post');
         Route::post('noc-transportation-project-post', [TransportationNocController::class, 'addTransportationProjectDetails'])->name('noc.transportation.project.post');
         Route::post('noc-transportation-attachments-post', [TransportationNocController::class, 'addTransportationAttachmentsDetails'])->name('noc.transportation.attachments.post');
-        
-        // Common AJAX Routes for Citizens
         Route::post('citizen/noc/checkNoc', [NocController::class, 'checkNoc'])->name('citizen.checkNoc');
         Route::post('/noc-pre.operational.post', [NocController::class, 'preOprationalPost'])->name('noc.pre.operational.post');
         Route::post('/noc-extension', [NocController::class, 'nocExtension'])->name('noc.extension.post');
         Route::post('/operational-noc', [NocController::class, 'nocOperational'])->name('noc.operational.post');
-        
-        // NOC Download and Preview
         Route::get('/download-noc/{id}', [NocController::class, 'downloadApplication'])->name('noc.download');
         Route::get('/preview-noc/{id}', [NocController::class,'previewNoc'])->name('citizen.preview.noc');
-        
-    }); // End of Citizen Middleware
+    });
     
-    // ==================== COMMON AJAX ROUTES (Any authenticated user) ====================
-    
-    // Common AJAX endpoints for dropdowns
+    // ==================== COMMON AJAX ROUTES ====================
     Route::post('getCategoryByProject', [CommonController::class, 'getCategoryByProject'])->name('getCategoryByProject');
     Route::post('getSubcategoryByCategory', [CommonController::class, 'getSubcategoryByCategory'])->name('getSubcategoryByCategory');
     Route::post('getTypeBySubcategory', [CommonController::class, 'getTypeBySubcategory'])->name('getTypeBySubcategory');

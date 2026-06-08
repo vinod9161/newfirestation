@@ -11,11 +11,37 @@ use Illuminate\Support\Facades\Cache;
 use App\Services\SmsService;
 use App\Services\TwilioService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    public function showLoginForm(){
-        return view('auth.login'); 
+    public function showLoginForm()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            session()->forget(['otp_user_id', 'otp', 'otp_required']);            
+            switch ($user->type) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 5:
+                    return redirect()->route('admin.dashboard')->with('info', 'You are already logged in.');
+                case 4:
+                    return redirect()->route('citizen.account')->with('info', 'You are already logged in.');
+                case 6:
+                    return redirect()->route('agency.account')->with('info', 'You are already logged in.');
+                case 7:
+                    return redirect()->route('auditor.account')->with('info', 'You are already logged in.');
+                default:
+                    Auth::logout();
+                    session()->flush();
+                    return view('auth.login');
+            }
+        }        
+        session()->forget(['otp_user_id', 'otp', 'otp_required']);        
+        return view('auth.login');
     }
 
     // public function login(Request $request)
@@ -231,11 +257,11 @@ class LoginController extends Controller
     // }
 
 
-
     public function login(Request $request)
     {
-        $request->session()->regenerate(true);
-
+        // Clear any existing session
+        session()->forget(['otp_user_id', 'otp', 'otp_required']);
+        
         $validator = Validator::make($request->all(), [
             'username' => 'required|regex:/^[A-Za-z0-9@. ]+$/',
             'password' => 'required',
@@ -248,11 +274,8 @@ class LoginController extends Controller
                 ->withInput();
         }
 
-        // ============ FINAL CAPTCHA VALIDATION ============
-        // This uses validate() which CLEARS the CAPTCHA after successful validation
-        $enteredCaptcha = $request->captcha;
-        
-        if (!CaptchaHelper::validate($enteredCaptcha)) {
+        // CAPTCHA Validation
+        if (!CaptchaHelper::validate($request->captcha)) {
             return redirect()->route('login')
                 ->with('error', 'Invalid CAPTCHA. Please try again.')
                 ->withInput($request->except('captcha'));
@@ -261,40 +284,51 @@ class LoginController extends Controller
         // Rate limiting
         $rateLimitKey = 'login_attempts_' . $request->ip();
         $attempts = Cache::get($rateLimitKey, 0);
-        
+
         if ($attempts >= 5) {
             return redirect()->route('login')
                 ->with('error', 'Too many login attempts. Please try again after 15 minutes.');
         }
 
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $user = \App\Models\User::where($fieldType, $request->username)->first();
 
-        if (Auth::attempt([$fieldType => $request->username, 'password' => $request->password])) {
-            $user = Auth::user();
-            
-            Cache::forget($rateLimitKey);
-            
-            // Generate OTP
-            // $otp = rand(100000, 999999);
-            $otp = '123456';
-            
-            session(['otp' => $otp]);
-            session(['otp_user_id' => $user->id]);
-
-            // Store in database as backup
-            \App\Models\User::where('id', $user->id)->update([
-                'otp' => $otp,
-                'updated_at' => now(),  // For expiry tracking
-            ]);
-
-            return redirect()->route('loginotp')->with('message', 'OTP sent to your registered contact.');
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            Cache::put($rateLimitKey, $attempts + 1, now()->addMinutes(15));
+            return redirect()->route('login')
+                ->with('error', 'Username and Password are incorrect.')
+                ->withInput($request->except('password', 'captcha'));
         }
-        
-        Cache::put($rateLimitKey, $attempts + 1, now()->addMinutes(15));
 
-        return redirect()->route('login')
-            ->with('error', 'Username and Password are incorrect.')
-            ->withInput($request->except('password', 'captcha'));
+        Cache::forget($rateLimitKey);
+
+        // Generate OTP
+        // $otp = rand(100000, 999999);
+        $otp = '123456'; // testing only
+
+        // ============ FIX: Use string values for enum columns ============
+        $updated = \Illuminate\Support\Facades\DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'otp' => $otp,
+                'is_verify' => '0',  // ← Use string '0' not integer 0
+            ]);
+        
+        \Log::info('OTP Update result: ' . ($updated ? 'SUCCESS' : 'FAILED'));
+        // ================================================================
+
+        // Store session data
+        session([
+            'otp_user_id' => $user->id,
+            'otp' => $otp,
+            'otp_required' => true
+        ]);
+
+        \Log::info('Login successful - User: ' . $user->email . ', ID: ' . $user->id . ', Type: ' . $user->type);
+
+        return redirect()
+            ->route('loginotp')
+            ->with('message', 'OTP sent to your registered contact.');
     }
 
     public function verifyOtp(Request $request)
@@ -303,70 +337,83 @@ class LoginController extends Controller
             'otp_combined' => 'required|digits:6',
         ]);
 
-        $otp = $request->input('otp_combined');
         $userId = session('otp_user_id');
-        // echo $userId; die;
 
-        // if (!$userId) {
-        //     return redirect()->route('login')->with('error', 'Session expired. Please login again.');
-        // }
-
-
-        $ip = $request->ip();
-        $attemptKey = 'otp_attempts_' . $userId . '_' . $ip;
-        $attempts = \Illuminate\Support\Facades\Cache::get($attemptKey, 0);        
-        if ($attempts >= 5) {
-            session()->forget('otp_user_id');
+        if (!$userId) {
             return redirect()->route('login')
-                ->with('error', 'Too many failed attempts. Please login again after 15 minutes.');
+                ->with('error', 'Session expired. Please login again.');
         }
 
         $user = \App\Models\User::find($userId);
 
         if (!$user) {
-            return redirect()->back()->with('error', 'User not found.');
-        }
-
-
-        // if ($user->updated_at && now()->diffInMinutes($user->updated_at) > 5) {
-        //     session()->forget('otp_user_id');
-        //     return redirect()->route('login')
-        //         ->with('error', 'OTP expired. Please login again.');
-        // }
-
-        if ($user->otp == $otp) {
-            \App\Models\User::where('id', $user->id)->update([    
-                'is_verify' => 1,
-                'otp' => null,  // Clear OTP after use
-            ]);
-            
-            \Illuminate\Support\Facades\Cache::forget($attemptKey);            
             session()->forget('otp_user_id');
-            
-            session()->regenerate();
-            Auth::login($user);
-
-            // Redirect based on user type
-            switch ($user->type) {
-                case '0': // Admin
-                    return redirect()->route('admin.dashboard');
-                case '1':
-                case '2':
-                case '3':
-                case '5': // Admin Roles
-                    return redirect()->route('admin.dashboard');
-                case '4': // Citizen
-                    return redirect()->route('citizen.account');
-                case '6': // Agency
-                    return redirect()->route('agency.account');
-                case '7': // Auditor
-                    return redirect()->route('auditor.account');
-                default:
-                    return redirect()->route('login')->with('error', 'Invalid user type.');
-            }
+            return redirect()->route('login')
+                ->with('error', 'User not found.');
         }
 
-        return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+        $otp = $request->otp_combined;
+
+        $attemptKey = 'otp_attempts_' . $userId . '_' . $request->ip();
+        $attempts = Cache::get($attemptKey, 0);
+
+        if ($attempts >= 5) {
+            session()->forget('otp_user_id');
+            return redirect()->route('login')
+                ->with('error', 'Too many failed OTP attempts. Please login again.');
+        }
+
+        \Log::info("Verifying OTP for user_id: {$userId}, entered OTP: {$otp}, expected OTP: {$user->otp}, attempts: {$attempts}");
+
+        if ($user->otp != $otp) {
+            Cache::put($attemptKey, $attempts + 1, now()->addMinutes(15));
+            return redirect()->back()
+                ->with('error', 'Invalid OTP. Please try again.');
+        }
+
+        // OTP Valid
+        Cache::forget($attemptKey);
+
+        // ============ FIX: Use string '1' for enum ============
+        $user->update([
+            'otp' => null,
+            'is_verify' => '1',  // ← Use string '1' not integer 1
+        ]);
+        // =====================================================
+
+        session()->forget('otp_user_id');
+
+        Auth::login($user);
+
+        $request->session()->regenerate();
+
+        switch ($user->type) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 5:
+                return redirect()
+                    ->route('admin.dashboard')
+                    ->with('success', 'Login successful!');
+            case 4:
+                return redirect()
+                    ->route('citizen.account')
+                    ->with('success', 'Login successful!');
+            case 6:
+                return redirect()
+                    ->route('agency.account')
+                    ->with('success', 'Login successful!');
+            case 7:
+                return redirect()
+                    ->route('auditor.account')
+                    ->with('success', 'Login successful!');
+            default:
+                Auth::logout();
+                return redirect()
+                    ->route('login')
+                    ->with('error', 'Invalid user type.');
+        }
     }
 
 
@@ -433,6 +480,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        session()->flush();    
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
