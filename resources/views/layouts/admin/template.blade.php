@@ -88,6 +88,27 @@
         .card {
             overflow: visible;
         }
+
+        .table-responsive::-webkit-scrollbar,
+        .dataTables_wrapper::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track,
+        .dataTables_wrapper::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb,
+        .dataTables_wrapper::-webkit-scrollbar-thumb {
+            background: #666 !important;
+            border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover,
+        .dataTables_wrapper::-webkit-scrollbar-thumb:hover {
+            background: #444 !important;
+        }
     </style>
 </head>
 <body>

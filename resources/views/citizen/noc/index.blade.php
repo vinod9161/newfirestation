@@ -30,120 +30,95 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="advanced-search br-3">
             <div class="row align-items-center">
-                <form method="GET" action="">
-                    <div class="responsive-background">
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <div class="advanced-search br-3">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label>Type</label>
-                                        <input type="text" class="form-control" name="type" value="{{ request('type') }}">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>Building Name</label>
-                                        <input type="text" class="form-control" name="building_name" value="{{ request('building_name') }}">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>District</label>
-                                        <select class="form-control" name="district">
-                                            <option value=""> Select District </option>
-                                            @foreach($district as $dist)
+                <form method="GET" action="{{ url()->current() }}" id="filterForm">
 
-                                                <option
-                                                    value="{{ $dist->id }}"
-                                                    {{ request('district')==$dist->id ? 'selected' : '' }}
-                                                >
-                                                    {{ $dist->name }}
-                                                </option>
+                    <div class="row">
 
-                                            @endforeach
+                        <div class="col-md-3">
+                            <label>Application For</label>
+                            <select class="form-control" name="application_for">
 
-                                        </select>
+                                <option value="">
+                                    Select NOC Type
+                                </option>
 
-                                    </div>
+                                <option value="building" {{ request('application_for')=='building' ? 'selected' : '' }}>
+                                    NOC For Building
+                                </option>
 
-                                    <div class="col-md-3">
+                                <option value="cinema_hall_multiplex" {{ request('application_for')=='cinema_hall_multiplex' ? 'selected' : '' }}>
+                                    Cinema Hall / Multiplex
+                                </option>
 
-                                        <label>Status</label>
+                                <option value="fire_arms_repair" {{ request('application_for')=='fire_arms_repair' ? 'selected' : '' }}>
+                                    Fire Arms Repair
+                                </option>
 
-                                        <select
-                                            class="form-control"
-                                            name="status"
-                                        >
+                                <option value="fire_arms_selling" {{ request('application_for')=='fire_arms_selling' ? 'selected' : '' }}>
+                                    Fire Arms Selling
+                                </option>
 
-                                            <option value="">
-                                                Select Status
-                                            </option>
+                                <option value="gas_warehouse" {{ request('application_for')=='gas_warehouse' ? 'selected' : '' }}>
+                                    Gas Warehouse
+                                </option>
 
-                                            <option
-                                                value="pending"
-                                                {{ request('status')=='pending' ? 'selected' : '' }}
-                                            >
-                                                Pending
-                                            </option>
+                            </select>
+                        </div>
 
-                                            <option
-                                                value="approved"
-                                                {{ request('status')=='approved' ? 'selected' : '' }}
-                                            >
-                                                Approved
-                                            </option>
+                        <div class="col-md-3">
+                            <label>Building Name</label>
+                            <input type="text"
+                                class="form-control"
+                                name="building_name"
+                                value="{{ request('building_name') }}">
+                        </div>
 
-                                            <option
-                                                value="reverted"
-                                                {{ request('status')=='reverted' ? 'selected' : '' }}
-                                            >
-                                                Reverted
-                                            </option>
+                        <div class="col-md-3">
+                            <label>Status</label>
 
-                                        </select>
+                            <select class="form-control"
+                                    name="status">
 
-                                    </div>
+                                <option value="">
+                                    Select Status
+                                </option>
 
-                                    <div class="col-md-3 mt-3">
+                                <option value="pending">Pending</option>
+                                <option value="processed">Processed</option>
+                                <option value="approved">Approved</option>
+                                <option value="reverted">Reverted</option>
 
-                                        <label>Payment Status</label>
+                            </select>
+                        </div>
 
-                                        <select
-                                            class="form-control"
-                                            name="payment_status"
-                                        >
+                        <div class="col-md-3">
+                            <label>Payment Status</label>
 
-                                            <option value="">
-                                                Select Payment Status
-                                            </option>
+                            <select class="form-control"
+                                    name="payment_status">
 
-                                            <option
-                                                value="pending"
-                                                {{ request('payment_status')=='pending' ? 'selected' : '' }}
-                                            >
-                                                Pending
-                                            </option>
+                                <option value="">
+                                    Select Payment Status
+                                </option>
 
-                                            <option
-                                                value="paid"
-                                                {{ request('payment_status')=='paid' ? 'selected' : '' }}
-                                            >
-                                                Paid
-                                            </option>
+                                <option value="pending">Pending</option>
+                                <option value="paid">Paid</option>
+                                <option value="failed">Failed</option>
 
-                                            <option
-                                                value="failed"
-                                                {{ request('payment_status')=='failed' ? 'selected' : '' }}
-                                            >
-                                                Failed
-                                            </option>
+                            </select>
+                        </div>
 
-                                        </select>
+                        <div class="col-md-12 mt-3 text-end">
 
-                                    </div>
-                                    
-                                    <div class="col-md-3" style="margin-top: 45px;">
-                                        <button type="button" class="btn btn-primary" id="applyFilterBtn"> Apply </button>
-                                        <a href="{{ url()->current() }}" class="btn btn-secondary"> Reset </a>
-                                    </div>
-                                </div>
-                            </div>
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Apply
+                            </button>
+
+                            <a href="{{ url()->current() }}"
+                            class="btn btn-secondary">
+                                Reset
+                            </a>
 
                         </div>
 
@@ -350,45 +325,25 @@
         }
     });
 
-    $(document).on('click','#applyFilterBtn',function(){
-        let params=new URLSearchParams();
 
-        let type=$('[name="type"]').val();
-        let building_name=$('[name="building_name"]').val();
-        let district=$('[name="district"]').val();
-        let status=$('[name="status"]').val();
-        let payment_status=$('[name="payment_status"]').val();
+    $('#filterForm').on('submit', function () {
 
-        if(type) params.append('type',type);
+        $(this).find(':input').each(function () {
 
-        if(building_name) params.append(
-            'building_name',
-            building_name
-        );
+            let type = $(this).attr('type');
 
-        if(district) params.append(
-            'district',
-            district
-        );
-
-        if(status) params.append(
-            'status',
-            status
-        );
-
-        if(payment_status) params.append(
-            'payment_status',
-            payment_status
-        );
-
-        let url="{{ url()->current() }}";
-
-        if(params.toString()){
-            url+='?'+params.toString();
-        }
-
-        window.location.href=url;
+            if (
+                !$(this).val() &&
+                type !== 'submit' &&
+                type !== 'button' &&
+                type !== 'hidden'
+            ) {
+                $(this).prop('disabled', true);
+            }
 
         });
+
+    });
+
 </script>
 @stop

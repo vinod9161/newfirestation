@@ -88,30 +88,23 @@ class MyMiddleware
             }
         }
         
-        // ============ CFO ROUTES (type = 0 or 2) ============
         if ($request->is('cfo/*') || str_contains($path, 'cfo')) {
-            if (!in_array($userType, [0, 2])) {
+            if (!in_array($userType, [0, 1, 2])) {
                 abort(403, 'Unauthorized - CFO access required. Your role: ' . $this->getRoleName($userType));
             }
         }
         
-        // ============ FSO ROUTES (type = 0, 2, or 3) ============
         if ($request->is('fso/*') || str_contains($path, 'fso')) {
-            if (!in_array($userType, [0, 2, 3])) {
+            if (!in_array($userType, [0, 1, 2, 3])) {
                 abort(403, 'Unauthorized - FSO access required. Your role: ' . $this->getRoleName($userType));
             }
         }
         
-        // ============ DEPUTY DIRECTOR ROUTES (type = 0 or 1) ============
         if ($request->is('deputy/*') || str_contains($path, 'deputy')) {
             if (!in_array($userType, [0, 1])) {
                 abort(403, 'Unauthorized - Deputy Director access required. Your role: ' . $this->getRoleName($userType));
             }
         }
-        
-        // ============ DASHBOARD ACCESS (All authenticated users) ============
-        // home-dashboard and home-dashboard-two are accessible to all logged-in users
-        // No restriction needed - your controller handles the data filtering based on role
         
         return $next($request);
     }

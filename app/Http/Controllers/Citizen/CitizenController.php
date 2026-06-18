@@ -91,92 +91,65 @@ class CitizenController extends Controller
     
     public function indexNoc(Request $request)
     {
-        $user_id=Auth::user()->id;
+        $user_id = Auth::user()->id;
 
-        $district=$this->commonModel->getData('districts');
+        $district = $this->commonModel->getData('districts');
+        $projects = $this->commonModel->getData('projects');
+        $categories = $this->commonModel->getData('categories');
+        $sub_categories = $this->commonModel->getData('sub_categories');
 
-        $projects=$this->commonModel->getData('projects');
+        $query = Application::where('user_id', $user_id);
 
-        $categories=$this->commonModel->getData('categories');
-
-        $sub_categories=$this->commonModel->getData('sub_categories');
-
-        $query=Application::where(
-            'user_id',
-            $user_id
-        );
-
-        if($request->application_for){
-
+        if ($request->filled('application_for'))
+        {
             $query->where(
                 'noc_type',
                 $request->application_for
             );
         }
 
-        if($request->type){
-
-            $query->where(
-                'application_type',
-                $request->type
-            );
-        }
-
-        if($request->building_name){
-
+        if ($request->filled('building_name'))
+        {
             $query->where(
                 'building_name',
                 'LIKE',
-                '%'.$request->building_name.'%'
+                '%' . $request->building_name . '%'
             );
         }
 
-        if($request->district){
-
-            $query->where(
-                'district_id',
-                $request->district
-            );
-        }
-
-        if($request->status){
-
+        if ($request->filled('status'))
+        {
             $query->where(
                 'status',
                 $request->status
             );
         }
 
-        if($request->payment_status){
-
+        if ($request->filled('payment_status'))
+        {
             $query->where(
                 'payment_status',
                 $request->payment_status
             );
         }
 
-        $application=$query
+        $application = $query
             ->latest()
             ->get();
 
-        $count=0;
+        $count = 0;
 
-        foreach ($application as $app){
-
-            if(
-                $app->status==='pending' ||
-                $app->status==='processed'
-            ){
+        foreach ($application as $app)
+        {
+            if (
+                $app->status == 'pending'
+                || $app->status == 'processed'
+            ) {
                 $count++;
             }
         }
 
-        $countStatus='N';
-
-        if($count>0){
-
-            $countStatus='Y';
-        }
+        $countStatus = $count > 0 ? 'Y' : 'N';
 
         return view(
             'citizen.noc.index',
@@ -190,6 +163,7 @@ class CitizenController extends Controller
             )
         );
     }
+
     public function indexTemporaryNoc()
     {
         return view('citizen.temporary.index_temporary_noc');

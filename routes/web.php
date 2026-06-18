@@ -199,6 +199,15 @@ Route::middleware(['auth.check'])->group(function () {
         return redirect('/');
     })->name('logout');
     Route::middleware(['staff'])->group(function () {
+
+        // NOC Assignment Routes
+        Route::post('admin/assignNocToFSO', [NocController::class, 'assignedNocToFSO'])->name('admin.assignedNocToFSO');
+        Route::post('admin/assignedNocToCFO', [NocController::class, 'assignedNocToCFO'])->name('admin.assignedNocToCFO');
+        
+        // Deputy Director to CFO assignments
+        Route::post('/dd-pre-approved', [App\Http\Controllers\Department\DepartmentController::class, 'applicationPreApprovedPost'])->name('dd.pre.approved');
+        Route::post('/dd-assigned-to-cfo', [App\Http\Controllers\Department\DepartmentController::class, 'applicationAssignedToCFO'])->name('dd.assignedTo.cfo');
+        
         // Profile Routes
         Route::get('/account', [App\Http\Controllers\Admin\AdminController::class,'admin_profile'])->name('admin.home');
         Route::get('admin_profile', [App\Http\Controllers\Admin\AdminController::class,'admin_profile'])->name('admin.profile');
@@ -879,10 +888,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::get('admin/welfareamenityedit/{id}', [CommonController::class, 'welfareamenityedit'])->name('admin.welfareamenity.edit');
         Route::post('admin/welfareamenityupdate', [CommonController::class, 'welfareamenityupdate'])->name('admin.welfareamenity.update');
         
-        // NOC Assignment Routes
-        Route::post('admin/assignNocToFSO', [NocController::class, 'assignedNocToFSO'])->name('admin.assignedNocToFSO');
-        Route::post('admin/assignedNocToCFO', [NocController::class, 'assignedNocToCFO'])->name('admin.assignedNocToCFO');
-        
         // Leadership Section
         Route::get('admin/leadership-section/add', [LeadershipSectionController::class,'addLeadershipSectionForm'])->name('admin.addLeadershipSection');
         Route::post('admin/leadership-section/save', [LeadershipSectionController::class,'saveLeadershipSection'])->name('admin.saveLeadershipSection');
@@ -904,9 +909,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::post('/cfo-revert', [App\Http\Controllers\Department\DepartmentController::class, 'revertNocPost'])->name('cfo.revert');
         Route::post('/cfo-remark', [App\Http\Controllers\Department\DepartmentController::class, 'remarkByCFOPost'])->name('cfo.remark');
         
-        // Deputy Director to CFO assignments
-        Route::post('/dd-pre-approved', [App\Http\Controllers\Department\DepartmentController::class, 'applicationPreApprovedPost'])->name('dd.pre.approved');
-        Route::post('/dd-assigned-to-cfo', [App\Http\Controllers\Department\DepartmentController::class, 'applicationAssignedToCFO'])->name('dd.assignedTo.cfo');
         
     }); // End of CFO Middleware
     
