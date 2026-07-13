@@ -4,13 +4,134 @@
     <div>
         <h5 class="main-content-title fs-24 mb-0">Service Bills</h5>
     </div>
-    <div class="d-flex gap-2">
-        <!-- <a href="{{ route('service-bills.export') }}" class="btn btn-success">
-            <i class="fe fe-download"></i> Export CSV
-        </a> -->
+    <div class="d-flex app-header-btn">
+        <div class="me-2">
+            <a href="javascript:void(0);" class="btn ripple btn-wave  btn-secondary navresponsive-toggler mb-0"
+                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fe fe-filter me-1"></i> Filter <i class="fa fa-caret-down ms-1 fs-10"></i>
+            </a>
+        </div>
+        <div>
+        </div>
     </div>
 </div>
 
+<div class="responsive-background mb-3">
+
+    <div class="collapse navbar-collapse"
+         id="navbarSupportedContent">
+
+        <form method="GET"
+              action="{{ url()->current() }}"
+              id="filterForm"
+              class="advanced-search br-3 p-3">
+
+            <div class="row">
+
+                <div class="col-md-2 mb-3">
+                    <label>Bill No</label>
+                    <input type="text"
+                           class="form-control"
+                           name="bill_no"
+                           value="{{ request('bill_no') }}">
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>Service Type</label>
+                    <select class="form-control"
+                            name="service_type">
+
+                        <option value="">Select</option>
+
+                        <option value="standby_duty"
+                            {{ request('service_type')=='standby_duty'?'selected':'' }}>
+                            Standby Duty
+                        </option>
+
+                        <option value="fire_report"
+                            {{ request('service_type')=='fire_report'?'selected':'' }}>
+                            Fire Report
+                        </option>
+
+                        <option value="rescue_report"
+                            {{ request('service_type')=='rescue_report'?'selected':'' }}>
+                            Rescue Report
+                        </option>
+
+                        <option value="relief_report"
+                            {{ request('service_type')=='relief_report'?'selected':'' }}>
+                            Relief Report
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>Request ID</label>
+                    <input type="text"
+                           class="form-control"
+                           name="request_id"
+                           value="{{ request('request_id') }}">
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>Payment Status</label>
+                    <select class="form-control"
+                            name="payment_status">
+
+                        <option value="">Select</option>
+
+                        <option value="pending"
+                            {{ request('payment_status')=='pending'?'selected':'' }}>
+                            Pending
+                        </option>
+
+                        <option value="paid"
+                            {{ request('payment_status')=='paid'?'selected':'' }}>
+                            Paid
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>From Date</label>
+                    <input type="date"
+                           class="form-control"
+                           name="from_date"
+                           value="{{ request('from_date') }}">
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label>To Date</label>
+                    <input type="date"
+                           class="form-control"
+                           name="to_date"
+                           value="{{ request('to_date') }}">
+                </div>
+
+            </div>
+
+            <div class="text-end">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Apply
+                </button>
+
+                <a href="{{ url()->current() }}"
+                   class="btn btn-secondary">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 <div class="card custom-card">
     <div class="card-body">
         @if(session('success'))
@@ -75,4 +196,24 @@
         </div>
     </div>
 </div>
+<script>
+    $('#filterForm').on('submit', function () {
+
+        $(this).find(':input').each(function () {
+
+            let type = $(this).attr('type');
+
+            if (
+                !$(this).val() &&
+                type !== 'submit' &&
+                type !== 'button' &&
+                type !== 'hidden'
+            ) {
+                $(this).prop('disabled', true);
+            }
+
+        });
+
+    });
+</script>
 @endsection

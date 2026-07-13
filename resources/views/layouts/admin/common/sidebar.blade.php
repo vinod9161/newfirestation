@@ -164,24 +164,25 @@
                 </li>
                 <!-- End Equipment -->
 
-                @if(Auth::user()->type == 3)
-
-                <li class="slide">
-
-                    <a href="{{ route('service-bills.index') }}"
-                        class="side-menu__item">
-
-                        <i class="bx bx-file side-menu__icon"></i>
-
-                        <span class="side-menu__label">
-                            Service Bills
-                        </span>
-
+                <li class="slide has-sub">
+                    <a href="javascript:void(0);" class="side-menu__item">
+                        <i class="fe fe-codepen side-menu__icon"></i>
+                        <span class="side-menu__label"> Service Bills </span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
 
+                    <ul class="slide-menu child1">
+                        <li class="slide">
+                            <a href="{{ route('service-bills.index') }}" class="side-menu__item" style="padding-left: 35px;">View All Service Bills</a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('admin.standby') }}" class="side-menu__item" style="padding-left: 35px;">Generate Standby Duty Bill</a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('pumping-bills.create') }}" class="side-menu__item" style="padding-left: 35px;">Generate Pumping Bill</a>
+                        </li>
+                    </ul>
                 </li>
-
-                @endif
 
                 <!-- Start::Fire NOC -->
                 <li class="slide has-sub">

@@ -435,3 +435,9 @@ ADD bill_generated TINYINT(1) DEFAULT 0,
 ADD payment_status ENUM('pending','paid') DEFAULT 'pending',
 ADD service_bill_id BIGINT UNSIGNED NULL,
 ADD paid_at DATETIME NULL;
+
+19 June 2026
+ALTER TABLE applications ADD UNIQUE INDEX unique_application_no (application_no);
+
+ALTER TABLE `service_bill_personnels` 
+ADD COLUMN `no_of_days` INT(11) NOT NULL DEFAULT 1 AFTER `no_of_person`;

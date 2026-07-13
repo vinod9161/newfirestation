@@ -284,6 +284,35 @@
                         </div>
                     </div>
 
+                    <!-- Details of Equipment used -->
+                    <div class="divborder">
+                        <div class="col-md-12 alert alert-dark text-center card-title">Details of Equipment Used</div>
+                        <div class="row" id="equipmentDynamicFields" style="padding-left: 10px;padding-right: 10px;">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Equipment <sup class="text-danger">*</sup></label>
+                                    <select class="form-control js-example-basic-single equipment_select" name="equipment_id[]">
+                                        <option value="">-- Select Equipment --</option>
+                                        @foreach($equipments as $equip)
+                                            <option value="{{ $equip->id }}">{{ $equip->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Usage (Hours) <sup class="text-danger">*</sup></label>
+                                    <input class="form-control" name="equipment_usage[]" type="number" step="0.01" placeholder="Hours used">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <a class="btn btn-primary add_equipment_field" id="add_equipment_field" style="margin-top:27px;"> + Add More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="divborder">
                         <div class="col-md-12 alert alert-dark text-center card-title">Details of Fire Service Personals on Incident Place घटनास्थल पर फायर सर्विस कार्मिकों का विवरण</div>
@@ -583,8 +612,51 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('/public/admin/js/select2.js') }}"></script>
- <script>  
-     $(document).ready(function(){  
+<script>
+    // Equipment dynamic rows
+    $(document).ready(function(){
+        var eqIndex = 1;
+        $('#add_equipment_field').click(function(e){
+            e.preventDefault();
+            eqIndex++;
+            $('#equipmentDynamicFields').append(`
+                <div class="row" id="eqrow${eqIndex}" style="padding-left: 10px; padding-right: 10px;">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label>Equipment <sup class="text-danger">*</sup></label>
+                            <select class="form-control js-example-basic-single equipment_select" name="equipment_id[]">
+                                <option value="">-- Select Equipment --</option>
+                                @foreach($equipments as $equip)
+                                    <option value="{{ $equip->id }}">{{ $equip->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label>Usage (Hours) <sup class="text-danger">*</sup></label>
+                            <input class="form-control" name="equipment_usage[]" type="number" step="0.01" placeholder="Hours used">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <a class="btn btn-danger remove_equipment_row" data-row="eqrow${eqIndex}" style="margin-top:27px;"> - Remove</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+            $('.js-example-basic-single').select2();
+        });
+
+        $(document).on('click', '.remove_equipment_row', function(e){
+            e.preventDefault();
+            var rowId = $(this).data('row');
+            $('#' + rowId).remove();
+        });
+    });
+
+
+    $(document).ready(function(){  
         
         var i = 1; 
 

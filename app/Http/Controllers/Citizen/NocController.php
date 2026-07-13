@@ -8,12 +8,15 @@ use App\Models\Common\CommonModel;
 use App\Models\Common\FilterModel;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Models\{Application, User, BuildingMap, FireEscapePlan, ChemicalUse, UploadSop, SafetyOfficer, DoAndDonts, Declaration, Issued, Project, District, Category};
-use Auth;
+use Illuminate\Support\Facades\Auth; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 
 class NocController extends Controller
 {
@@ -26,6 +29,7 @@ class NocController extends Controller
     public function indexAdminNoc(Request $request)
     {
         $status = $request->status;
+        $data = [];
         if($status == 'all')
         {
             if (Auth::user()->type == 0)
@@ -279,7 +283,7 @@ class NocController extends Controller
         return view('admin.Noc.list_noc', ['applications' => $application,'projects' => $projects,'categories' => $categories, 'noc_type' => $noc_type]);
     }
 
-    public function applyTempNOC($noc_type)
+    public function applyTempNOC($noc_type='')
     {
         $user = Auth::user();
         $districts = $this->commonModel->getData('districts');
@@ -435,11 +439,11 @@ class NocController extends Controller
     }
     public function applyOperationalNocDetail($id, Request $request)
     {
-        return \Redirect::route('citizen.viewNocDetail', $id)->with('failed', 'Please fill Pre Operational Application Detail...!!!');
+        return Redirect::route('citizen.viewNocDetail', $id)->with('failed', 'Please fill Pre Operational Application Detail...!!!');
     }
     public function applyRenewalNocDetail($id, Request $request)
     {
-        return \Redirect::route('citizen.viewNocDetail', $id)->with('failed', 'Please fill Renewal Application Detail...!!!');
+        return Redirect::route('citizen.viewNocDetail', $id)->with('failed', 'Please fill Renewal Application Detail...!!!');
     }
     public function checkNoc(Request $request)
     {
@@ -476,7 +480,7 @@ class NocController extends Controller
                 $projects           = Project::with('category')->get();
 
 
-               // return \Redirect::route('citizen.viewNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Operational Application Detail...!!!');
+               // return Redirect::route('citizen.viewNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Operational Application Detail...!!!');
 
                return view('citizen.noc.pre_operational_noc_step_one', [
                     'district' => District::with('tehsil', 'block.panchayat')->take(13)->get(),
@@ -484,7 +488,7 @@ class NocController extends Controller
                     'projects' => Project::with('category')->get(),
                     'application_no' => $data['application_no'],
                     'noc_type' => $data['noc_type']
-                ])->with('message', 'Please fill basic application detail')->with('noc', '')->with('pre_perational', '0')->with('application', $application)->with('noc_step', $data['noc_step']);
+                ])->with('message', 'Please fill basic application detail')->with('noc', '')->with('pre_perational', '0')->with('application', $applicationDetail)->with('noc_step', $data['noc_step']);
             } 
             else {
 
@@ -540,7 +544,7 @@ class NocController extends Controller
                 // $users = User::where('type', '=', '3')->get();
                 // $applicationDetail  = Application::with('category', 'subcategory', 'type', 'district', 'assigned', 'block', 'panchayat', 'tehsil')->where('id', '=', $app['application_id'])->first();
 
-                // return \Redirect::route('citizen.viewOperationalNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Renewal Application Detail...!!!');
+                // return Redirect::route('citizen.viewOperationalNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Renewal Application Detail...!!!');
 
                 $users = User::where('type', '=', '3')->get();
                 $applicationDetail  = Application::with('category', 'subcategory', 'type', 'district', 'assigned', 'block', 'panchayat', 'tehsil')->where('application_no', '=', $data['application_no'])->first();
@@ -551,7 +555,7 @@ class NocController extends Controller
                 $projects           = Project::with('category')->get();
 
 
-               // return \Redirect::route('citizen.viewNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Operational Application Detail...!!!');
+               // return Redirect::route('citizen.viewNocDetail', $applicationDetail->id)->with('message', 'Please fill Pre Operational Application Detail...!!!');
 
                return view('citizen.noc.renewal_noc_step_one', [
                     'district' => District::with('tehsil', 'block.panchayat')->take(13)->get(),
@@ -559,7 +563,7 @@ class NocController extends Controller
                     'projects' => Project::with('category')->get(),
                     'application_no' => $data['application_no'],
                     'noc_type' => $data['noc_type']
-                ])->with('message', 'Please fill basic application detail')->with('noc', '')->with('pre_perational', '0')->with('application', $application)->with('noc_step', $data['noc_step']);
+                ])->with('message', 'Please fill basic application detail')->with('noc', '')->with('pre_perational', '0')->with('application', $applicationDetail)->with('noc_step', $data['noc_step']);
             }
             else {
 
@@ -598,212 +602,145 @@ class NocController extends Controller
             }
         }
     }
+    
     public function addNocStepFirstPost(Request $request)
     {
         $filterModel = new FilterModel;
         $user = Auth::user();
-        $data = $request->all();
+
+        // ---------- Build occupancy data (original logic) ----------
         $occupancy_data = [];
-        if (isset($request->no_of_rooms) && $request->no_of_rooms != '')
-        {
+        if ($request->filled('no_of_rooms')) {
             $occupancy_data['no_of_rooms'] = $request->no_of_rooms;
         }
-        if (isset($request->no_of_beds) && $request->no_of_beds != '')
-        {
+        if ($request->filled('no_of_beds')) {
             $occupancy_data['no_of_beds'] = $request->no_of_beds;
         }
-        if (isset($request->for_educational) && $request->for_educational != '')
-        {
+        if ($request->filled('for_educational')) {
             $occupancy_data['for_educational'] = $request->for_educational;
         }
-        if (isset($request->seating_capacity) && $request->seating_capacity != '')
-        {
+        if ($request->filled('seating_capacity')) {
             $occupancy_data['seating_capacity'] = $request->seating_capacity;
         }
-        if (isset($request->no_of_employee) && $request->no_of_employee != '')
-        {
+        if ($request->filled('no_of_employee')) {
             $occupancy_data['no_of_employee'] = $request->no_of_employee;
         }
-        if (isset($request->is_hazardous_material) && $request->is_hazardous_material != '')
-        {
+        if ($request->filled('is_hazardous_material')) {
             $occupancy_data['is_hazardous_material'] = $request->is_hazardous_material;
         }
-        if (isset($request->hazardous_material) && $request->hazardous_material != '')
-        {
+        if ($request->filled('hazardous_material')) {
             $occupancy_data['hazardous_material'] = $request->hazardous_material;
         }
-        $occupancy_data = [];
-
-        // Save dynamic occupancy value (category-based)
         if ($request->filled('occupancy_value')) {
             $occupancy_data['value'] = $request->occupancy_value;
             $occupancy_data['category_id'] = $request->category_id;
             $occupancy_data['subcategory_id'] = $request->subcategory_id;
         }
-        // echo "<pre>";
-        // print_r($occupancy_data);
-        // exit('pp');
+        // DO NOT reset $occupancy_data
 
-        $app =  '';
-        if ($request->application_no != '')
-        {
-            $application = $this->commonModel->getDataByOneCondition('applications', array('application_no' => $request->application_no));
-            $occupancy_detail = json_encode($occupancy_data);
-            $data = [
-                'application_type' => isset($request->application_type) ? $request->application_type : "",
-                'building_name' => isset($request->building_name) ? $request->building_name : "",
-                'building_ownership' => isset($request->building_ownership) ? $request->building_ownership : "",
-                'gst_pan_tan' => isset($request->gst_pan_tan) ? $request->gst_pan_tan : "",
-                'gst_pan_tan_no' => isset($request->gst_pan_tan_no) ? $request->gst_pan_tan_no : "",
-                'project_type' => isset($request->project_type) ? $request->project_type : "",
-                'category_id' => isset($request->category_id) ? $request->category_id : "",
-                'subcategory_id' => isset($request->subcategory_id) ? $request->subcategory_id : "",
-                'type_id' => isset($request->type_id) ? $request->type_id : 0,
-                'project_status' => isset($request->project_status) ? $request->project_status : "",
-                'google_address' => isset($request->google_address) ? $request->google_address : "",
-                'latitude' => isset($request->latitude) ? $request->latitude : "",
-                'longitude' => isset($request->longitude) ? $request->longitude : "",
-                'email' => isset($request->email) ? $request->email : "",
-                'mobile_no' => isset($request->mobile_no) ? $request->mobile_no : "",
-                'office_telephone' => isset($request->office_telephone) ? $request->office_telephone : "",
-                'district_id' => isset($request->district_id) ? $request->district_id : "",
-                'rural_urban' => isset($request->rural_urban) ? $request->rural_urban : "",
-                'tehsil_id' => isset($request->tehsil_id) ? $request->tehsil_id : 0,
-                'plot_khasra_khatauni' => isset($request->plot_khasra_khatauni) ? $request->plot_khasra_khatauni : "",
-                'plot_khasra_khatauni_no' => isset($request->plot_khasra_khatauni_no) ? $request->plot_khasra_khatauni_no : "",
-                'street' => isset($request->street) ? $request->street : "",
-                'landmark' => isset($request->landmark) ? $request->landmark : "",
-                'city' => isset($request->city) ? $request->city : "",
-                'pincode' => isset($request->pincode) ? $request->pincode : 0,
-                'block_id' => isset($request->block_id) ? $request->block_id : 0,
-                'panchayat_id' => isset($request->panchayat_id) ? $request->panchayat_id : 0,
-                'village' => isset($request->village) ? $request->village : "",
-                'occupancy_detail' => $occupancy_detail,
-                'noc_type' => $request->noc_type,
-                'pre_perational' => '0',
-                'step' => '1',
-                'status' => 'incomplete',
-                'user_id' => $user->id,
-            ];
-            $result = $filterModel->updateDataByOneCondition('applications', array('application_no' => $request->application_no), $data);
-            if ($result == 1)
-            {
-                return ['status' => '1', 'msg' => 'Data updated successfully.', 'application_no' => $application[0]->application_no];
-            }
-            else if ($result == 2)
-            {
+        $occupancy_detail = json_encode($occupancy_data);
+
+        // ---------- Common base data ----------
+        $baseData = [
+            'application_type'       => $request->input('application_type', ''),
+            'building_name'          => $request->input('building_name', ''),
+            'building_ownership'     => $request->input('building_ownership', ''),
+            'gst_pan_tan'            => $request->input('gst_pan_tan', ''),
+            'gst_pan_tan_no'         => $request->input('gst_pan_tan_no', ''), // never null
+            'project_type'           => $request->input('project_type', ''),
+            'category_id'            => $request->input('category_id', ''),
+            'subcategory_id'         => $request->input('subcategory_id', ''),
+            'type_id'                => (int) $request->input('type_id', 0),
+            'project_status'         => $request->input('project_status', ''),
+            'google_address'         => $request->input('google_address', ''),
+            'latitude'               => $request->input('latitude', ''),
+            'longitude'              => $request->input('longitude', ''),
+            'email'                  => $request->input('email', ''),
+            'mobile_no'              => $request->input('mobile_no', ''),
+            'office_telephone'       => $request->input('office_telephone', ''),
+            'district_id'            => $request->input('district_id', ''),
+            'rural_urban'            => $request->input('rural_urban', ''),
+            'plot_khasra_khatauni'   => $request->input('plot_khasra_khatauni', ''),
+            'plot_khasra_khatauni_no'=> $request->input('plot_khasra_khatauni_no', ''),
+            'landmark'               => $request->input('landmark', ''),
+            'city'                   => $request->input('city', ''),
+            'pincode'                => (int) $request->input('pincode', 0),
+            'occupancy_detail'       => $occupancy_detail,
+            'noc_type'               => $request->input('noc_type', ''),
+            'pre_perational'         => '0',          // FIX: string, not integer
+            'step'                   => '1',          // FIX: string (if column is enum)
+            'status'                 => 'incomplete',
+            'user_id'                => $user->id,
+        ];
+
+        // ---------- Conditional urban/rural fields ----------
+        if ($request->input('rural_urban') === 'urban') {
+            $baseData['tehsil_id']     = (int) $request->input('tehsil_id', 0);
+            $baseData['urban_body_id'] = (int) $request->input('urban_body_id', 0);
+            $baseData['ward_id']       = (int) $request->input('ward_id', 0);
+            $baseData['street']        = $request->input('street', '');
+        }
+        if ($request->input('rural_urban') === 'rural') {
+            $baseData['block_id']     = (int) $request->input('block_id', 0);
+            $baseData['panchayat_id'] = (int) $request->input('panchayat_id', 0);
+            $baseData['village']      = $request->input('village', '');
+        }
+
+        // ---------- Update existing ----------
+        if ($request->filled('application_no')) {
+            $application_no = $request->application_no;
+            $result = $filterModel->updateDataByOneCondition('applications', ['application_no' => $application_no], $baseData);
+            if ($result == 1) {
+                return ['status' => '1', 'msg' => 'Data updated successfully.', 'application_no' => $application_no];
+            } elseif ($result == 2) {
                 return ['status' => '0', 'msg' => 'Nothing to update'];
-            }
-            else
-            {
+            } else {
                 return ['status' => '0', 'msg' => 'Data was not updated. Please try again.'];
             }
         }
-        else
-        {
 
-            if ($request->pre_perational == '1')
-            {
-                $application_no = strtotime(now());
-                $pre_perational = '1';
+        // ---------- New application ----------
+        $application_no = time();
+        $baseData['application_no'] = $application_no;
+
+        // application_flag & old_application_no (original logic)
+        $check_application = [];
+        if ($request->application_type == 'pre operational noc' && $request->filled('old_application_no')) {
+            $check_application = $this->commonModel->getDataByOneCondition('applications', ['application_no' => $request->old_application_no]);
+        }
+        if (!empty($check_application) && $request->application_type == 'pre operational noc' && $request->filled('old_application_no')) {
+            $baseData['application_flag'] = 3;
+            $baseData['old_application_no'] = $request->old_application_no;
+        } elseif ($request->application_type == 'pre establishment noc') {
+            $baseData['application_flag'] = 1;
+            $baseData['old_application_no'] = null;
+        } elseif ($request->application_type == 'pre operational noc' && !$request->filled('old_application_no')) {
+            $baseData['application_flag'] = 2;
+            $baseData['old_application_no'] = null;
+        } elseif ($request->application_type == 'renewal noc' && $request->filled('old_application_no')) {
+            $baseData['application_flag'] = 4;
+            $baseData['old_application_no'] = $request->old_application_no;
+        }
+
+        // ---------- Insert with duplicate handling ----------
+        try {
+            DB::beginTransaction();
+            $insertedId = $this->commonModel->lastInsertData('applications', $baseData);
+            DB::commit();
+            return ['status' => '1', 'msg' => 'Data submitted successfully.', 'application_no' => $application_no];
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Log::error('Insert failed: ' . $e->getMessage());
+            if ($e->getCode() == 23000 || $e->getCode() == 1062 || str_contains($e->getMessage(), 'Duplicate entry')) {
+                $existing = $this->commonModel->getDataByOneCondition('applications', ['application_no' => $application_no]);
+                if (!empty($existing)) {
+                    return ['status' => '1', 'msg' => 'Application already exists.', 'application_no' => $existing[0]->application_no];
+                }
             }
-            else
-            {
-                $application_no = strtotime(now());
-            }
-            $user_id = $user->id;
-            $occupancy_detail = json_encode($occupancy_data);
-
-            $check_application = $this->commonModel->getDataByOneCondition('applications', array('application_no' => $request->old_application_no));
-            //echo "<pre>"; print_r($check_application);die;
-
-            
-
-            $data = [
-                'application_no' => $application_no,
-                'application_type' => isset($request->application_type) ? $request->application_type : "",
-                'building_name' => isset($request->building_name) ? $request->building_name : "",
-                'building_ownership' => isset($request->building_ownership) ? $request->building_ownership : "",
-                'gst_pan_tan' => isset($request->gst_pan_tan) ? $request->gst_pan_tan : "",
-                'gst_pan_tan_no' => isset($request->gst_pan_tan_no) ? $request->gst_pan_tan_no : "",
-                'project_type' => isset($request->project_type) ? $request->project_type : "",
-                'category_id' => isset($request->category_id) ? $request->category_id : "",
-                'subcategory_id' => isset($request->subcategory_id) ? $request->subcategory_id : "",
-                'type_id' => isset($request->type_id) ? $request->type_id : 0,
-                'project_status' => isset($request->project_status) ? $request->project_status : "",
-                'google_address' => isset($request->google_address) ? $request->google_address : "",
-                'latitude' => isset($request->latitude) ? $request->latitude : "",
-                'longitude' => isset($request->longitude) ? $request->longitude : "",
-                'email' => isset($request->email) ? $request->email : "",
-                'mobile_no' => isset($request->mobile_no) ? $request->mobile_no : "",
-                'office_telephone' => isset($request->office_telephone) ? $request->office_telephone : "",
-                'district_id' => isset($request->district_id) ? $request->district_id : "",
-                'rural_urban' => isset($request->rural_urban) ? $request->rural_urban : "",
-                'tehsil_id' => isset($request->tehsil_id) ? $request->tehsil_id : 0,
-                'plot_khasra_khatauni' => isset($request->plot_khasra_khatauni) ? $request->plot_khasra_khatauni : "",
-                'plot_khasra_khatauni_no' => isset($request->plot_khasra_khatauni_no) ? $request->plot_khasra_khatauni_no : "",
-                'street' => isset($request->street) ? $request->street : "",
-                'landmark' => isset($request->landmark) ? $request->landmark : "",
-                'city' => isset($request->city) ? $request->city : "",
-                'pincode' => isset($request->pincode) ? $request->pincode : 0,
-                'block_id' => isset($request->block_id) ? $request->block_id : 0,
-                'panchayat_id' => isset($request->panchayat_id) ? $request->panchayat_id : 0,
-                'village' => isset($request->village) ? $request->village : "",
-                'occupancy_detail' => $occupancy_detail,
-                'noc_type' => $request->noc_type,
-                'urban_body_id' => $request->urban_body_id,
-                'ward_id' => $request->ward_id,
-                'pre_perational' => '0',
-                'step' => '1',
-                'status' => 'incomplete',
-                'user_id' => $user->id,
-            ];
-
-            // if(!empty($check_application) && $request->application_type == 'pre operational noc' && $request->old_application_no == $check_application[0]->application_no)
-            // {
-            //     $data['application_flag'] = 3;
-            //     $data['old_application_no'] = $request->old_application_no;
-
-            // }
-            if(!empty($check_application) && $request->application_type == 'pre operational noc' && $request->old_application_no != '')
-            {
-                $data['application_flag'] = 3;
-                $data['old_application_no'] = $request->old_application_no;
-
-            }
-            else if($request->application_type == 'pre establishment noc')
-            {
-                $data['application_flag'] = 1;
-                $data['old_application_no'] = null;
-
-            }
-            else if($request->application_type == 'pre operational noc' && $request->old_application_no=='')
-            {
-                $data['application_flag'] = 2;
-                $data['old_application_no'] = null;
-
-            }
-
-            else if(!empty($check_application) &&$request->application_type == 'renewal noc' && $request->old_application_no!='')
-            {
-                $data['application_flag'] = 4;
-                $data['old_application_no'] = $request->old_application_no;
-
-            }
-
-            //echo "<pre>"; print_r($data);die;
-            
-            $result = $this->commonModel->lastInsertData('applications', $data);
-            if ($result)
-            {
-                return ['status' => '1', 'msg' => 'Data submitted successfully.', 'application_no' => $application_no];
-            }
-            else
-            {
-                return ['status' => '0', 'msg' => 'Data was not saved. Please try again.'];
-            }
+            return ['status' => '0', 'msg' => 'Data was not saved. Please try again.'];
         }
     }
+
     public function addNocStepSecondPost(Request $request)
     {
         try {
@@ -1147,6 +1084,7 @@ class NocController extends Controller
     }
     public function assignedNocToFSO(Request $request)
     {
+        $tbl = '';
         if($request->application_type =='established')
         {
             $tbl = 'applications';

@@ -200,8 +200,95 @@ class MainController extends Controller{
 
     public function actionCallDetails()
     {
-        return view('fire.call_details');
+        // 1. Get all distinct years from all three tables
+        $years = DB::table('fs_fire_report')
+            ->selectRaw('YEAR(fire_incident_datetime) as year')
+            ->union(
+                DB::table('fs_rescue_report')->selectRaw('YEAR(rescue_incident_datetime) as year')
+            )
+            ->union(
+                DB::table('fs_relief_work_report')->selectRaw('YEAR(incident_datetime) as year')
+            )
+            ->pluck('year')
+            ->toArray();
+
+        // 2. Fire calls per year
+        $fireCalls = DB::table('fs_fire_report')
+            ->selectRaw('YEAR(fire_incident_datetime) as year, COUNT(*) as count')
+            ->groupBy('year')
+            ->pluck('count', 'year')
+            ->toArray();
+
+        // 3. Rescue calls per year
+        $rescueCalls = DB::table('fs_rescue_report')
+            ->selectRaw('YEAR(rescue_incident_datetime) as year, COUNT(*) as count')
+            ->groupBy('year')
+            ->pluck('count', 'year')
+            ->toArray();
+
+        // 4. Property and Life data – only from fs_fire_report
+        $fireStats = DB::table('fs_fire_report')
+            ->selectRaw('
+                YEAR(fire_incident_datetime) as year,
+                SUM(CAST(REPLACE(REPLACE(property_saved, ",", ""), " ", "") AS DECIMAL(20,2))) as property_saved,
+                SUM(CAST(REPLACE(REPLACE(property_lost, ",", ""), " ", "") AS DECIMAL(20,2))) as property_lost,
+                SUM(life_saved_human) as human_saved,
+                SUM(life_saved_animal) as animal_saved,
+                SUM(life_lost_human) as human_lost,
+                SUM(life_lost_animal) as animal_lost
+            ')
+            ->groupBy('year')
+            ->get()
+            ->keyBy('year');
+
+        // 5. Combine everything
+        $stats = [];
+        foreach ($years as $year) {
+            $row = (object) [
+                'year'           => $year,
+                'fire_calls'     => $fireCalls[$year] ?? 0,
+                'rescue_calls'   => $rescueCalls[$year] ?? 0,
+                'total_calls'    => 0,
+                'property_saved' => 0,
+                'property_lost'  => 0,
+                'human_saved'    => 0,
+                'animal_saved'   => 0,
+                'human_lost'     => 0,
+                'animal_lost'    => 0,
+            ];
+
+            // Add data from fire table (the only one with these metrics)
+            if (isset($fireStats[$year])) {
+                $f = $fireStats[$year];
+                $row->property_saved += $f->property_saved;
+                $row->property_lost   += $f->property_lost;
+                $row->human_saved     += $f->human_saved;
+                $row->animal_saved    += $f->animal_saved;
+                $row->human_lost      += $f->human_lost;
+                $row->animal_lost     += $f->animal_lost;
+            }
+
+            $row->total_calls = $row->fire_calls + $row->rescue_calls;
+            $stats[] = $row;
+        }
+
+        // Sort descending by year (most recent first)
+        usort($stats, function ($a, $b) {
+            return $b->year - $a->year;
+        });
+
+        // Prepare chart arrays
+        $years        = array_column($stats, 'year');
+        $fireCalls    = array_column($stats, 'fire_calls');
+        $rescueCalls  = array_column($stats, 'rescue_calls');
+        $humanSaved   = array_column($stats, 'human_saved');
+        $animalSaved  = array_column($stats, 'animal_saved');
+
+        return view('fire.call_details', compact(
+            'stats', 'years', 'fireCalls', 'rescueCalls', 'humanSaved', 'animalSaved'
+        ));
     }
+
 
     /////////////////////////////////////////////////
 

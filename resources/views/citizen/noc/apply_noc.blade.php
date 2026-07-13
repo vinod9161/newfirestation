@@ -280,7 +280,7 @@
                 if (!response) return;
 
                 // Show header when there is valid occupancy input
-
+                console.log('Occupancy input type: ' + response.input_type);
 
                 let html = "";
 
@@ -301,7 +301,8 @@
                 }
 
                 // Textarea
-                if (response.input_type == 3) {
+                if (response.input_type == 4) {
+                    console.log('Textarea input');
                     html = `
                         <label>${response.caption}</label>
                         <textarea class="form-control" name="occupancy_value"></textarea>
@@ -309,7 +310,7 @@
                 }
 
                 // Dropdown (JSON options)
-                if (response.input_type == 4) {
+                if (response.input_type == 3) {
                     let opts = "";
                     response.options_json.forEach(o => {
                         opts += `<option value="${o}">${o}</option>`;
@@ -326,6 +327,7 @@
                     $(".occupency_heading").show();
                     html += `<br/>`;
                 }
+                console.log('html '+html);
 
                 $("#dynamic_input_box").html(html);
                 if (savedOccupancyValue) {
@@ -515,6 +517,14 @@
         });
         $(document).on("click", "#submitBasic", function(e) {
             e.preventDefault();
+    
+            var $btn = $(this);
+            // If already clicked, ignore
+            if ($btn.data('clicked')) {
+                return false;
+            }
+            $btn.data('clicked', true).prop('disabled', true).html('Saving...');
+
             console.log("Submitting Basic Info");
             var app = $('input[name="application_no"]').val()?.trim() || '';
             console.log(app);
@@ -701,7 +711,7 @@
                     'X-CSRF-TOKEN': formData._token
                 },
                 success: function(response) {
-
+                    $btn.data('clicked', false).prop('disabled', false).html('Save & Next');
                     if (response.status === "1") {
                         const errorIds = [
                             'error1', 'error2', 'error3', 'error4', 'error5', 'error6',
@@ -731,6 +741,7 @@
                         bar_text.css('width', `${newValue}%`);
                         bar_text.text(`${newValue}%`);
                     } else {
+                        $btn.data('clicked', false).prop('disabled', false).html('Save & Next');
                         $('#errorBlock').html(response.msg || "An error occurred").show();
                     }
                 },

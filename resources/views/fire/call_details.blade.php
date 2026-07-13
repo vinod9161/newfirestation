@@ -102,7 +102,7 @@
 
             </tr>
           </thead>
-          <tbody>
+          <!-- <tbody>
             <tr>
               <th scope="row">1</th>
               <td>2000</td>
@@ -595,6 +595,23 @@
 
             </tr>
 
+          </tbody> -->
+          <tbody>
+              @foreach($stats as $index => $row)
+                  <tr>
+                      <th scope="row">{{ $loop->iteration }}</th>
+                      <td>{{ $row->year }}</td>
+                      <td>{{ $row->fire_calls }}</td>
+                      <td>{{ $row->rescue_calls }}</td>
+                      <td>{{ $row->total_calls }}</td>
+                      <td>{{ number_format($row->property_saved, 0) }}</td>
+                      <td>{{ number_format($row->property_lost, 0) }}</td>
+                      <td>{{ $row->human_saved }}</td>
+                      <td>{{ $row->animal_saved }}</td>
+                      <td>{{ $row->human_lost ?? 0 }}</td>
+                      <td>{{ $row->animal_lost ?? 0 }}</td>
+                  </tr>
+              @endforeach
           </tbody>
         </table>
 
@@ -604,83 +621,84 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const labels = ['2026', '2025', '2024', '2023', '2022', '2021'];
+    // Data passed from the controller
+    const allLabels = @json($years);           // e.g., [2026,2025,2024,2023,...]
+    const allFire   = @json($fireCalls);
+    const allRescue = @json($rescueCalls);
+    const allHuman  = @json($humanSaved);
+    const allAnimal = @json($animalSaved);
 
-// BAR DATA
-const productA = [30, 40, 50, 60, 50, 45];
-const productB = [20, 30, 40, 20, 35, 30];
+    // Show only the most recent 3 years (or adjust as needed)
+    const count = Math.min(3, allLabels.length);
+    const labels = allLabels.slice(0, count);
+    const fireCalls = allFire.slice(0, count);
+    const rescueCalls = allRescue.slice(0, count);
+    const humanSaved = allHuman.slice(0, count);
+    const animalSaved = allAnimal.slice(0, count);
 
-// LINE DATA (same values as bar stack)
-const lineA = [...productA];
-const lineB = [...productB];
-
-const ctx = document.getElementById('comboChart').getContext('2d');
-
-new Chart(ctx, {
-  data: {
-    labels: labels,
-    datasets: [
-      /* STACKED BARS */
-      {
-        type: 'bar',
-        label: 'Fire Calls',
-        data: productA,
-        backgroundColor: 'rgba(212, 0, 0, 0.85)',
-        stack: 'stack1',
-		barThickness: 20,              // 👈 decrease thickness
-		maxBarThickness: 25,
-		categoryPercentage: 0.6,
-		barPercentage: 0.6
-      },
-      {
-        type: 'bar',
-        label: 'Rescue Calls',
-        data: productB,
-        backgroundColor: 'rgba(0, 37, 142, 0.85)',
-        stack: 'stack1',
-		barThickness: 20,              // 👈 decrease thickness
-		maxBarThickness: 25,
-		categoryPercentage: 0.6,
-		barPercentage: 0.6
-      },
-
-      /* LINES FOR EACH STACK */
-      {
-        type: 'line',
-        label: 'Human Life Saved',
-        data: lineA,
-        borderColor: 'green',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'green'
-      },
-      {
-        type: 'line',
-        label: 'Animal Life Saved',
-        data: lineB,
-        borderColor: 'red',
-        borderWidth: 2,
-        tension: 0.3,
-        fill: false,
-        pointRadius: 4,
-        pointBackgroundColor: 'red'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, beginAtZero: true }
-    },
-    plugins: {
-      legend: { position: 'top' }
-    }
-  }
-});
+    const ctx = document.getElementById('comboChart').getContext('2d');
+    new Chart(ctx, {
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Fire Calls',
+                    data: fireCalls,
+                    backgroundColor: 'rgba(212, 0, 0, 0.85)',
+                    stack: 'stack1',
+                    barThickness: 20,
+                    maxBarThickness: 25,
+                    categoryPercentage: 0.6,
+                    barPercentage: 0.6
+                },
+                {
+                    type: 'bar',
+                    label: 'Rescue Calls',
+                    data: rescueCalls,
+                    backgroundColor: 'rgba(0, 37, 142, 0.85)',
+                    stack: 'stack1',
+                    barThickness: 20,
+                    maxBarThickness: 25,
+                    categoryPercentage: 0.6,
+                    barPercentage: 0.6
+                },
+                {
+                    type: 'line',
+                    label: 'Human Life Saved',
+                    data: humanSaved,
+                    borderColor: 'green',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'green'
+                },
+                {
+                    type: 'line',
+                    label: 'Animal Life Saved',
+                    data: animalSaved,
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'red'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true }
+            },
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
 </script>
 <script>
 document.getElementById("viewGrid").addEventListener("click", function () {

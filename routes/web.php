@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\CMS\Services\StandbyController as CmsStandbyContr
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\ReportFeeMasterController;
 use App\Http\Controllers\FSO\ServiceBillController;
+use App\Http\Controllers\FSO\PumpingBillController;
 use App\Http\Controllers\CaptchaController;
 
 
@@ -924,6 +925,10 @@ Route::middleware(['auth.check'])->group(function () {
         Route::get('service-bills/report/create/{service_type}/{request_id}', [ServiceBillController::class, 'createReportBill'])->name('service-bills.report.create');
         Route::post('service-bills/report/store', [ServiceBillController::class, 'storeReportBill'])->name('service-bills.report.store');
         
+        // Pumping Bill routes
+        Route::get('/pumping-bills/create', [PumpingBillController::class, 'create'])->name('pumping-bills.create');
+        Route::post('/pumping-bills', [PumpingBillController::class, 'store'])->name('pumping-bills.store');
+        Route::get('/pumping-bills/get-report/{type}/{id}', [PumpingBillController::class, 'getReport'])->name('pumping-bills.get-report');
     });
     
     // FSO Routes (outside prefix)
@@ -946,7 +951,6 @@ Route::middleware(['auth.check'])->group(function () {
         Route::get('/my-noc', [CitizenController::class, 'noc'])->name('citizen.noc.home');
         Route::get('/temporary_noc', [CitizenController::class, 'temporary_noc'])->name('citizen.temporary_noc');
         
-        // NOC Application Steps
         Route::get('/noc-step-initial', [CitizenController::class, 'addNocStepFirst'])->name('noc.step.first');
         Route::get('/apply-noc', [CitizenController::class, 'applyNoc'])->name('noc.apply');
         Route::post('/noc-step-initial-post', [NocController::class, 'addNocStepFirstPost'])->name('noc.step.first.post');

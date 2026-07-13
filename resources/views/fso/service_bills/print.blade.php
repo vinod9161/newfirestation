@@ -136,11 +136,11 @@
 
                     <div style="line-height:20px;margin-top:8px;">
 
-                        मुख्यालय - चतुर्थ तल, सरदार पटेल भवन<br>
+                        मुख्यालय - चतुर्थ तल, सरदार पटेल भवन
 
                         कोर्ट रोड, देहरादून, उत्तराखंड - 248001<br>
 
-                        Headquarter - IV Floor, Sardar Patel Bhavan<br>
+                        Headquarter - IV Floor, Sardar Patel Bhavan
 
                         Court Road, Dehradun, Uttarakhand - 248001
 

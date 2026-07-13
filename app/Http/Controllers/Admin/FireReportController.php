@@ -14,6 +14,7 @@ use App\Models\VehicleModel as Vehicle;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use App\Models\Common\CommonModel;
+use App\Models\EquipmentCategory;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -198,9 +199,10 @@ class FireReportController extends Controller
         // $subcategories = $this->commonModel->getData("fire_subcategories");
         $categories = DB::table('fire_categories')->orderBy('id', 'ASC')->get();
         $subcategories = DB::table('fire_subcategories')->orderBy('id', 'ASC')->get();
+        $equipments = EquipmentCategory::all();
 
 
-        return view('admin.fireReport.add',compact('vehicles','cfo', 'fso', 'fsso', 'lfm', 'dvr', 'fm', 'districts', 'stations', 'categories', 'subcategories'));
+        return view('admin.fireReport.add',compact('vehicles','cfo', 'fso', 'fsso', 'lfm', 'dvr', 'fm', 'districts', 'stations', 'categories', 'subcategories', 'equipments'));
     }
     public function editFireReport($id)
     {
@@ -492,6 +494,31 @@ class FireReportController extends Controller
             'assigned_to'   => Auth::user()->id
 
         ];
+
+        $vehicleIds = $request->input('vehicle_id');
+        $pumpingKms = $request->input('pumping_km');
+        $vehicleData = [];
+        if (is_array($vehicleIds)) {
+            foreach ($vehicleIds as $index => $vehId) {
+                if (!empty($vehId)) {
+                    $vehicleData[$vehId] = $pumpingKms[$index] ?? 0;
+                }
+            }
+        }
+        $data['vehicle_data'] = !empty($vehicleData) ? json_encode($vehicleData) : null;
+
+        $equipmentIds = $request->input('equipment_id');
+        $equipmentUsage = $request->input('equipment_usage');
+        $equipmentData = [];
+        if (is_array($equipmentIds)) {
+            foreach ($equipmentIds as $index => $eqId) {
+                if (!empty($eqId)) {
+                    $equipmentData[$eqId] = $equipmentUsage[$index] ?? 0;
+                }
+            }
+        }
+        $data['equipment_data'] = !empty($equipmentData) ? json_encode($equipmentData) : null;
+
         $result = $this->commonModel->insertDataGetId('fs_fire_report', $data);
         if($result)
         {
@@ -655,6 +682,30 @@ class FireReportController extends Controller
             'latitude' => $request->input('incident_latitude'),
             'upload' => $reportPdf,
         ];
+        $vehicleIds = $request->input('vehicle_id');
+        $pumpingKms = $request->input('pumping_km');
+        $vehicleData = [];
+        if (is_array($vehicleIds)) {
+            foreach ($vehicleIds as $index => $vehId) {
+                if (!empty($vehId)) {
+                    $vehicleData[$vehId] = $pumpingKms[$index] ?? 0;
+                }
+            }
+        }
+        $data['vehicle_data'] = !empty($vehicleData) ? json_encode($vehicleData) : null;
+
+        $equipmentIds = $request->input('equipment_id');
+        $equipmentUsage = $request->input('equipment_usage');
+        $equipmentData = [];
+        if (is_array($equipmentIds)) {
+            foreach ($equipmentIds as $index => $eqId) {
+                if (!empty($eqId)) {
+                    $equipmentData[$eqId] = $equipmentUsage[$index] ?? 0;
+                }
+            }
+        }
+        $data['equipment_data'] = !empty($equipmentData) ? json_encode($equipmentData) : null;
+
         $result = $this->commonModel->updateDataByOneCondition('fs_fire_report', array('id' => $request->input('id')), $data);
         if($result == '1')
         {

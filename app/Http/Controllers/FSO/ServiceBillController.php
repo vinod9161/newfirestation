@@ -19,9 +19,65 @@ use DB;
 
 class ServiceBillController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bills=ServiceBill::latest()->paginate(20);
+        $query = ServiceBill::query();
+
+        if ($request->filled('bill_no'))
+        {
+            $query->where(
+                'bill_no',
+                'LIKE',
+                '%' . $request->bill_no . '%'
+            );
+        }
+
+        if ($request->filled('service_type'))
+        {
+            $query->where(
+                'service_type',
+                $request->service_type
+            );
+        }
+
+        if ($request->filled('request_id'))
+        {
+            $query->where(
+                'service_request_id',
+                $request->request_id
+            );
+        }
+
+        if ($request->filled('payment_status'))
+        {
+            $query->where(
+                'payment_status',
+                $request->payment_status
+            );
+        }
+
+        if ($request->filled('from_date'))
+        {
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $request->from_date
+            );
+        }
+
+        if ($request->filled('to_date'))
+        {
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $request->to_date
+            );
+        }
+
+        $bills = $query
+            ->latest()
+            ->paginate(20)
+            ->appends($request->query());
 
         return view(
             'fso.service_bills.index',
@@ -32,13 +88,7 @@ class ServiceBillController extends Controller
     public function create($service_type,$request_id)
     {
         if($service_type=='standby_duty'){
-
-            $request=Standby::where(
-                    'application_id',
-                    $request_id
-                )
-                ->firstOrFail();
-
+            $request=Standby::where('application_id', $request_id)->firstOrFail();
         }else{
             abort(404);
         }
@@ -47,8 +97,7 @@ class ServiceBillController extends Controller
         $vehicles=VehicleCategory::get();
         $equipments=EquipmentCategory::get();
 
-        return view(
-            'fso.service_bills.create',
+        return view('fso.service_bills.create',
             compact(
                 'request',
                 'service_type',
@@ -89,7 +138,7 @@ class ServiceBillController extends Controller
             'service_type'=>$request->service_type,
             'service_request_id'=>$request->request_id,
             'bill_no'=>$billNo,
-            'diesel_rate'=>$request->diesel_rate,
+            'diesel_rate' => $request->fuel_rate ?? $request->diesel_rate,
             'fuel_expense'=>$request->fuel_expense,
             'depreciation_expense'=>$request->depreciation_expense,
             'personnel_expense'=>$request->personnel_expense,
@@ -122,6 +171,7 @@ class ServiceBillController extends Controller
                     'bill_id'=>$bill->id,
                     'designation_id'=>$designationId,
                     'no_of_person'=>$request->no_of_person[$key] ?? 0,
+                    'no_of_days' => $request->days[$key] ?? 1,
                     'per_person_expense'=>$request->expense[$key] ?? 0,
                     'da_amount'=>$request->da[$key] ?? 0,
                     'total_amount'=>$request->person_total[$key] ?? 0
@@ -143,7 +193,7 @@ class ServiceBillController extends Controller
 
                     'vehicle_type_id'=>$vehicleId,
 
-                    'diesel_rate'=>$request->diesel_rate,
+                    'diesel_rate' => $request->fuel_rate ?? $request->diesel_rate,
 
                     'mileage_value'=>$request->vehicle_mileage[$key] ?? 0,
 

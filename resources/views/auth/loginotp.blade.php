@@ -73,7 +73,6 @@
                                 @endfor
                             </div>
                             <input type="hidden" name="otp_combined" id="otp_combined">
-                            <!-- REMOVED: <input type="hidden" name="user_id" value="{{ session('otp_user_id') }}"> -->
                             <button type="submit" class="btn btn-danger w-100">Verify OTP</button>
                             <div class="text-center mt-2">
                                 <a href="javascript:void(0);" id="resendOtpLink" class="text-danger fw-bold">Resend OTP</a>
@@ -229,7 +228,6 @@
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
-                    // user_id removed - server gets from session
                 },
                 success: function(response) {
                     if (response.message) {
