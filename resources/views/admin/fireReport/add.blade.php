@@ -294,7 +294,7 @@
                                     <select class="form-control js-example-basic-single equipment_select" name="equipment_id[]">
                                         <option value="">-- Select Equipment --</option>
                                         @foreach($equipments as $equip)
-                                            <option value="{{ $equip->id }}">{{ $equip->name }}</option>
+                                            <option value="{{ $equip->category_id }}">{{ $equip->equipment_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -308,6 +308,28 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <a class="btn btn-primary add_equipment_field" id="add_equipment_field" style="margin-top:27px;"> + Add More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details of Foam Used -->
+                    <div class="divborder">
+                        <div class="col-md-12 alert alert-dark text-center card-title">Details of Foam Used</div>
+                        <div class="row" id="foamDynamicFields" style="padding-left: 10px;padding-right: 10px;">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Foam Type <sup class="text-danger">*</sup></label>
+                                    <select class="form-control js-example-basic-single foam_select" name="foam_id[]">
+                                        <option value="">-- Select Foam --</option>
+                                        <option value="1">Foam</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Quantity (in Rate per KG/Ltr) <sup class="text-danger">*</sup></label>
+                                    <input class="form-control" name="foam_quantity[]" type="number" step="0.01" placeholder="Quantity used">
                                 </div>
                             </div>
                         </div>
@@ -627,7 +649,7 @@
                             <select class="form-control js-example-basic-single equipment_select" name="equipment_id[]">
                                 <option value="">-- Select Equipment --</option>
                                 @foreach($equipments as $equip)
-                                    <option value="{{ $equip->id }}">{{ $equip->name }}</option>
+                                    <option value="{{ $equip->category_id }}">{{ $equip->equipment_name }}</option>
                                 @endforeach
                             </select>
                         </div>

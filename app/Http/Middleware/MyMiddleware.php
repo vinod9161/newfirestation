@@ -10,8 +10,25 @@ class MyMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // ============ 1. APPLY SECURITY HEADERS FIRST (BEFORE ANY RETURN) ============
+        $response = $next($request);
+        
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
+        $response->headers->set('X-XSS-Protection', '1; mode=block');
+        $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+        $response->headers->remove('X-Powered-By');
+        $response->headers->remove('Server');
+        $response->headers->set('Server', 'Web Server');
+
+        if ($request->secure() || env('APP_ENV') === 'production') {
+            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+        }
+
+        // ============ 2. AUTHENTICATION & AUTHORIZATION CHECKS ============
         if (!Auth::check()) {
-            return redirect('/login');
+            return $response;  // Return the response with headers already set
         }
 
         $user = Auth::user();
@@ -61,21 +78,6 @@ class MyMiddleware
             if (!in_array($userType, [0, 1])) {
                 abort(403, 'Unauthorized - Deputy Director access required.');
             }
-        }
-
-        $response = $next($request);
-
-        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-        $response->headers->set('X-Content-Type-Options', 'nosniff');
-        $response->headers->set('X-XSS-Protection', '1; mode=block');
-        $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-        $response->headers->remove('X-Powered-By');
-        $response->headers->remove('Server');
-        $response->headers->set('Server', 'Web Server');
-
-        if ($request->secure() || env('APP_ENV') === 'production') {
-            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
         return $response;

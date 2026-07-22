@@ -27,6 +27,8 @@ class User extends Authenticatable
         'role',
         'type',
         'password',
+        'otp',
+        'is_verify',
         'number',
         'district_id',
         'station_id',

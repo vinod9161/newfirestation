@@ -44,6 +44,16 @@ return [
     'fast2sms' => [
         'api_key' => env('FAST2SMS_API_KEY'),
     ],
+    
+    'sms' => [
+        'url'          => env('SMS_API_URL'),
+        'username'     => env('SMS_USERNAME'),
+        'api_password' => env('SMS_API_PASSWORD'),
+        'sender'       => env('SMS_SENDER'),
+        'priority'     => env('SMS_PRIORITY', 4),
+        'entity_id'    => env('SMS_ENTITY_ID'),
+        'template_id'  => env('SMS_TEMPLATE_ID'),
+    ],
 
 
 ];

@@ -200,6 +200,33 @@ class FireReportController extends Controller
         $categories = DB::table('fire_categories')->orderBy('id', 'ASC')->get();
         $subcategories = DB::table('fire_subcategories')->orderBy('id', 'ASC')->get();
         $equipments = EquipmentCategory::all();
+        $query = DB::table('equipment')
+            ->select(
+                'equipment.*',
+                'equipment_category.name as category_name',
+                'equipment_name.name as equipment_name'
+            )
+            ->leftJoin(
+                'equipment_category',
+                'equipment.category_id',
+                '=',
+                'equipment_category.id'
+            )
+            ->leftJoin(
+                'equipment_name',
+                'equipment.equipment_name',
+                '=',
+                'equipment_name.id'
+            )
+            ->where('equipment.status', '1');
+
+        $equipments = $query
+            ->orderBy('equipment.id', 'DESC')
+            ->get()
+            ->toArray();
+        // echo "<pre>";
+        // print_r($equipments);
+        // exit('ppp');
 
 
         return view('admin.fireReport.add',compact('vehicles','cfo', 'fso', 'fsso', 'lfm', 'dvr', 'fm', 'districts', 'stations', 'categories', 'subcategories', 'equipments'));
