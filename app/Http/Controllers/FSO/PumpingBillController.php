@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 
 class PumpingBillController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
         $query = FireReport::where('bill_generated', 0);
 
@@ -39,12 +39,25 @@ class PumpingBillController extends Controller
 
         $reports = $fireReports;
 
+        $preSelectedReportId = $request->query('report_id');
+
+        // Ensure the report exists and is eligible (optional)
+        if ($preSelectedReportId) {
+            $reportExists = FireReport::where('id', $preSelectedReportId)
+                ->where('bill_generated', 0)
+                ->exists();
+            if (!$reportExists) {
+                $preSelectedReportId = null; // invalid or already billed
+            }
+        }
+
         $designations = PersonnelExpenseRegister::with('designation')->get();
         $vehicles = VehicleCategory::select('id', 'type', 'mileage_value', 'mileage_type')->get();
         $equipments = EquipmentCategory::select('id', 'name', 'mileage_value', 'mileage_type')->get();
 
         return view('fso.pumping_bills.create', compact(
             'reports',
+            'preSelectedReportId',
             'designations',
             'vehicles',
             'equipments'
@@ -225,7 +238,7 @@ class PumpingBillController extends Controller
             $mobile = $request->mobile;
             $email = $request->email;
             $service_description = $request->service_description;
-            $requestId = 'MANUAL_' . date('YmdHis');
+            $requestId = null;
         }
 
         // 3. Generate bill number
@@ -250,12 +263,15 @@ class PumpingBillController extends Controller
         ]);
 
         // 5. If report linked, update it
+        
         if ($report) {
-            $report->update([
-                'bill_generated'   => 1,
-                'payment_status'   => 'pending',
-                'service_bill_id'  => $bill->id,
-            ]);
+            DB::table('fs_fire_report')
+                ->where('id',$requestId)
+                ->update([
+                    'bill_generated'=>1,
+                    'payment_status'=>'pending',
+                    'service_bill_id'=>$bill->id
+                ]);
         }
 
         // 6. Save personnel details

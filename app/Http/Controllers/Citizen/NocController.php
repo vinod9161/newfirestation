@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use App\Services\SmsService;
 
 class NocController extends Controller
 {
@@ -1071,6 +1072,28 @@ class NocController extends Controller
         $type = $this->commonModel->getData('types');
         if ($res == 1)
         {
+            $smsService = app(SmsService::class);
+            $smsService->send(
+                'APPLICATION_SUBMITTED',
+                $application[0]->mobile_no,
+                [
+                    'UIID' => $application[0]->application_no
+                ]
+            );
+
+            if (!empty($application->assigned_cfo) && $application->assigned_cfo != 0) {
+
+                $assignedOfficer = User::find($application->assigned_cfo);
+
+                if ($assignedOfficer && !empty($assignedOfficer->mobile_no)) {
+                    $smsService->send(
+                        'NEW_APPLICATION',
+                        $assignedOfficer->mobile_no,
+                        []
+                    );
+                }
+            }
+
             return ['status' => '1', 'msg' => 'Application submitted successfully.', 'application_no' => $application[0]->application_no, 'application_type' => $application[0]->application_type];
         }
         else if ($res == 2)
@@ -1126,6 +1149,16 @@ class NocController extends Controller
             'history' => json_encode($history)
         ];
         $this->commonModel->updateDataByOneCondition($tbl, array('application_no' => $app[0]->application_no), $data);
+        
+        $smsService = app(SmsService::class);
+
+        if (!empty($station) && !empty($station[0]->number)) {
+            $smsService->send(
+                'NEW_APPLICATION',
+                $station[0]->number,
+                []
+            );
+        }
 
         return redirect()->back()->with('message', 'Application has been Assined To FSO '.ucfirst($user_name).' Successfully!');
     }

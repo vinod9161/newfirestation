@@ -18,6 +18,7 @@ use App\Models\Models\Application;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\ServiceBill;
 use App\Models\Models\Standby;
+use App\Services\SmsService;
 
 class PaymentController extends Controller
 {
@@ -188,6 +189,23 @@ class PaymentController extends Controller
                     'transaction_id'=>$request->razorpay_payment_id
                 ]);
 
+            $application = Application::where(
+                'application_no',
+                $payment->service_id
+            )->first();
+
+            if ($application) {
+                $smsService = app(SmsService::class);
+                $smsService->send(
+                    'PAYMENT_SUCCESS',
+                    $application->mobile_no,
+                    [
+                        'AMOUNT' => number_format($payment->amount, 2),
+                        'UIID'   => $application->application_no
+                    ]
+                );
+            }
+
         }
         else{
 
@@ -198,18 +216,14 @@ class PaymentController extends Controller
             if($bill){
 
                 $bill->update([
-
                     'payment_status'=>'paid',
-
                     'payment_id'=>$payment->id,
-
                     'payment_method'=>'razorpay',
-
                     'transaction_id'=>$request->razorpay_payment_id,
-
                     'paid_at'=>now()
-
                 ]);
+
+                $smsService = app(SmsService::class);
 
                 if($bill->service_type=='standby_duty'){
                     Standby::where(
@@ -220,6 +234,19 @@ class PaymentController extends Controller
                         'payment_status'=>'paid',
                         'paid_at'=>now()
                     ]);
+
+                    $standby = Standby::find($bill->service_request_id);
+
+                    if ($standby && !empty($standby->mobile_no)) {
+                        $smsService->send(
+                            'PAYMENT_SUCCESS',
+                            $standby->mobile_no,
+                            [
+                                'AMOUNT' => number_format($payment->amount, 2),
+                                'UIID'   => $standby->application_id
+                            ]
+                        );
+                    }
                 }
 
                 if($bill->service_type=='fire_report'){
@@ -233,6 +260,21 @@ class PaymentController extends Controller
                             'payment_status'=>'paid'
                         ]);
 
+                    $report = DB::table('fs_fire_report')
+                        ->where('id', $bill->service_request_id)
+                        ->first();
+
+                    if ($report && !empty($report->informer_contact_no)) {
+                        $smsService->send(
+                            'PAYMENT_SUCCESS',
+                            $report->informer_contact_no,
+                            [
+                                'AMOUNT' => number_format($payment->amount, 2),
+                                'UIID'   => $report->fire_report_no
+                            ]
+                        );
+                    }
+
                 }elseif($bill->service_type=='rescue_report'){
 
                     DB::table('fs_rescue_report')
@@ -244,8 +286,25 @@ class PaymentController extends Controller
                             'payment_status'=>'paid'
                         ]);
 
-                }elseif($bill->service_type=='relief_report'){
+                    $report = DB::table('fs_rescue_report')
+                        ->where('id', $bill->service_request_id)
+                        ->first();
 
+                    if ($report && !empty($report->informer_contact_no)) {
+
+                        $smsService = app(\App\Services\SmsService::class);
+
+                        $smsService->send(
+                            'PAYMENT_SUCCESS',
+                            $report->informer_contact_no,
+                            [
+                                'AMOUNT' => number_format($payment->amount, 2),
+                                'UIID'   => $report->rescue_report_no
+                            ]
+                        );
+                    }
+
+                }elseif($bill->service_type=='relief_report'){
                     DB::table('fs_relief_work_report')
                         ->where(
                             'id',
@@ -254,6 +313,50 @@ class PaymentController extends Controller
                         ->update([
                             'payment_status'=>'paid'
                         ]);
+                    
+                    $report = DB::table('fs_relief_work_report')
+                        ->where('id', $bill->service_request_id)
+                        ->first();
+
+                    if ($report && !empty($report->informer_contact_no)) {
+
+                        $smsService = app(\App\Services\SmsService::class);
+
+                        $smsService->send(
+                            'PAYMENT_SUCCESS',
+                            $report->informer_contact_no,
+                            [
+                                'AMOUNT' => number_format($payment->amount, 2),
+                                'UIID'   => $report->relief_report_no
+                            ]
+                        );
+                    }
+
+                }elseif($bill->service_type=='pumping_work'){
+
+                    DB::table('fs_fire_report')
+                        ->where(
+                            'id',
+                            $bill->service_request_id
+                        )
+                        ->update([
+                            'payment_status'=>'paid'
+                        ]);
+
+                    $report = DB::table('fs_fire_report')
+                        ->where('id', $bill->service_request_id)
+                        ->first();
+
+                    if ($report && !empty($report->informer_contact_no)) {
+                        $smsService->send(
+                            'PAYMENT_SUCCESS',
+                            $report->informer_contact_no,
+                            [
+                                'AMOUNT' => number_format($payment->amount, 2),
+                                'UIID'   => $report->fire_report_no
+                            ]
+                        );
+                    }
 
                 }
 

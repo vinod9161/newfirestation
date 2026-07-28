@@ -257,7 +257,7 @@ class LoginController extends Controller
     // }
 
 
-    public function login(Request $request)
+    public function login(Request $request, SmsService $smsService)
     {
         // Clear any existing session
         session()->forget(['otp_user_id', 'otp', 'otp_required']);
@@ -303,32 +303,39 @@ class LoginController extends Controller
         Cache::forget($rateLimitKey);
 
         // Generate OTP
-        // $otp = rand(100000, 999999);
-        $otp = '123456'; // testing only
+        $otp = rand(100000,999999);
+        // $otp = '123456'; // testing only
 
-        // ============ FIX: Use string values for enum columns ============
-        $updated = \Illuminate\Support\Facades\DB::table('users')
-            ->where('id', $user->id)
-            ->update([
-                'otp' => $otp,
-                'is_verify' => '0',  // ← Use string '0' not integer 0
-            ]);
-        
-        \Log::info('OTP Update result: ' . ($updated ? 'SUCCESS' : 'FAILED'));
-        // ================================================================
-
-        // Store session data
-        session([
-            'otp_user_id' => $user->id,
+        $user->update([
             'otp' => $otp,
-            'otp_required' => true
+            'is_verify' => '0',
         ]);
 
-        \Log::info('Login successful - User: ' . $user->email . ', ID: ' . $user->id . ', Type: ' . $user->type);
+        $smsResponse = $smsService->send(
+            'LOGIN_OTP',
+            $user->number,
+            [
+                'OTP'=>$otp
+            ],
+            $user->id
+        );
 
-        return redirect()
-            ->route('loginotp')
-            ->with('message', 'OTP sent to your registered contact.');
+        if ($smsResponse['status'] != 200) {
+
+            return back()->with('error','Unable to send OTP.');
+        }
+
+        if (str_contains(strtolower($smsResponse['body']), 'insufficient')) {
+
+            return back()->with('error',$smsResponse['body']);
+        }
+
+        session([
+            'otp_user_id'=>$user->id
+        ]);
+
+        return redirect()->route('loginotp')
+                ->with('message','OTP sent successfully.');
     }
 
     public function verifyOtp(Request $request)
@@ -352,34 +359,40 @@ class LoginController extends Controller
                 ->with('error', 'User not found.');
         }
 
-        $otp = $request->otp_combined;
+        $otp = trim($request->otp_combined);
 
+        // Maximum 5 attempts
         $attemptKey = 'otp_attempts_' . $userId . '_' . $request->ip();
         $attempts = Cache::get($attemptKey, 0);
 
         if ($attempts >= 5) {
             session()->forget('otp_user_id');
+
             return redirect()->route('login')
-                ->with('error', 'Too many failed OTP attempts. Please login again.');
+                ->with('error', 'Too many invalid OTP attempts. Please login again.');
         }
 
-        \Log::info("Verifying OTP for user_id: {$userId}, entered OTP: {$otp}, expected OTP: {$user->otp}, attempts: {$attempts}");
+        // Debug log (remove in production)
+        \Log::info('OTP Verification', [
+            'user_id' => $user->id,
+            'entered_otp' => $otp,
+            'db_otp' => $user->otp,
+        ]);
 
-        if ($user->otp != $otp) {
+        if ((string) $user->otp !== (string) $otp) {
+
             Cache::put($attemptKey, $attempts + 1, now()->addMinutes(15));
-            return redirect()->back()
-                ->with('error', 'Invalid OTP. Please try again.');
+
+            return back()->with('error', 'Invalid OTP.');
         }
 
-        // OTP Valid
+        // OTP verified successfully
         Cache::forget($attemptKey);
 
-        // ============ FIX: Use string '1' for enum ============
         $user->update([
             'otp' => null,
-            'is_verify' => '1',  // ← Use string '1' not integer 1
+            'is_verify' => '1',
         ]);
-        // =====================================================
 
         session()->forget('otp_user_id');
 
@@ -393,56 +406,53 @@ class LoginController extends Controller
             case 2:
             case 3:
             case 5:
-                return redirect()
-                    ->route('admin.dashboard')
-                    ->with('success', 'Login successful!');
+                return redirect()->route('admin.dashboard');
+
             case 4:
-                return redirect()
-                    ->route('citizen.account')
-                    ->with('success', 'Login successful!');
+                return redirect()->route('citizen.account');
+
             case 6:
-                return redirect()
-                    ->route('agency.account')
-                    ->with('success', 'Login successful!');
+                return redirect()->route('agency.account');
+
             case 7:
-                return redirect()
-                    ->route('auditor.account')
-                    ->with('success', 'Login successful!');
+                return redirect()->route('auditor.account');
+
             default:
                 Auth::logout();
-                return redirect()
-                    ->route('login')
+
+                return redirect()->route('login')
                     ->with('error', 'Invalid user type.');
         }
     }
 
 
-    public function resendOtp(Request $request)
+    public function resendOtp(Request $request, SmsService $smsService)
     {
-        // ============ FIX: Get user_id from SESSION, NOT from request ============
+        // Get user ID from session
         $userId = session('otp_user_id');
-        
+
         if (!$userId) {
             return response()->json([
                 'error' => 'Session expired. Please login again.'
             ], 401);
         }
-        
-        // Rate limiting for resend - 60 seconds cooldown
+
+        // Rate limiting - 60 seconds cooldown
         $resendKey = 'otp_resend_' . $userId;
         $lastResend = \Illuminate\Support\Facades\Cache::get($resendKey);
-        
+
         if ($lastResend && now()->diffInSeconds($lastResend) < 60) {
             $remaining = 60 - now()->diffInSeconds($lastResend);
+
             return response()->json([
                 'error' => "Please wait {$remaining} seconds before requesting another OTP."
             ], 429);
         }
-        
-        // Limit total resends per hour (max 5)
+
+        // Maximum 5 resends per hour
         $hourlyKey = 'otp_resend_hourly_' . $userId;
         $hourlyCount = \Illuminate\Support\Facades\Cache::get($hourlyKey, 0);
-        
+
         if ($hourlyCount >= 5) {
             return response()->json([
                 'error' => 'Maximum OTP resend limit reached. Please try again after 1 hour.'
@@ -453,26 +463,66 @@ class LoginController extends Controller
 
         if (!$user) {
             session()->forget('otp_user_id');
-            return response()->json(['error' => 'User not found.'], 404);
+
+            return response()->json([
+                'error' => 'User not found.'
+            ], 404);
         }
-        
-        // Generate new OTP
-        // $otp = rand(100000, 999999); // Use in production
-        $otp = '123456'; // For testing only
-        
-        // Update session and database
+
+        // Generate OTP
+        $otp = rand(100000, 999999);
+        // $otp = '123456'; // Uncomment only for testing
+
+        // Save OTP
         session(['otp' => $otp]);
+
         $user->update([
             'otp' => $otp,
-            'updated_at' => now(),  // Update timestamp for expiry
+            'updated_at' => now(),
         ]);
-        
-        // Store rate limiting data
-        \Illuminate\Support\Facades\Cache::put($resendKey, now(), now()->addSeconds(60));
-        \Illuminate\Support\Facades\Cache::put($hourlyKey, $hourlyCount + 1, now()->addHours(1));
+
+        // Send SMS
+        $smsResponse = $smsService->send(
+            'LOGIN_OTP',
+            $user->number,
+            [
+                'OTP' => $otp
+            ],
+            $user->id
+        );
+
+        // SMS API failed
+        if ($smsResponse['status'] != 200) {
+            return response()->json([
+                'error' => 'Unable to send OTP. Please try again.'
+            ], 500);
+        }
+
+        // Insufficient balance or gateway error
+        if (isset($smsResponse['body']) &&
+            str_contains(strtolower($smsResponse['body']), 'insufficient')) {
+
+            return response()->json([
+                'error' => $smsResponse['body']
+            ], 500);
+        }
+
+        // Update rate limiting
+        \Illuminate\Support\Facades\Cache::put(
+            $resendKey,
+            now(),
+            now()->addSeconds(60)
+        );
+
+        \Illuminate\Support\Facades\Cache::put(
+            $hourlyKey,
+            $hourlyCount + 1,
+            now()->addHours(1)
+        );
 
         return response()->json([
-            'message' => 'OTP resent successfully. Please check your mobile.'
+            'success' => true,
+            'message' => 'OTP resent successfully. Please check your registered mobile number.'
         ]);
     }
 

@@ -23,6 +23,7 @@ use App\Models\LeadershipSection;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Validator;
+use App\Services\SmsService;
 
 
 class MainController extends Controller{
@@ -948,7 +949,7 @@ class MainController extends Controller{
 
 
 
-    public function publicAwarenessPost(Request $request){
+    public function publicAwarenessPost(Request $request, SmsService $smsService){
         try {
             $validator = Validator::make($request->all(), [
                 'captcha'          => 'required|string',
@@ -975,8 +976,8 @@ class MainController extends Controller{
            
             $tbl = 'fs_awareness_program_request';
             $appliaction_id = rand(1234567890, 9999999999);
-            // $otp = rand(100000, 999999);
-            $otp = 123456;
+            // $otp = 123456;
+            $otp = rand(100000, 999999);
             $dataArray = [
                 'application_id'   => $appliaction_id,
                 'program_type'     => $request->input('program_type'),
@@ -996,6 +997,14 @@ class MainController extends Controller{
 
             if ($result) 
             {
+                $smsService->send(
+                    'LOGIN_OTP',
+                    $request->mobile_no,
+                    [
+                        'OTP' => $otp
+                    ]
+                );
+
                 $resp = [
                     'code' => 1,
                     'status' => 'Success',
@@ -1028,7 +1037,7 @@ class MainController extends Controller{
     }
 
 
-    public function publicAwarenessOtpPost(Request $request)
+    public function publicAwarenessOtpPost(Request $request, SmsService $smsService)
     {
         try{
             $validator = Validator::make($request->all(), [
@@ -1076,6 +1085,13 @@ class MainController extends Controller{
             {
                 $where = ['mobile_no' => $request->input('otpMobile')];
                 $getData = $this->commonModel->getDataByOneCondition($tbl,$where);
+                $smsService->send(
+                    'APPLICATION_SUBMITTED',
+                    $getData[0]->mobile_no,
+                    [
+                        'UIID' => $getData[0]->application_id
+                    ]
+                );
 
                 $resp = [
                     'code' => 1,
@@ -1235,17 +1251,7 @@ class MainController extends Controller{
         ]);
     }
 
-    // public function actionStandbyPost(Request $request){
-
-    //     echo "<pre>"; print_r($request->all()); die;
-    //     Standby::create($request->all());
-    //     return redirect()->route('actionSuccess');
-    // }
-
-
-
-
-    public function actionStandbyPost(Request $request){
+    public function actionStandbyPost(Request $request, SmsService $smsService){
         try {
             $validator = Validator::make($request->all(), [
                 'program_type'     => 'required|string',
@@ -1266,7 +1272,8 @@ class MainController extends Controller{
                     ->withInput();
             }
 
-            $otp = 123456;
+            // $otp = 123456;
+            $otp = rand(100000, 999999);
             $application_id = rand(1234567890, 9999999999);
             $mobile = ltrim($request->input('mobile_no'), '0');
 
@@ -1284,20 +1291,42 @@ class MainController extends Controller{
                 'crowd_size'       => $request->input('crowd_size'),
                 'otp'              => $otp
             ];
-            // echo "<pre>"; print_r($data); die;
-           $result = Standby::create($data);
+            $result = Standby::create($data);
 
-             if ($result) 
+            if ($result)
             {
+                try {
+                    $smsService->send(
+                        'LOGIN_OTP',
+                        $mobile,
+                        [
+                            'OTP' => $otp
+                        ]
+                    );
+                } catch (\Exception $e) {
+
+                    dd($e->getMessage());
+
+                    // or
+
+                    return response()->json([
+                        'error' => $e->getMessage()
+                    ]);
+                }
+                // $smsService->send(
+                //     'LOGIN_OTP',
+                //     $mobile,
+                //     [
+                //         'OTP' => $otp
+                //     ]
+                // );
                 $resp = [
                     'code' => 1,
                     'status' => 'Success',
-                    'message' => 'Data saved successfully.| One Time Password is sent to your  registered mobile number.',
+                    'message' => 'Data saved successfully. One Time Password has been sent to your registered mobile number.',
                 ];
-
                 return json_encode($resp);
-            } 
-            else 
+            }else 
             {
                 $resp = [
                     'code' => 0,
@@ -1317,7 +1346,7 @@ class MainController extends Controller{
 
 
 
-    public function actionStandbyOtpPost(Request $request){
+    public function actionStandbyOtpPost(Request $request, SmsService $smsService){
         try{
         
             $validator = Validator::make($request->all(), [
@@ -1357,24 +1386,27 @@ class MainController extends Controller{
             ];
 
             $result = $this->commonModel->updateDataByOneCondition($tbl,$where,$dataArray);
+
             if ($result){
                 $where = ['mobile_no' => $request->input('otpMobile')];
                 $getData = $this->commonModel->getDataByOneCondition($tbl,$where);
-                // $resp = [
-                //     'code' => 1,
-                //     'status' => 'Success',
-                //     'message' => "Application has been saved successfully.| Your application id is: ".$getData[0]->application_id??'',
-                // ];
+                $smsService->send(
+                    'APPLICATION_SUBMITTED',
+                    $getData[0]->mobile_no,
+                    [
+                        'UIID' => $getData[0]->application_id
+                    ]
+                );
 
                 $resp = [
                     'code' => 1,
                     'status' => 'Success',
                     'application_id' => $getData[0]->application_id,
-                    'message' => "Application verified successfully"
+                    'message' => 'Application verified successfully'
                 ];
+
                 return json_encode($resp);
-            }
-            else{
+            }else{
                 $resp = [
                     'code' => 0,
                     'status' => 'Failed',
@@ -1511,10 +1543,7 @@ class MainController extends Controller{
         {
             return redirect()->back()->with('message', 'Report submited Successfully!');
         }
-        // Apuni Sarkar Submit API
-        
-        // /Apuni Sarkar Submit API
-    }
+    } 
 
 
 

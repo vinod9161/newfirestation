@@ -398,7 +398,7 @@
 
                                     @if(Auth::user()->type==3)
                                         @if($report->bill_generated==0)
-                                            <a href="{{ route('service-bills.report.create',['service_type'=>'fire_report','request_id'=>$report->id]) }}" class="btn btn-warning btn-sm">Generate Bill </a>
+                                            <a href="{{ route('pumping-bills.create', ['report_id' => $report->id]) }}" class="btn btn-warning btn-sm">Generate Bill </a>
                                         @elseif($report->payment_status=='pending')
                                             <a href="{{ route('service-bills.show',$report->service_bill_id) }}" class="btn btn-info btn-sm" target="_blank"> View Bill & Pay </a>
                                         @elseif($report->payment_status=='paid')

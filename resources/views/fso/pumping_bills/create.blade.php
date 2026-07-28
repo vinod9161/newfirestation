@@ -453,6 +453,8 @@ $(document).ready(function() {
     // 6. REPORT SELECTION
     // ============================================================
 
+    let preSelectedId = {{ isset($preSelectedReportId) ? $preSelectedReportId : 'null' }};
+
     $('#reportSelect').select2({
         placeholder: 'Search for a report...',
         allowClear: true
@@ -504,6 +506,10 @@ $(document).ready(function() {
             populateEquipment([]);
         }
     });
+
+    if (preSelectedId && $('#reportSelect option[value="' + preSelectedId + '"]').length) {
+        $('#reportSelect').val(preSelectedId).trigger('change');
+    }
 
     // ============================================================
     // 7. ADD / REMOVE ROWS

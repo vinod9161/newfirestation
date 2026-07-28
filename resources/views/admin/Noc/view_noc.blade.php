@@ -3522,8 +3522,6 @@ $conditions = [
                                         <input type="hidden" name="application_no" value="{{$applicationDetail->application_no}}">
                                         <select name="cfo_list" id="cfo_list" class="form-control">
                                             <option value="">---- Select CFO ----</option>
-                                            <!-- <option value="">ABC</option>
-                                            <option value="">XYZ</option> -->
 
                                             @foreach($getCFOs as $cfo)
                                             @php

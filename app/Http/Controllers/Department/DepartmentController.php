@@ -17,6 +17,7 @@ use App\Models\Common\CommonModel;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
+use App\Services\SmsService;
 
 class DepartmentController extends Controller
 {
@@ -252,6 +253,16 @@ class DepartmentController extends Controller
         }
         $application->history = json_encode($history);
         $application->update(); 
+
+        $dd = User::where('type', 1)->first(); // Deputy Director
+        if ($dd && !empty($dd->number)) {
+            $smsService = app(SmsService::class);
+            $smsService->send(
+                'PRE_APPROVAL_NOTIFICATION',
+                $dd->number,
+                []
+            );
+        }
         return back()->with('application',$application)->with("message","Application has been sent for Pre appoval");        
     }
     public function applicationPreApprovedPost(Request $request)
@@ -322,6 +333,18 @@ class DepartmentController extends Controller
         $application->dd_approve_date = Carbon::now();
         $application->dd_name = Auth::user()->name;
         $application->update();
+
+        $cfo = User::find($application->assigned_cfo);
+        if ($cfo && !empty($cfo->number)) {
+            $smsService = app(SmsService::class);
+            $smsService->send(
+                'PRE_APPROVAL_NOTIFICATION',
+                $cfo->number,
+                [
+                    'UIID' => $application->application_no
+                ]
+            );
+        }
         return back()->with('application',$application)->with("message","Application has been pre approved");        
     }
     public function applicationAssignedToCFO(Request $request)
@@ -354,7 +377,17 @@ class DepartmentController extends Controller
 
         $application->history = json_encode($history);
       
-        $application->update(); 
+        $application->update();
+        
+        $smsService = app(SmsService::class);
+
+        if (!empty($user_name) && !empty($user_name[0]->number)) {
+            $smsService->send(
+                'NEW_APPLICATION',
+                $user_name[0]->number,
+                []
+            );
+        }
 
         return back()->with('application',$application)->with("message","Application has been submitted to concerned CFO ".ucfirst($user_name[0]->name));        
     }
@@ -419,9 +452,26 @@ class DepartmentController extends Controller
             'history' => json_encode($history)
         ];
         $result = $this->commonModel->updateDataByOneCondition($tbl, array('application_no' => $application[0]->application_no), $data);
-        if($result)
-        {
-            return back()->with('application',$application)->with("message","Application has been Approved Successfully!");
+        if ($result) {
+
+            $citizen = User::find($application[0]->user_id);
+
+            if ($citizen && !empty($citizen->number)) {
+
+                $smsService = app(\App\Services\SmsService::class);
+
+                $smsService->send(
+                    'APPLICATION_APPROVED',
+                    $citizen->number,
+                    [
+                        'UIID' => $application[0]->application_no
+                    ]
+                );
+            }
+
+            return back()
+                ->with('application', $application)
+                ->with('message', 'Application has been Approved Successfully!');
         }
         else
         {
@@ -516,31 +566,27 @@ class DepartmentController extends Controller
         $application->history = json_encode($history);
         $application->old_application_no = $request->application_no;
         $application->update(); 
-        if($application->status == 'reverted')
-        {
-            return back()->with('application',$application)->with("message","Application Reverted Back to Citizen!"); 
-            // try
-            // {
-            //     $user = User::where('id', $application->user_id)->first();
-            //     $client = new Client([
-            //         'auth' => ['homedepartment', 'homedepartment@BdwDZ9a2s5IWHuFl40xSnBE7cHmwDlEg']
-            //     ]);
-            //     // $params['headers'] = ['Content-Type' => 'application/json', 'Authorization' => 'Zoho-authtoken ' . $AuthCode];
-            //     $params['form_params'] = array('thirdPartyApplicationId' => $application->id, 'serviceId' => json_decode($user->apuni_sarkar_response)->service->id, 'userId' => json_decode($user->apuni_sarkar_response)->user->_id, 'status' => 'Rejected');
-            //     $res = $client->post('https://eservices.uk.gov.in/api/home-department-integration/application/update',$params);
-            //     if($res->getStatusCode() == 200 || $res->getStatusCode() == 201)
-            //     {
-            //         return back()->with('application',$application)->with("message","Application Reverted Back to Citizen!"); 
-            //     }
-            //     else if($res->getStatusCode() == 400)
-            //     {
-            //         return back()->with('error','Something went wromg, Please try again!');
-            //     }
-            // }
-            // catch(\Exception $e)
-            // {
-            //     return back()->with('error','Something went wromg, Please try again!');
-            // }
+
+        if ($application->status == 'reverted') {
+
+            $citizen = User::find($application->user_id);
+
+            if ($citizen && !empty($citizen->number)) {
+
+                $smsService = app(SmsService::class);
+
+                $smsService->send(
+                    'APPLICATION_REVERTED',
+                    $citizen->number,
+                    [
+                        'UIID' => $application->application_no
+                    ]
+                );
+            }
+
+            return back()
+                ->with('application', $application)
+                ->with('message', 'Application Reverted Back to Citizen!');
         }
         else
         {
@@ -600,6 +646,18 @@ class DepartmentController extends Controller
         $existingRemarks[] = $remarks;
         $application->remark_by_cfo = json_encode($existingRemarks);
         $application->save();
+        
+        $smsService = app(SmsService::class);
+
+        $fso = User::find($application->assigned_id);
+
+        if ($fso && !empty($fso->number)) {
+            $smsService->send(
+                'APPROVAL_PENDING',
+                $fso->number,
+                []
+            );
+        }
 
         return back()->with('application', $application)
                     ->with('message', 'Remark Added BY CFO Successfully!');
@@ -724,6 +782,16 @@ class DepartmentController extends Controller
         ];
         $this->commonModel->updateDataByOneCondition($tbl, array('application_no' => $application[0]->application_no), $data);
 
+        $smsService = app(SmsService::class);
+        $fso = User::find($application[0]->assigned_id);
+
+        if ($fso && !empty($fso->number)) {
+            $smsService->send(
+                'APPROVAL_PENDING',
+                $fso->number,
+                []
+            );
+        }
         return back()->with('application',$application)->with("message","Application has been sent for appoval!");        
     }
     public function get_user_name_by_district($district_id)
